@@ -14,6 +14,7 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
+        <script src="js/main.js" defer></script>
         <script src="js/components/navbar.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,13 +48,13 @@
         </section>
 
         <section class="shoeprint-container">
-            <img class="shoeprint" src="assets/shoe1.svg" alt="Shoe print" id="shoe1">
-            <img class="shoeprint" src="assets/shoe2.svg" alt="Shoe print" id="shoe2">
-            <img class="shoeprint" src="assets/shoe3.svg" alt="Shoe print" id="shoe3">
-            <img class="shoeprint" src="assets/shoe4.svg" alt="Shoe print" id="shoe4">
+            <img class="shoeprint hidden" src="assets/shoe1.svg" alt="Shoe print" id="shoe1">
+            <img class="shoeprint hidden" src="assets/shoe2.svg" alt="Shoe print" id="shoe2">
+            <img class="shoeprint hidden" src="assets/shoe3.svg" alt="Shoe print" id="shoe3">
+            <img class="shoeprint hidden" src="assets/shoe4.svg" alt="Shoe print" id="shoe4">
         </section>
 
-        <section class="choose-park">
+        <section class="choose-park hidden">
             <div class="choose-park-container">
                 <h2>Choose a park</h2>
                 <div class="park-icon-container">
@@ -66,10 +67,9 @@
 
         </section>
 
-        <section class="map-container">
+        <section class="map-container hidden">
             <div id="map"></div>
         </section>
 
     </body>
-    <script src="js/main.js" defer></script>
 </html>
