@@ -20,8 +20,9 @@ function initMap(park) {
     }).addTo(mapLayerGroup);
 
     map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
-    addLayerNew("alg_accesspt");
-    addLayerNew("apt_seg");
+    //addLayerNew("alg_accesspt");
+    //addLayerNew("apt_seg");
+    //addLayerNew("alg_water");
     //current_map.setView(new L.LatLng(lat, lon),zoom);
 }   
 
