@@ -1,18 +1,103 @@
+section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/********** Home ************/
+
+.home {
+    gap: 80px;
+}
+
+.home img {
+    height: auto;
+    width: 450px;
+}
+
+.home h1 {
+    font-size: 40px;
+    color: white;
+    font-weight: 400;
+
+}
 
 /********** Home ************/
 
 
+/*** Shoeprint Container ***/
 
-/********** Home ************/
+.shoeprint-container { 
+    position: absolute;   
+    min-height: 0; 
+}
+
+.shoeprint-container img {
+    height: auto;
+    width: 100px;
+    position: absolute;
+}
+
+#shoe1 {
+    left: 950px;
+    bottom: 80px;
+}
+
+#shoe2 {
+    width: 160px;
+    left: 850px;
+}
+
+#shoe3 {
+    width: 170px;
+    left: 700px;
+    top: 20px;
+    right: 50px;
+}
+
+#shoe4 {
+    width: 170px;
+    top: 100px;
+    right: 800px;
+}
+
+/*** Shoeprint Container ***/
+
+/****** Choose a Park ******/
+.choose-park {
+    margin-top: 180px;
+    min-height: 0;
+}
+
+.choose-park-container {
+    border: 2px solid red;
+    width: 80%;
+    z-index: 1;
+}
+
+.choose-park-container h2 {
+    color: white;
+    font-weight: 400;
+    font-size: 45px;
+}
+
+.park-icon-container { 
+    height: 500px;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 20px;
+    margin-top: 30px;
+}
+
+/****** Choose a Park ******/
+
 
 /********** Map ************/
 
 .map-container {
-    min-height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border: 2px solid red;
 }
 
