@@ -20,48 +20,35 @@ function initMap(park) {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
     
-
-    var start = L.marker((srt_view), {draggable: true,
-    autoPan: true}).addTo(map);
-    var end = L.marker([45.84, -78.10], {draggable: true,
-        autoPan: true}).addTo(map);
-    
-    start.bindPopup("Start.");
-    end.bindPopup("End.");
-
-        start.on('dragend', function(event) {
-            var S_latlng = event.target.getLatLng();
-            console.log("START: ", S_latlng.lat, S_latlng.lng)
-          });
-
-
-        end.on('dragend', function(event) {
-            var E_latlng = event.target.getLatLng();
-            console.log("END: ", E_latlng.lat, E_latlng.lng)
-          });
-
- ;
-
-
-    
-    //var draggable = new L.Draggable(start);
-    //draggable.enable();
-
-    var circle = L.circle(srt_view, {
-        color: 'red',
-        fillColor: '#f03',
-        fillOpacity: 0.5,
-        radius: 1500
-    }).addTo(map);
-   
-   
-   
-
+    markers(map);
 }   
+
+
+
+function markers(map){
+    var start = L.marker((srt_view), {draggable: true,
+        autoPan: true}).addTo(map);
+        var end = L.marker([45.84, -78.10], {draggable: true,
+            autoPan: true}).addTo(map);
+        
+        start.bindPopup("Start.");
+        end.bindPopup("End.");
+    
+            start.on('dragend', function(event) {
+                var S_latlng = event.target.getLatLng();
+                console.log("START: ", S_latlng.lat, S_latlng.lng)
+              });
+    
+    
+            end.on('dragend', function(event) {
+                var E_latlng = event.target.getLatLng();
+                console.log("END: ", E_latlng.lat, E_latlng.lng)
+              });
+}
+
 
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
