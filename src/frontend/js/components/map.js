@@ -8,15 +8,15 @@ function initMap(park) {
     removeChooseParkBtn(); // remove select park button 
 
     var map = L.map("map", {
-        center: [-1.2836622060674874, 36.822524070739746],
-        zoom: 16 //set the zoom level
+        center: [-78.40, 45.84],
+        zoom: 9 //set the zoom level
     });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
-    maxZoom: 19,
+    maxZoom: 9,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    map.setView([51.505, -0.09], 13); // set map view to specified coordinates and zoom level
+    map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
 }   
 
 function removeChooseParkBtn() {
