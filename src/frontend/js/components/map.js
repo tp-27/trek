@@ -6,21 +6,22 @@ function initMap(park) {
 
     map = L.map("map", {
         center: [-78.40, 45.84],
-        zoom: 9 //set the zoom level
+        zoom: 9, //set the zoom level
+        minZoom: 1,
+        maxZoom: 18
     });
 
     mapLayerGroup = L.layerGroup(); // create new layer group
     mapLayerGroup.addTo(map); // add layer group to map
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
-    maxZoom: 9,
+    maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(mapLayerGroup);
 
+    map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
     addLayerNew("test");
-    map.setView(new L.LatLng[45.84, -78.40], 10); // set map view to specified coordinates and zoom level
-
-    current_map.setView(new L.LatLng(lat, lon),zoom);
+    //current_map.setView(new L.LatLng(lat, lon),zoom);
 }   
 
 function initMapDiv() {
@@ -53,10 +54,14 @@ function getLayer(layerName) {
     });
 }
 
-function addLayerNew (layerName) {
+async function addLayerNew (layerName) {
     // make api call to backend to get layer from geoserver
-    const layer = getLayer('Rec_point');
+    try {
+        const layer = await getLayer('Rec_point');
+        L.geoJSON(layer).addTo(mapLayerGroup);
+        console.log("added");
 
-    L.geoJSON(layer).addTo(mapLayerGroup);
-    console.log("added");
+    } catch(error) {
+        console.error('Error:', error);
+    }
 }
