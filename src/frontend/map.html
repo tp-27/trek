@@ -6,7 +6,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>TripPlanner</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="map.css">
         <link rel="stylesheet" href="css/global.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
@@ -43,38 +43,9 @@
             </ul>
         </nav>
 
-        <section class="home">
-            <div class="home-left">
-                <h1>Charting your backcountry <br> journey, one click at a time</h1>
-                <a href="map.html" class="action-btn">Start</a>
-            </div>
-            
-            <img src="assets/camping.svg" alt="Tent and fire animation">
-        </section>
-
-        <section class="shoeprint-container">
-            <img class="shoeprint hidden" src="assets/shoe1.svg" alt="Shoe print" id="shoe1">
-            <img class="shoeprint hidden" src="assets/shoe2.svg" alt="Shoe print" id="shoe2">
-            <img class="shoeprint hidden" src="assets/shoe3.svg" alt="Shoe print" id="shoe3">
-            <img class="shoeprint hidden" src="assets/shoe4.svg" alt="Shoe print" id="shoe4">
-        </section>
-
-        <section class="choose-park hidden">
-            <div class="choose-park-container">
-                <h2>Choose a park</h2>
-                <div class="park-icon-container">
-                    <img src="assets/algonquin.svg" alt="Algonquin badge">
-                    <img src="assets/kawartha.svg" alt="Kawartha badge">
-                    <img src="assets/killarney.svg" alt="Killarney badge">
-                    <img src="assets/bonecho.svg" alt="Bon Echo badge">
-                </div>
-            </div>
-
-        </section>
-
-        <section class="map-container hidden">
+        <section class="map-container">
+            <button class="action-btn" onclick="initMap()" id="park-btn">Choose a park</button> 
             <div id="map"></div>
         </section>
-        <script src="" async defer></script>
     </body>
 </html>

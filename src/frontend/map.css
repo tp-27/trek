@@ -1,0 +1,18 @@
+.map-container {
+    height: 750px;
+    width: 80%;
+    background-color: #362312;
+    border-radius: 20px;
+    margin: auto;
+    margin-top: 150px;
+    margin-bottom: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.map-container .action-btn {
+    border: none;
+    height: 60px;
+    width: 200px;
+}
