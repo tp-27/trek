@@ -101,10 +101,14 @@ section {
     height: auto;
     width: 250px;
     transition: filter 0.3s ease;
+    filter: grayscale(100%);
+    -webkit-filter: grayscale(100%);
+    transition: filter ease-in 0.3s;
 }
 
 .park-icon-container img:hover {
-    filter: grayscale(0%) contrast(100%);
+    filter: contrast(100%); /* Remove grayscale and restore full contrast on hover */
+    -webkit-filter: contrast(100%); /* WebKit-prefixed version */
 }
 
 /****** Choose a Park ******/
