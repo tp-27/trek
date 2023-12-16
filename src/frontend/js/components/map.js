@@ -3,6 +3,7 @@ var map;
 function initMap(park) {
     var mapDiv = document.getElementById("map");
 
+    mapDiv.style.display = "block";
     mapDiv.style.height = "600px";
     mapDiv.style.width = "90%";
     removeChooseParkBtn(); // remove select park button 
