@@ -1,6 +1,9 @@
 var map; 
+var srt_view = [45.84, -78.40]
+console.log("check");
 
 function initMap(park) {
+    
     var mapDiv = document.getElementById("map");
 
     mapDiv.style.display = "block";
@@ -17,10 +20,42 @@ function initMap(park) {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
+
+    map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
+    
+    markers(map);
 }   
+
+
+
+function markers(map){
+    var start = L.marker((srt_view), {draggable: true,
+        autoPan: true}).addTo(map);
+        var end = L.marker([45.84, -78.10], {draggable: true,
+            autoPan: true}).addTo(map);
+        
+        start.bindPopup("Start.");
+        end.bindPopup("End.");
+    
+            start.on('dragend', function(event) {
+                var S_latlng = event.target.getLatLng();
+                console.log("START: ", S_latlng.lat, S_latlng.lng)
+              });
+    
+    
+            end.on('dragend', function(event) {
+                var E_latlng = event.target.getLatLng();
+                console.log("END: ", E_latlng.lat, E_latlng.lng)
+              });
+}
+
 
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
     parkBtn.style.display = "none";
 }
+
+
+
+
+
