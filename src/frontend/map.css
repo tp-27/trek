@@ -16,3 +16,7 @@
     height: 60px;
     width: 200px;
 }
+
+#map {
+    display: none;
+}
