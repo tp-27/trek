@@ -19,15 +19,36 @@
     </head>
     <body>        
         <nav>
-            <ul>
-                <li><a href="/" id="logo">TripPlanner</a></li>
+            <ul class="sidebar">
+                <li onclick=closeMenu()><img src="../../src/frontend/assets/close.svg" alt="Close icon" id="close-icon"></li>
                 <li class="nav-item"><a href="/">Home</a></li>
                 <li class="nav-item"><a href="/">Sign Up</a></li>
                 <li class="nav-item"><a href="/">About</a></li>
                 <li class="nav-item"><a href="/">Contact</a></li>
-                <li class="nav-item"><a class="action-btn">Get Started</a></li>
+                <li class="nav-item"><a href="/">Get Started</a></li>
+            </ul>
+
+            <ul>
+                <li><a href="/" id="logo">TripPlanner</a></li>
+                <li class="nav-item hideOnMobile"><a href="/">Home</a></li>
+                <li class="nav-item hideOnMobile"><a href="/">Sign Up</a></li>
+                <li class="nav-item hideOnMobile"><a href="/">About</a></li>
+                <li class="nav-item hideOnMobile"><a href="/">Contact</a></li>
+                <li class="nav-item hideOnMobile"><a class="action-btn">Get Started</a></li>
+                <li id="menu-icon" onclick=showMenu()><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
             </ul>
         </nav>
-        <script src="" async defer></script>
+        <script>
+            function showMenu() {
+                var menu = document.querySelector(".sidebar");
+                menu.style.display = "block";
+            }
+
+            function closeMenu() {
+                var menu = document.querySelector(".sidebar");
+                menu.style.display = "none";
+            }
+           
+        </script>
     </body>
 </html>
