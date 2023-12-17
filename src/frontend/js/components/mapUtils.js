@@ -15,10 +15,25 @@ export async function addPath(mapLayerGroup) {
     .catch(err => console.log("Rejected: " + err.message));
 }
 
+export async function addLayerWithBoundingBox(layerName, boundBox) {
+    var boundParam = "&srsName=CRS&bbox=";
+    boundParam += boundBox[0] + ',' + boundBox[1] + ',' + boundBox[2] + ',' + boundBox[3]; // add bounding box coordinates
+    console.log(boundParam)
+
+    var resource = baseURL + layerName + respFormat + boundParam
+
+    const response = await fetch(resource);
+    const geoJSON = await response.json(); // extract layer with bounding box specifications
+    console.log(geoJSON);
+
+    return geoJSON;
+}
+
 async function getLayer(layerName) {
 
     const response = await fetch(baseURL + layerName + respFormat);
     const geoJSON = await response.json();
+    console.log(geoJSON);
    
     return geoJSON;
 }

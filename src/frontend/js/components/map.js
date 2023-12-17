@@ -42,7 +42,6 @@ function initMapDiv() {
     removeChooseParkBtn(); // remove select park button 
 }
    
-
 function markers(map){
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
