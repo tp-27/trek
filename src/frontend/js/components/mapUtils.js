@@ -1,7 +1,7 @@
 const baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
 const respFormat = "&outputFormat=application/json";
-var sourceID = 0;
-var targetID = 0;
+var sourceID = 17;
+var targetID = 3742;
 
 export async function addLayer(layerName, mapLayerGroup) {
     getLayer(layerName)
@@ -46,7 +46,8 @@ export async function getNearestVertex(point) {
 }
 
 async function getPath() {
-    var url = `${baseURL}shortest_path${respFormat}&viewparams=source:${sourceID};target:${targetID};`
+    var url = `${baseURL}shortest_path${respFormat}&viewparams=source:${sourceID};target:${targetID};`;
     const response = await fetch(url);
+    console.log(response);
     return response.json();
 }
