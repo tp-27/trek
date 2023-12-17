@@ -7,8 +7,8 @@ export async function addLayer(layerName, mapLayerGroup) {
         .catch(err => console.log("Rejected: " + err.message));
 }
 
-export async function addPath(mapLayerGroup) {
-    getPath()
+export async function addPath(mapLayerGroup, sourceID, targetID) {
+    getPath(sourceID, targetID)
     .then(data =>  L.geoJSON(data).addTo(mapLayerGroup)) // add layer to layer group
     .catch(err => console.log("Rejected: " + err.message));
 }
