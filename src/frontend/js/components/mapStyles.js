@@ -13,13 +13,19 @@ export function setMarkerStyles(layer) {
             iconAnchor: [16, 32],
             popupAnchor: [0, -32],
         }),
+
+
     };
 
     layer = L.geoJSON(layer, { // process function for each feature from geoJSON
         pointToLayer: function (feature, latlng) {
             const subtype = feature.properties.SUBTYPE; // get the subtype of the feature from geoJSON file
-            console.log(subtype);
-            return L.marker(latlng, { icon: icons[subtype] }); // assigned the icon for a feature 
+            
+            if (subtype in icons) {
+                return L.marker(latlng, { icon: icons[subtype] }); // assigned the icon for a feature 
+            } else {
+                console.log("Subtype not found in icons dict");
+            }
         }
     });
 
