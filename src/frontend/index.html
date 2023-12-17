@@ -14,9 +14,8 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-        <script src="js/main.js" defer></script>
-        <script src="js/components/navbar.js"></script>
-        <script src="js/components/map.js" defer></script>
+        <script src="js/main.js" type="module" defer></script>
+        <script src="js/components/navbar.js" type="module"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
@@ -75,6 +74,7 @@
         <section class="map-container hidden">
             <div id="map"></div>
         </section>
-        <script src="" async defer></script>
+        <script src="js/components/map.js" type="module" defer></script>
+        <script src="index.js" type="module" defer></script>
     </body>
 </html>

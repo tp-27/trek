@@ -1,32 +1,41 @@
-var map; 
-var srt_view = [45.84, -78.40]
-console.log("check");
+import { addLayer } from "./mapUtils.js";
 
-function initMap(park) {
-    
+var map; 
+var mapLayerGroup;
+var srt_view = [45.84, -78.40];
+
+export function initMap() {
+    initMapDiv(); // show map in container
+
+    map = L.map("map", {
+        center: [-78.40, 45.84],
+        zoom: 9, //set the zoom level
+        minZoom: 1,
+        maxZoom: 18
+    });
+
+    mapLayerGroup = L.layerGroup(); // create new layer group
+    mapLayerGroup.addTo(map); // add layer group to map
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
+    maxZoom: 18,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(mapLayerGroup);
+
+    map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
+    markers(map);
+    addLayer('Rec_point', mapLayerGroup);
+}   
+
+function initMapDiv() {
     var mapDiv = document.getElementById("map");
 
-    mapDiv.style.display = "block";
+    mapDiv.style.display = "block"; // display map in map container
     mapDiv.style.height = "600px";
     mapDiv.style.width = "90%";
     removeChooseParkBtn(); // remove select park button 
-
-    var map = L.map("map", {
-        center: [-78.40, 45.84],
-        zoom: 9 //set the zoom level
-    });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
-    maxZoom: 9,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
-
-
-    map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
-    
-    markers(map);
-}   
-
-
+}
+   
 
 function markers(map){
     var canoe_icon = L.icon({
@@ -62,12 +71,8 @@ function markers(map){
                 console.log("END: ", E_latlng.lat, E_latlng.lng)
                 end.bindPopup("End." + end.getLatLng());
               });
-
-
-
-              
+     
 }
-
 
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
