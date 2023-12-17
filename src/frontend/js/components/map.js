@@ -4,6 +4,7 @@ import { addLayer, getNearestVertex } from "./mapUtils.js";
 
 var map; 
 var mapLayerGroup;
+var RecMarkers;
 var srt_view = [45.84, -78.40];
 
 export function initMap() {
@@ -17,6 +18,11 @@ export function initMap() {
     });
 
     mapLayerGroup = L.layerGroup(); // create new layer group
+    RecMarkers = L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)
+        showCoverageOnHover: true,
+        zoomToBoundsOnClick: true,
+        disableClusteringAtZoom: 15
+    }).addTo(mapLayerGroup); 
     mapLayerGroup.addTo(map); // add layer group to map
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
@@ -26,7 +32,7 @@ export function initMap() {
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
     markers(map);
-    addLayer('Rec_point', mapLayerGroup);
+    addLayer('Rec_point', RecMarkers);
 }   
 
 function initMapDiv() {
@@ -39,7 +45,9 @@ function initMapDiv() {
 }
    
 
+
 async function markers(map){
+
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
