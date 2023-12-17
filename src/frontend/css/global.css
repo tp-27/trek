@@ -79,7 +79,7 @@ nav li:first-child {
     font-size: 35px;
 }
 
-.sidebar {
+.sidebar-nav {
     position: fixed;
     top: 0;
     right: 0;

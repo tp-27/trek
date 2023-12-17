@@ -43,7 +43,11 @@ function initMapDiv() {
     mapDiv.style.display = "block"; // display map in map container
     mapDiv.style.height = "600px";
     mapDiv.style.width = "90%";
-    removeChooseParkBtn(); // remove select park button 
+    removeChooseParkBtn(); // remove select park button
+    
+    var sidebar = L.control.sidebar('sidebar').addTo(map);
+    console.log("Sidebar Added: ", sidebar);
+
 }
    
 
@@ -109,6 +113,9 @@ async function markers(map){
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
     parkBtn.style.display = "none";
+
+    var navBar = document.getElementById("sidebar");
+    navBar.style.display = "block";
 }
 
 
