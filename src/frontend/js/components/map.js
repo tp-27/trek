@@ -1,4 +1,4 @@
-import { addLayerNew } from "./addLayer.js";
+import { addLayer } from "./mapUtils.js";
 
 var map; 
 var mapLayerGroup;
@@ -22,7 +22,8 @@ export function initMap() {
     }).addTo(mapLayerGroup);
 
     map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
-    addLayerNew('Rec_point', mapLayerGroup, map);
+    
+    addLayer('Rec_point', mapLayerGroup);
 }   
 
 function initMapDiv() {
