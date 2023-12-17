@@ -15,7 +15,7 @@ export function setMarkerStyles(layer) {
         // }),
     };
 
-    layer = L.geoJSON(layer, { // process functino for each feature from geoJSON
+    layer = L.geoJSON(layer, { // process function for each feature from geoJSON
         pointToLayer: function (feature, latlng) {
             const subtype = feature.properties.SUBTYPE; // get the subtype of the feature from geoJSON file
             console.log(subtype);

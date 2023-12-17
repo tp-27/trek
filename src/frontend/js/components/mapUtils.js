@@ -2,15 +2,13 @@ import { setMarkerStyles } from './mapStyles.js';
 
 const baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
 
-export async function addLayer(layerName, mapLayerGroup) {
+export async function addLayer(layerName, mapClusterGroup) {
     getLayer(layerName)
         .then((data) =>  {
             const layer = setMarkerStyles(data); // customize layer icons 
-            layer.addTo(mapLayerGroup); // add layer to layer group
+            layer.addTo(mapClusterGroup); // add layer to layer group
 
-            // L.geoJSON(data).addTo(mapLayerGroup);
-
-
+            // L.geoJSON(data).addTo(mapClusterGroup);
         })
         .catch(err => console.log("Rejected: " + err.message));
 }
