@@ -1,6 +1,8 @@
 import { setMarkerStyles } from './mapStyles.js';
 
 const baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+const respFormat = "&outputFormat=application/json";
+var path = undefined;
 
 export async function addLayer(layerName, mapClusterGroup) {
     getLayer(layerName)
@@ -11,6 +13,13 @@ export async function addLayer(layerName, mapClusterGroup) {
             // L.geoJSON(data).addTo(mapClusterGroup);
         })
         .catch(err => console.log("Rejected: " + err.message));
+}
+
+export async function addPath(mapLayerGroup, sourceID, targetID) {
+    if(path != undefined) path.remove();
+    getPath(sourceID, targetID)
+    .then(data =>  path = L.geoJSON(data).addTo(mapLayerGroup)) // add layer to layer group
+    .catch(err => console.log("Rejected: " + err.message));
 }
 
 export async function addLayerWithBoundingBox(layerName, boundBox) {
@@ -28,7 +37,6 @@ export async function addLayerWithBoundingBox(layerName, boundBox) {
 }
 
 async function getLayer(layerName) {
-    var respFormat = "&outputFormat=application/json";
 
     const response = await fetch(baseURL + layerName + respFormat);
     const geoJSON = await response.json();
@@ -37,8 +45,16 @@ async function getLayer(layerName) {
     return geoJSON;
 }
 
-async function getNearestVertex(point) {
-    var url = `${baseURL}nearest_vertex&outputformat=application/json&viewparams=x:${point.lng};y:${point.lat};`;
+
+export async function getNearestVertex(point) {
+    var url = `${baseURL}nearest_vertex${respFormat}&viewparams=x:${point.lng};y:${point.lat};`;
     const response = await fetch(url);
+    return response.json();
+}
+
+async function getPath(sourceID, targetID) {
+    var url = `${baseURL}shortest_path${respFormat}&viewparams=source:${sourceID};target:${targetID};`;
+    const response = await fetch(url);
+    console.log(response);
     return response.json();
 }

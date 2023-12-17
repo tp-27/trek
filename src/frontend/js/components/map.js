@@ -1,8 +1,11 @@
-import { addLayer } from "./mapUtils.js";
+
+import { addLayer, getNearestVertex, addPath } from "./mapUtils.js";
+
 
 var map; 
 var mapLayerGroup;
 var RecMarkers;
+var sourceID = 17, targetID = 5742;
 var srt_view = [45.84, -78.40];
 
 export function initMap() {
@@ -31,8 +34,8 @@ export function initMap() {
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
     markers(map);
     addLayer('Rec_point', RecMarkers);
-
     RecMarkers.addTo(map); // add layer group to map
+    addPath(mapLayerGroup);
 }   
 
 function initMapDiv() {
@@ -44,16 +47,19 @@ function initMapDiv() {
     removeChooseParkBtn(); // remove select park button 
 }
    
-function markers(map){
+
+
+async function markers(map){
+
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
     
         iconSize:     [38, 95], // size of the icon
        // shadowSize:   [50, 64], // size of the shadow
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
        // shadowAnchor: [4, 62],  // the same for the shadow
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
   
@@ -66,18 +72,38 @@ function markers(map){
         start.bindPopup("Start" +  start.getLatLng());
         end.bindPopup("End." + end.getLatLng());
     
-            start.on('dragend', function(event) {
-                var S_latlng = event.target.getLatLng();
-                console.log("START: ", S_latlng.lat, S_latlng.lng)
-                start.bindPopup("Start" +  start.getLatLng());
-              });
-    
-    
-            end.on('dragend', function(event) {
-                var E_latlng = event.target.getLatLng();
-                console.log("END: ", E_latlng.lat, E_latlng.lng)
-                end.bindPopup("End." + end.getLatLng());
-              });
+        start.on('dragend', async function(event) {
+            var S_latlng = event.target.getLatLng();
+            console.log("START: ", S_latlng.lat, S_latlng.lng)
+            start.bindPopup("Start" +  start.getLatLng());
+           var sResponse = await getNearestVertex(S_latlng);
+            var sGeometry = sResponse.features[0].geometry.coordinates;
+             sourceID = sResponse.features[0].properties.id;
+            console.log("SOURCE ID ", sourceID);
+             var sLat = sGeometry[1];
+            var sLng = sGeometry[0];
+            console.log(sLat, sLng);
+           var sNewLL = new L.LatLng(sLat,sLng);
+           start.setLatLng(sNewLL);
+           addPath(mapLayerGroup, sourceID, targetID);
+          });
+          
+
+        end.on('dragend', async function(event) {
+            var E_latlng = event.target.getLatLng();
+            console.log("END: ", E_latlng.lat, E_latlng.lng)
+            end.bindPopup("End." + end.getLatLng());
+            var response = await getNearestVertex(E_latlng);
+            var geometry = response.features[0].geometry.coordinates;
+             targetID = response.features[0].properties.id;
+             console.log("TARGET ID ", targetID);
+             var lat = geometry[1];
+            var lng = geometry[0];
+            console.log(lat, lng);
+           var newLL = new L.LatLng(lat,lng);
+           end.setLatLng(newLL);
+           addPath(mapLayerGroup, sourceID, targetID);
+          });
      
 }
 
