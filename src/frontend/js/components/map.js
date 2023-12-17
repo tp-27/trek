@@ -1,7 +1,9 @@
+import { addLayerNew } from "./addLayer.js";
+
 var map; 
 var mapLayerGroup;
 
-function initMap(park) {
+export function initMap() {
     initMapDiv(); // show map in container
 
     map = L.map("map", {
@@ -20,8 +22,7 @@ function initMap(park) {
     }).addTo(mapLayerGroup);
 
     map.setView([45.84, -78.40], 10); // set map view to specified coordinates and zoom level
-    addLayerNew("test");
-    //current_map.setView(new L.LatLng(lat, lon),zoom);
+    addLayerNew('Rec_point', mapLayerGroup, map);
 }   
 
 function initMapDiv() {
@@ -36,36 +37,4 @@ function initMapDiv() {
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
     parkBtn.style.display = "none";
-}
-
-var baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
-
-async function getLayer(layerName) {
-    fetch(baseURL + layerName + "&outputFormat=application/json")
-    .then(response => {
-        if(!response.ok) {
-            throw new Error('Error: Invalid Response');
-        }
-        console.log(response);
-        return response.json();
-    })
-    .then(data => {
-        console.log(data);
-        L.geoJSON(data).addTo(mapLayerGroup);
-      })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-async function addLayerNew (layerName) {
-    // make api call to backend to get layer from geoserver
-    try {
-        const layer = await getLayer('Rec_point');
-        L.geoJSON(layer).addTo(mapLayerGroup);
-        console.log("added");
-
-    } catch(error) {
-        console.error('Error:', error);
-    }
 }

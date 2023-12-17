@@ -14,7 +14,8 @@
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
         crossorigin=""></script>
-        <script src="js/main.js" defer></script>
+        <script src="js/main.js" type="module" defer></script>
+        <script src="js/components/map.js" type="module"></script>
         <script src="js/components/navbar.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,10 +44,9 @@
         </nav>
 
         <section class="map-container">
-            <button class="action-btn" onclick="initMap()" id="park-btn">Choose a park</button> 
+            <button class="action-btn" id="park-btn">Choose a park</button> 
             <div id="map"></div>
         </section>
     </body>
 
-    <script src="js/components/map.js" defer></script>
 </html>
