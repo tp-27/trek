@@ -56,9 +56,9 @@ async function markers(map){
     
         iconSize:     [38, 95], // size of the icon
        // shadowSize:   [50, 64], // size of the shadow
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
        // shadowAnchor: [4, 62],  // the same for the shadow
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
   
@@ -71,25 +71,38 @@ async function markers(map){
         start.bindPopup("Start" +  start.getLatLng());
         end.bindPopup("End." + end.getLatLng());
     
-            start.on('dragend', async function(event) {
-                var S_latlng = event.target.getLatLng();
-                console.log("START: ", S_latlng.lat, S_latlng.lng)
-                start.bindPopup("Start" +  start.getLatLng());
-               var response = await getNearestVertex(S_latlng);
-                var geometry = response.features[0].geometry.coordinates;
-                var lat = geometry[1];
-                var lng = geometry[0];
-                console.log(lat, lng);
-               var newLL = new L.LatLng(lat,lng);
-               start.setLatLng(newLL);
-              });
-              
-    
-            end.on('dragend', async function(event) {
-                var E_latlng = event.target.getLatLng();
-                console.log("END: ", E_latlng.lat, E_latlng.lng)
-                end.bindPopup("End." + end.getLatLng());
-              });
+        start.on('dragend', async function(event) {
+            var S_latlng = event.target.getLatLng();
+            console.log("START: ", S_latlng.lat, S_latlng.lng)
+            start.bindPopup("Start" +  start.getLatLng());
+           var sResponse = await getNearestVertex(S_latlng);
+            var sGeometry = sResponse.features[0].geometry.coordinates;
+             sourceID = sResponse.features[0].properties.id;
+            console.log("SOURCE ID ", sourceID);
+             var sLat = sGeometry[1];
+            var sLng = sGeometry[0];
+            console.log(sLat, sLng);
+           var sNewLL = new L.LatLng(sLat,sLng);
+           start.setLatLng(sNewLL);
+           addPath(mapLayerGroup, sourceID, targetID);
+          });
+          
+
+        end.on('dragend', async function(event) {
+            var E_latlng = event.target.getLatLng();
+            console.log("END: ", E_latlng.lat, E_latlng.lng)
+            end.bindPopup("End." + end.getLatLng());
+            var response = await getNearestVertex(E_latlng);
+            var geometry = response.features[0].geometry.coordinates;
+             targetID = response.features[0].properties.id;
+             console.log("TARGET ID ", targetID);
+             var lat = geometry[1];
+            var lng = geometry[0];
+            console.log(lat, lng);
+           var newLL = new L.LatLng(lat,lng);
+           end.setLatLng(newLL);
+           addPath(mapLayerGroup, sourceID, targetID);
+          });
      
 }
 
