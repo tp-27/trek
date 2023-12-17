@@ -24,7 +24,7 @@ export function initMap() {
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
     markers(map);
-    addLayer('Rec_point', mapLayerGroup);
+    // addLayer('Rec_point', mapLayerGroup);
 }   
 
 function initMapDiv() {
@@ -36,7 +36,6 @@ function initMapDiv() {
     removeChooseParkBtn(); // remove select park button 
 }
    
-
 function markers(map){
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
