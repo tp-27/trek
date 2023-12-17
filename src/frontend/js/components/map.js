@@ -1,4 +1,4 @@
-import { addLayer } from "./mapUtils.js";
+import { addLayer, addPath } from "./mapUtils.js";
 
 var map; 
 var mapLayerGroup;
@@ -31,6 +31,7 @@ export function initMap() {
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
     markers(map);
     addLayer('Rec_point', RecMarkers);
+    addPath(mapLayerGroup);
 }   
 
 function initMapDiv() {
