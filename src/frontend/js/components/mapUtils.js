@@ -36,7 +36,8 @@ async function getLayer(layerName) {
     return geoJSON;
 }
 
-async function getNearestVertex(point) {
+
+export async function getNearestVertex(point) {
     var url = `${baseURL}nearest_vertex${respFormat}&viewparams=x:${point.lng};y:${point.lat};`;
     const response = await fetch(url);
     return response.json();
