@@ -3,6 +3,7 @@ import { addLayer, addPath } from "./mapUtils.js";
 var map; 
 var mapLayerGroup;
 var RecMarkers;
+var sourceID = 17, targetID = 5742;
 var srt_view = [45.84, -78.40];
 
 export function initMap() {
