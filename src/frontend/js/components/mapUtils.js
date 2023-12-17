@@ -1,5 +1,6 @@
 const baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
 const respFormat = "&outputFormat=application/json";
+var path;
 
 export async function addLayer(layerName, mapLayerGroup) {
     getLayer(layerName)
@@ -8,8 +9,9 @@ export async function addLayer(layerName, mapLayerGroup) {
 }
 
 export async function addPath(mapLayerGroup, sourceID, targetID) {
+    path.remove()
     getPath(sourceID, targetID)
-    .then(data =>  L.geoJSON(data).addTo(mapLayerGroup)) // add layer to layer group
+    .then(data =>  path = L.geoJSON(data).addTo(mapLayerGroup)) // add layer to layer group
     .catch(err => console.log("Rejected: " + err.message));
 }
 
