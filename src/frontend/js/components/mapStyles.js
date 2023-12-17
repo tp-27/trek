@@ -29,7 +29,5 @@ export function setMarkerStyles(layer) {
         }
     });
 
-    console.log(layer);
-
     return layer;
 }
