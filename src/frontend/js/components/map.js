@@ -1,4 +1,6 @@
-import { addLayer } from "./mapUtils.js";
+import { addLayer, getNearestVertex } from "./mapUtils.js";
+
+
 
 var map; 
 var mapLayerGroup;
@@ -37,7 +39,7 @@ function initMapDiv() {
 }
    
 
-function markers(map){
+async function markers(map){
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
@@ -59,14 +61,21 @@ function markers(map){
         start.bindPopup("Start" +  start.getLatLng());
         end.bindPopup("End." + end.getLatLng());
     
-            start.on('dragend', function(event) {
+            start.on('dragend', async function(event) {
                 var S_latlng = event.target.getLatLng();
                 console.log("START: ", S_latlng.lat, S_latlng.lng)
                 start.bindPopup("Start" +  start.getLatLng());
+               var response = await getNearestVertex(S_latlng);
+                var geometry = response.features[0].geometry.coordinates;
+                var lat = geometry[1];
+                var lng = geometry[0];
+                console.log(lat, lng);
+               var newLL = new L.LatLng(lat,lng);
+               start.setLatLng(newLL);
               });
+              
     
-    
-            end.on('dragend', function(event) {
+            end.on('dragend', async function(event) {
                 var E_latlng = event.target.getLatLng();
                 console.log("END: ", E_latlng.lat, E_latlng.lng)
                 end.bindPopup("End." + end.getLatLng());
