@@ -7,12 +7,12 @@ export function setMarkerStyles(layer) {
             popupAnchor: [0, -32],
         }),
         
-        // "Access Point": L.icon({
-        //     iconUrl: '../../src/frontend/assets/access.svg',
-        //     iconSize: [32, 32],
-        //     iconAnchor: [16, 32],
-        //     popupAnchor: [0, -32],
-        // }),
+        "Access Point": L.icon({
+            iconUrl: '../../src/frontend/assets/access.svg',
+            iconSize: [32, 32],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32],
+        }),
     };
 
     layer = L.geoJSON(layer, { // process function for each feature from geoJSON
