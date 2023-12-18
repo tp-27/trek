@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>TripPlanner</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css  ">
         <link rel="stylesheet" href="map.css">
         <link rel="stylesheet" href="css/global.css">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -71,6 +72,10 @@
                         <ul role="tablist">
                             <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
                         </ul>
+                      
+                        <ul role="tablist">
+                            <li><a href="#layers" role="tab"><i class="fa-solid fa-layer-group"></i></a></li>
+                        </ul>
 
                         <ul role="tablist">
                             <li><a href="#route-stats" role="tab"><i class="fa-solid fa-chart-simple"></i></a></li>
@@ -134,6 +139,34 @@
             
                         <div class="sidebar-pane" id="settings">
                             <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        </div>
+
+                        <div class="sidebar-pane" id="layers">
+                            <h1 class="sidebar-header">Layers and Icons<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                            <div class="icons-container">
+                                <h2>Icons</h2>
+                                <div class="icons">
+                                    <div class="icon-item">
+                                        <img src="../../src/frontend/assets/tent.svg" alt="Tent">
+                                        <input type="checkbox" id="campsite" name="icons" value="Designated Camping Site">
+                                    </div>
+
+                                    <div class="icon-item">
+                                        <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
+                                        <input type="checkbox" id="access-point" name="icons" value="Access Point">
+                                    </div>
+
+                                    <div class="icon-item">
+                                        <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
+                                        <input type="checkbox" id="picnic-area" name="icons" value="Picnic">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="layers-container">
+                                <h2>Layers</h2>
+                            </div>
+
                         </div>
                     </div>
                 </div>

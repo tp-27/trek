@@ -1,8 +1,7 @@
-import { initMap } from './components/map.js';
+import { initMap, showFeatureIcon, hideFeatureIcon  } from './components/map.js';
 import { mapSettings as MapSettings } from './components/mapSettings.js';
 
 var mapSettings = new MapSettings();
-
 
 // scroll animations
 const observer = new IntersectionObserver((entries) => {
@@ -16,9 +15,8 @@ const observer = new IntersectionObserver((entries) => {
 const hiddenElements = document.querySelectorAll(".hidden");
 hiddenElements.forEach((el) => observer.observe(el)); // observe all hidden elements
 
-
 window.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('park-btn').addEventListener("click", () => {
+    document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
         initMap();
     });
 
@@ -36,6 +34,22 @@ window.addEventListener('DOMContentLoaded', function() {
     this.document.getElementById("portagespeed-btn").addEventListener("click", () => {
         mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value;
     });
+  
+    var iconCheckboxes = document.querySelectorAll("input[type=checkbox][name=icons]");
+    var checkboxSettings = []
+
+    iconCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('click', function() {
+            if (checkbox.checked) {
+                showFeatureIcon(checkbox.value); 
+            } else {
+                hideFeatureIcon(checkbox.value);
+            }
+            updateFeatureIconSettings();
+            console.log(checkbox.value);
+        })
+    });
+});
 
     this.document.getElementById("maxdist-btn").addEventListener("click", () => {
         mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value;

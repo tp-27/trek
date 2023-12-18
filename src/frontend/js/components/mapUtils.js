@@ -1,10 +1,16 @@
+import { setMarkerStyles } from './mapStyles.js';
+
 const baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
 const respFormat = "&outputFormat=application/json";
 var path = undefined;
 
-export async function addLayer(layerName, mapLayerGroup) {
+export async function addLayer(layerName, mapClusterGroup) {
     getLayer(layerName)
-        .then(data =>  L.geoJSON(data).addTo(mapLayerGroup)) // add layer to layer group
+        .then((data) =>  {
+            const layer = setMarkerStyles(data); // customize layer icons 
+            layer.addTo(mapClusterGroup); // add layer to layer group
+            return markers; 
+        })
         .catch(err => console.log("Rejected: " + err.message));
 }
 
@@ -51,3 +57,4 @@ async function getPath(sourceID, targetID) {
     console.log(response);
     return response.json();
 }
+
