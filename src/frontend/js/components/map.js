@@ -6,6 +6,7 @@ var clusterGroup;
 var mapLayerGroup;
 var sourceID = 17, targetID = 5742;
 var srt_view = [45.84, -78.40];
+var markers = {};
 
 export function initMap() {
     initMapDiv(); // show map in container
@@ -32,8 +33,10 @@ export function initMap() {
     }).addTo(clusterGroup);
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
-    markers(map);
-    addLayer('Rec_point', clusterGroup);
+
+    addStartMarkers(map);
+    markers = addLayer('Rec_point', clusterGroup);
+
     addPath(mapLayerGroup);
 
     // // addPath(clusterGroup);
@@ -46,12 +49,17 @@ function initMapDiv() {
     mapDiv.style.display = "block"; // display map in map container
     mapDiv.style.height = "600px";
     mapDiv.style.width = "90%";
-    removeChooseParkBtn(); // remove select park button 
+    removeChooseParkBtn(); // remove select park button
+    
+    var sidebar = L.control.sidebar('sidebar').addTo(map);
+    console.log("Sidebar Added: ", sidebar);
+
 }
    
 
 
-async function markers(map){
+
+async function addStartMarkers(map){
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
@@ -111,8 +119,19 @@ async function markers(map){
 function removeChooseParkBtn() {
     var parkBtn = document.getElementById("park-btn");
     parkBtn.style.display = "none";
+
+    var navBar = document.getElementById("sidebar");
+    navBar.style.display = "block";
 }
 
+
+export function showFeatureIcon(feature) {
+    showFeatureIcon(feature, clusterGroup);
+}
+
+export function hideFeatureIcon(feature) {
+    showFeatureIcon(feature, clusterGroup);
+}
 
 
 

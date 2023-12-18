@@ -9,8 +9,8 @@ export async function addLayer(layerName, mapClusterGroup) {
         .then((data) =>  {
             const layer = setMarkerStyles(data); // customize layer icons 
             layer.addTo(mapClusterGroup); // add layer to layer group
+            return markers; 
 
-            // L.geoJSON(data).addTo(mapClusterGroup);
         })
         .catch(err => console.log("Rejected: " + err.message));
 }

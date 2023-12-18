@@ -79,7 +79,7 @@ nav li:first-child {
     font-size: 35px;
 }
 
-.sidebar {
+.sidebar-nav {
     position: fixed;
     top: 0;
     right: 0;
@@ -123,4 +123,50 @@ nav li:first-child {
     #menu-icon {
         display: inline-block;
     }
+}
+
+.next-button {
+    
+    display: inline-block;
+    outline: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0 56px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 7px;
+    background-color: #0070f3;
+    color: white;
+    font-weight: 400;
+    font-size: 16px;
+    box-shadow: 0 4px 14px 0 rgb(0 118 255 / 39%);
+    transition: background 0.2s ease,color 0.2s ease,box-shadow 0.2s ease;
+    :hover{
+        background: rgba(0,118,255,0.9);
+        box-shadow: 0 6px 20px rgb(0 118 255 / 23%);
+    }
+    
+}
+
+.next-textinput {
+    
+    padding: 6px 12px;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: 4px;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    :focus{
+        color: #212529;
+        background-color: #fff;
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+    }
+    
 }
