@@ -15,8 +15,14 @@ export function initMap() {
         center: [-78.40, 45.84],
         zoom: 9, //set the zoom level
         minZoom: 1,
-        maxZoom: 18
+        maxZoom: 18,
+        zoomControl: false 
     });
+
+    L.control.zoom({
+        position: 'topright'
+    }).addTo(map);
+
 
     mapLayerGroup = L.layerGroup(); // create new layer group
     RecMarkers = L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)

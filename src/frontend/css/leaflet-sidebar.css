@@ -3,9 +3,7 @@
     top: 0;
     bottom: 0;
     display: none;
-    width: 100%;
-    overflow: hidden;
-    z-index: auto; }
+    z-index: 2000; }
     .sidebar.collapsed {
       width: 40px; }
     @media (min-width: 768px) {
@@ -45,7 +43,7 @@
     .sidebar-right .sidebar-tabs {
       right: 0; }
     .sidebar-tabs, .sidebar-tabs > ul {
-      position: absolute;
+      position: relative;
       width: 40px;
       margin: 0;
       padding: 0;

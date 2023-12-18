@@ -49,50 +49,53 @@
                 <li id="menu-icon" onclick="NavModule.showMenu()"><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
             </ul>
         </nav>
-
+        
         <section class="map-container">
 
             <button class="action-btn" id="park-btn">Choose a park</button> 
-            <div id="sidebar" class="sidebar collapsed">
-                <!-- Nav tabs -->
-                <div class="sidebar-tabs">
-                    <ul role="tablist">
-                        <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                    </ul>
-        
-                    <ul role="tablist">
-                        <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-                    </ul>
+            
+
+            <div id="map" class="sidebar-map">
+                <div id="sidebar" class="sidebar collapsed">
+                    <!-- Nav tabs -->
+                    <div class="sidebar-tabs">
+                        <ul role="tablist">
+                            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                        </ul>
+            
+                        <ul role="tablist">
+                            <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
+                        </ul>
+                    </div>
+            
+                    <!-- Tab panes -->
+                    <div class="sidebar-content">
+                        <div class="sidebar-pane" id="home">
+                            <h1 class="sidebar-header">
+                                sidebar-v2
+                                <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                            </h1>
+            
+                            <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+                        </div>
+            
+                        <div class="sidebar-pane" id="profile">
+                            <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        </div>
+            
+                        <div class="sidebar-pane" id="messages">
+                            <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        </div>
+            
+                        <div class="sidebar-pane" id="settings">
+                            <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        </div>
+                    </div>
                 </div>
-        
-                <!-- Tab panes -->
-                <div class="sidebar-content">
-                    <div class="sidebar-pane" id="home">
-                        <h1 class="sidebar-header">
-                            sidebar-v2
-                            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                        </h1>
-        
-                        <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-                    </div>
-        
-                    <div class="sidebar-pane" id="profile">
-                        <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    </div>
-        
-                    <div class="sidebar-pane" id="messages">
-                        <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    </div>
-        
-                    <div class="sidebar-pane" id="settings">
-                        <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    </div>
-                </div>
+    
+                <script src="../frontend/js/leaflet-sidebar.js"></script>
+                
             </div>
-
-            <script src="../frontend/js/leaflet-sidebar.js"></script>
-
-            <div id="map" class="sidebar-map"></div>
 
         </section>
     </body>
