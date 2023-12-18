@@ -92,16 +92,16 @@ async function addStartMarkers(map){
         var S_latlng = event.target.getLatLng();
         // console.log("START: ", S_latlng.lat, S_latlng.lng)
         start.bindPopup("Start" +  start.getLatLng());
-        var sResponse = await getNearestVertex(S_latlng);
+        var sResponse = await map.clusterGroup.getNearestVertex(S_latlng);
         var sGeometry = sResponse.features[0].geometry.coordinates;
         map.sourceID = sResponse.features[0].properties.id;
-        // console.log("SOURCE ID ", sourceID);
+         //console.log("SOURCE ID ", map.sourceID);
             var sLat = sGeometry[1];
         var sLng = sGeometry[0];
         // console.log(sLat, sLng);
         var sNewLL = new L.LatLng(sLat,sLng);
         start.setLatLng(sNewLL);
-        addPath(map.mapLayerGroup, map.sourceID, map.targetID);
+        map.clusterGroup.addPath(map.sourceID, map.targetID);
     });
         
         
@@ -109,7 +109,7 @@ async function addStartMarkers(map){
         var E_latlng = event.target.getLatLng();
         // console.log("END: ", E_latlng.lat, E_latlng.lng)
         end.bindPopup("End." + end.getLatLng());
-        var response = await getNearestVertex(E_latlng);
+        var response = await map.clusterGroup.getNearestVertex(E_latlng);
         var geometry = response.features[0].geometry.coordinates;
         map.targetID = response.features[0].properties.id;
         //  console.log("TARGET ID ", targetID);
@@ -118,7 +118,7 @@ async function addStartMarkers(map){
         console.log(lat, lng);
         var newLL = new L.LatLng(lat,lng);
         end.setLatLng(newLL);
-        addPath(map.mapLayerGroup, map.sourceID, map.targetID);
+        map.clusterGroup.addPath(map.sourceID, map.targetID);
     });
 }
 

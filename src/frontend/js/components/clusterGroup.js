@@ -17,17 +17,15 @@ class ClusterGroup {
         this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
-        this.addPath(this.mapLayerGroup);
-        this.currentPath = undefined;
+        this.path = undefined;
     }
 
     async addLayer(layerName) {
         this.getLayer(layerName)
             .then((data) =>  {
-                const layer = setMarkerStyles(data); // customize layer icons 
+                const layer = this.setMarkerStyles(data); // customize layer icons 
                 layer.addTo(this.clusterGroup); // add layer to layer group
-                return markers; 
-    
+                console.log(layer);
             })
             .catch(err => console.log("Rejected: " + err.message));
     }
@@ -35,7 +33,7 @@ class ClusterGroup {
     async addPath(sourceID, targetID) {
         if(this.path != undefined) this.path.remove();
         this.getPath(sourceID, targetID)
-        .then(data =>  this.path = L.geoJSON(data).addTo(this.clusterGroup)) // add layer to layer group
+        .then(data =>  this.path = L.geoJSON(data).addTo(this.mapLayerGroup)) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
     }
         
