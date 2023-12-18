@@ -49,7 +49,6 @@ window.addEventListener('DOMContentLoaded', function() {
             console.log(checkbox.value);
         })
     });
-});
 
     this.document.getElementById("maxdist-btn").addEventListener("click", () => {
         mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value;
