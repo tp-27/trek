@@ -4,10 +4,10 @@ export class mapSettings {
         //this.{setting} = ...
 
         //Cost Settings
-        this.triplePortageDistance = false;
+        this.tripleDist = false;
         //Speed Settings
-        this.canoeSpeed = 4; //Km/h
-        this.portageSpeed = 2; //Km/h
+        this.canoeSpeed = 2; //Km/h
+        this.portageSpeed = 1; //Km/h
         //Route Settings
         this.skillLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
         this.maxDailyDist = 12; //Km
@@ -34,6 +34,11 @@ export class mapSettings {
     set maxDailyDist(val) {
         console.log("New Max Daily Dist: ", val);
     }
+    set triplePortageDistance(val) {
+        this.tripleDist = val;
+        console.log("Triple Portage Distance: ", val);
+    }
+    get triplePortageDistance(){ return this.tripleDist}
 }
 
 //Setting Options
