@@ -33,8 +33,10 @@ export function initMap() {
     }).addTo(clusterGroup);
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
+
     addStartMarkers(map);
     markers = addLayer('Rec_point', clusterGroup);
+
     addPath(mapLayerGroup);
 
     // // addPath(clusterGroup);
@@ -56,8 +58,8 @@ function initMapDiv() {
    
 
 
-async function addStartMarkers(map){
 
+async function addStartMarkers(map){
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
@@ -81,15 +83,15 @@ async function addStartMarkers(map){
     
         start.on('dragend', async function(event) {
             var S_latlng = event.target.getLatLng();
-            console.log("START: ", S_latlng.lat, S_latlng.lng)
+            // console.log("START: ", S_latlng.lat, S_latlng.lng)
             start.bindPopup("Start" +  start.getLatLng());
            var sResponse = await getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
              sourceID = sResponse.features[0].properties.id;
-            console.log("SOURCE ID ", sourceID);
+            // console.log("SOURCE ID ", sourceID);
              var sLat = sGeometry[1];
             var sLng = sGeometry[0];
-            console.log(sLat, sLng);
+            // console.log(sLat, sLng);
            var sNewLL = new L.LatLng(sLat,sLng);
            start.setLatLng(sNewLL);
            addPath(mapLayerGroup, sourceID, targetID);
@@ -98,12 +100,12 @@ async function addStartMarkers(map){
 
         end.on('dragend', async function(event) {
             var E_latlng = event.target.getLatLng();
-            console.log("END: ", E_latlng.lat, E_latlng.lng)
+            // console.log("END: ", E_latlng.lat, E_latlng.lng)
             end.bindPopup("End." + end.getLatLng());
             var response = await getNearestVertex(E_latlng);
             var geometry = response.features[0].geometry.coordinates;
              targetID = response.features[0].properties.id;
-             console.log("TARGET ID ", targetID);
+            //  console.log("TARGET ID ", targetID);
              var lat = geometry[1];
             var lng = geometry[0];
             console.log(lat, lng);
