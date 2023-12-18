@@ -1,7 +1,6 @@
-import { initMap, showFeatureIcon, hideFeatureIcon  } from './components/map.js';
-import { mapSettings as MapSettings } from './components/mapSettings.js';
+import Map from "../js/components/map.js"
 
-var mapSettings = new MapSettings();
+var map = new Map();
 
 // scroll animations
 const observer = new IntersectionObserver((entries) => {
@@ -17,7 +16,7 @@ hiddenElements.forEach((el) => observer.observe(el)); // observe all hidden elem
 
 window.addEventListener('DOMContentLoaded', function() {
     document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
-        initMap();
+        map.initMap();
     });
 
     //Settings Functions
