@@ -27,11 +27,6 @@ export function setMarkerStyles(layer) {
             iconAnchor: [16, 32],
             popupAnchor: [0, -32],
         }),
-
-
-
-
-
     };
 
     layer = L.geoJSON(layer, { // process function for each feature from geoJSON
