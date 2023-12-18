@@ -1,8 +1,8 @@
 import { initMap } from './components/map.js';
-import { mapSettings, mapSettings } from './components/mapSettings.js';
+import { mapSettings as MapSettings } from './components/mapSettings.js';
 
+var mapSettings = new MapSettings();
 
-var mapSettings = new mapSettings();
 
 // scroll animations
 const observer = new IntersectionObserver((entries) => {
