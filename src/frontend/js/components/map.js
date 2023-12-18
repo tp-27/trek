@@ -1,7 +1,6 @@
 
 import { addLayer, getNearestVertex, addPath } from "./mapUtils.js";
 
-
 var map; 
 var mapLayerGroup;
 var RecMarkers;
@@ -123,3 +122,16 @@ function removeChooseParkBtn() {
     var navBar = document.getElementById("sidebar");
     navBar.style.display = "block";
 }
+
+
+export function showFeatureIcon(feature) {
+    showFeatureIcon("Designated Camping Site", clusterGroup);
+}
+
+export function hideFeatureIcon(feature) {
+    showFeatureIcon("Designated Camping Site", clusterGroup);
+}
+
+
+
+
