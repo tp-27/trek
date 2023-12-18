@@ -9,8 +9,8 @@ export class mapSettings {
         this.canoeSpeed = 4; //Km/h
         this.portageSpeed = 2; //Km/h
         //Route Settings
-        this.maxDifficultLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
-
+        this.skillLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
+        this.maxDailyDist = 12; //Km
 
         //Tile Setgins
 
@@ -25,6 +25,14 @@ export class mapSettings {
 
     set portageSpeed(val) {
         console.log("New Portage Speed: ", val);
+    }
+
+    set skillLevel(val) {
+        console.log("New Skill Level: ", val);
+    }
+
+    set maxDailyDist(val) {
+        console.log("New Max Daily Dist: ", val);
     }
 }
 

@@ -36,4 +36,29 @@ window.addEventListener('DOMContentLoaded', function() {
     this.document.getElementById("portagespeed-btn").addEventListener("click", () => {
         mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value;
     });
+
+    this.document.getElementById("maxdist-btn").addEventListener("click", () => {
+        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value;
+    });
+
+    this.document.getElementById("beginner-btn").addEventListener("click", () => {
+        mapSettings.maxDifficultyLevel = 1
+        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 2.4
+        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1
+        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 10
+    });
+
+    this.document.getElementById("intermediate-btn").addEventListener("click", () => {
+        mapSettings.maxDifficultyLevel = 1
+        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 4
+        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.2
+        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 15
+    });
+
+    this.document.getElementById("expert-btn").addEventListener("click", () => {
+        mapSettings.maxDifficultyLevel = 1
+        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 6
+        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.5
+        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 20
+    });
 });
