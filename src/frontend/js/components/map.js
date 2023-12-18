@@ -123,8 +123,3 @@ function removeChooseParkBtn() {
     var navBar = document.getElementById("sidebar");
     navBar.style.display = "block";
 }
-
-
-
-
-
