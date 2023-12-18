@@ -2,10 +2,11 @@
 import { addLayer, getNearestVertex, addPath } from "./mapUtils.js";
 
 var map; 
+var clusterGroup;
 var mapLayerGroup;
-var RecMarkers;
 var sourceID = 17, targetID = 5742;
 var srt_view = [45.84, -78.40];
+var markers = {};
 
 export function initMap() {
     initMapDiv(); // show map in container
@@ -14,32 +15,30 @@ export function initMap() {
         center: [-78.40, 45.84],
         zoom: 9, //set the zoom level
         minZoom: 1,
-        maxZoom: 18,
-        zoomControl: false 
+        maxZoom: 18
     });
 
-    L.control.zoom({
-        position: 'topright'
-    }).addTo(map);
-
-
-    mapLayerGroup = L.layerGroup(); // create new layer group
-    RecMarkers = L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)
+    mapLayerGroup = L.layerGroup();
+    clusterGroup = L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)
         showCoverageOnHover: true,
         zoomToBoundsOnClick: true,
         disableClusteringAtZoom: 15
-    }).addTo(mapLayerGroup); 
+    }).addTo(mapLayerGroup);
+
     mapLayerGroup.addTo(map); // add layer group to map
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(mapLayerGroup);
+    }).addTo(clusterGroup);
 
     map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
-    markers(map);
-    addLayer('Rec_point', RecMarkers);
+    addStartMarkers(map);
+    markers = addLayer('Rec_point', clusterGroup);
     addPath(mapLayerGroup);
+
+    // // addPath(clusterGroup);
+    // clusterGroup.addTo(map); // add layer group to map
 }   
 
 function initMapDiv() {
@@ -57,7 +56,7 @@ function initMapDiv() {
    
 
 
-async function markers(map){
+async function addStartMarkers(map){
 
     var canoe_icon = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoe.png",
@@ -125,11 +124,11 @@ function removeChooseParkBtn() {
 
 
 export function showFeatureIcon(feature) {
-    showFeatureIcon("Designated Camping Site", clusterGroup);
+    showFeatureIcon(feature, clusterGroup);
 }
 
 export function hideFeatureIcon(feature) {
-    showFeatureIcon("Designated Camping Site", clusterGroup);
+    showFeatureIcon(feature, clusterGroup);
 }
 
 

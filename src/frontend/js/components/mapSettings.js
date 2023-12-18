@@ -10,7 +10,7 @@ export class mapSettings {
         this.portageSpeed = 2; //Km/h
         //Route Settings
         this.maxDifficultLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
-
+        this.mapFeatureIcons = ["Designated Camping Site", "Access Point", "Picnic"]
 
         //Tile Setgins
 
@@ -26,6 +26,8 @@ export class mapSettings {
     set portageSpeed(val) {
         console.log("New Portage Speed: ", val);
     }
+
+
 }
 
 //Setting Options

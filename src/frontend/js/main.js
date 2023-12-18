@@ -41,10 +41,11 @@ window.addEventListener('DOMContentLoaded', function() {
     iconCheckboxes.forEach(function(checkbox) {
         checkbox.addEventListener('click', function() {
             if (checkbox.checked) {
-                showFeatureIcon(checkbox.value);
+                showFeatureIcon(checkbox.value); 
             } else {
                 hideFeatureIcon(checkbox.value);
             }
+            updateFeatureIconSettings();
             console.log(checkbox.value);
         })
     });
