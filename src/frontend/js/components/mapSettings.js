@@ -19,9 +19,13 @@ export class mapSettings {
         //Other Settings
     }
 
-    //set{Setting} {
-    //  logic for setting
-    //}
+    set canoeSpeed(val) {
+        console.log("New Canoe Speed: ", val);
+    }
+
+    set portageSpeed(val) {
+        console.log("New Portage Speed: ", val);
+    }
 }
 
 //Setting Options

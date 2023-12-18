@@ -28,4 +28,12 @@ window.addEventListener('DOMContentLoaded', function() {
     //      mapSettings.set{SettingName}();
     //      mapSettings.setLocalStorage({SettingName},{Value})
     //});
+
+    this.document.getElementById("canoespeed-btn").addEventListener("click", () => {
+        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value;
+    });
+
+    this.document.getElementById("portagespeed-btn").addEventListener("click", () => {
+        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value;
+    });
 });
