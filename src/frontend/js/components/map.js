@@ -65,17 +65,22 @@ export class Map {
     async addDirectionsToSidebar(pdata) {
         const data = await this.clusterGroup.createDirectionsFromPath(pdata);
         console.log("Adding Directions: ", pdata);
-        const ulElement = document.createElement('ul');
-        const outputDiv = document.getElementById('route-directions');
+        
+        const outputDiv = document.getElementById('directions-table');
         outputDiv.innerHTML = '';
+    
         data.forEach((item, index) => {
-            const liElement = document.createElement('li');
-            liElement.innerHTML = `Name: ${item.name} - &nbsp;${item.distance}m`;
-
-            ulElement.appendChild(liElement);
+            const liElement = document.createElement('div');
+            liElement.classList.add('table-row');
+    
+            liElement.innerHTML = `
+                <div class="table-cell ...">${item.name}</div>
+                <div class="table-cell ...">${item.distance}</div>`;
+    
+            outputDiv.appendChild(liElement);
         });
-        outputDiv.appendChild(ulElement);
     }
+    
 }
 
 export default Map;
