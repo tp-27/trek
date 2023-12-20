@@ -1,8 +1,9 @@
-class ClusterGroup {
+import { setMarkerStyles } from "./mapStyles.js";
 
+export default class ClusterGroup {
     constructor() {
-        this.mapLayerGroup = L.layerGroup();
-        this.clusterGroup =  L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)
+        this.mapLayerGroup = L.layerGroup(); // layer for route planning markers
+        this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
             showCoverageOnHover: true,
             zoomToBoundsOnClick: true,
             disableClusteringAtZoom: 15
@@ -13,21 +14,55 @@ class ClusterGroup {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.clusterGroup);
 
-        
         this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
-        this.markers = this.addLayer('Rec_point');
-        this.path = undefined;
+        this.markers = this.addLayer('Rec_point'); // add campsite, picnic, building markers
+        this.path = undefined; // layer that defines users selected route
+    }
+
+
+    initLayers() {
+        this.mapLayerGroup = L.layerGroup();
     }
 
     async addLayer(layerName) {
         this.getLayer(layerName)
             .then((data) =>  {
-                const layer = this.setMarkerStyles(data); // customize layer icons 
-                layer.addTo(this.clusterGroup); // add layer to layer group
-                console.log(layer);
+                var layers = [];
+                if (layerName === 'Rec_point') { 
+                    layers = this.splitLayerBySubtype(data); // Split different features into individual layers - comes as one layer from geoserver
+                } else {
+
+                }
+
+                for (const [subtype, features] of Object.entries(layers)) { // loop through individual layers
+                    var styledLayer = setMarkerStyles(subtype, features); // set marker styles for each individual layer 
+                    styledLayer.addTo(this.clusterGroup);
+                }
+
+                // const layer = this.setMarkerStyles(data); // customize layer icons 
+                // layer.addTo(this.clusterGroup); // add layer to layer group
+                // console.log(layer);
             })
             .catch(err => console.log("Rejected: " + err.message));
+    }
+
+    splitLayerBySubtype(geoJSON) {
+        var subTypes = {};
+        var allFeatures = geoJSON.features;
+
+        // process geoJSON and separate into individual layers
+        allFeatures.forEach(function (feature) {
+            var type = feature.properties.SUBTYPE;
+            if (type in subTypes) { // if subtype exists - append feature to list
+                subTypes[type].push(feature);
+            } else {
+                subTypes[type] = []; // create new key 
+                subTypes[type].push(feature); // append new feature
+            }
+        });
+
+        return subTypes;
     }
     
     async addPath(sourceID, targetID) {
@@ -36,12 +71,11 @@ class ClusterGroup {
         .then(data =>  this.path = L.geoJSON(data).addTo(this.mapLayerGroup)) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
     }
-        
+    
+    // Request a layer from the Geoserver
     async getLayer(layerName) {
-        console.log(this.baseURL + layerName + this.respFormat);
         const response = await fetch(this.baseURL + layerName + this.respFormat);
         const geoJSON = await response.json();
-       
         return geoJSON;
     }
     
@@ -91,8 +125,10 @@ class ClusterGroup {
     
         return layer;
     }
+
+    removeLayer(layerName) {
+        this.clusterGroup.removeLayer(layerName);
+    }
     
     
 }
-
-export default ClusterGroup;
