@@ -2,6 +2,7 @@ import { setMarkerStyles } from "./mapStyles.js";
 
 export default class ClusterGroup {
     constructor() {
+        this.allLayers = {}; // dictionary containing layer identifiers, layer object pairs
         this.mapLayerGroup = L.layerGroup(); // layer for route planning markers
         this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
             showCoverageOnHover: true,
@@ -20,29 +21,28 @@ export default class ClusterGroup {
         this.path = undefined; // layer that defines users selected route
     }
 
-
     initLayers() {
         this.mapLayerGroup = L.layerGroup();
     }
 
     async addLayer(layerName) {
-        this.getLayer(layerName)
+        if (layerName in this.allLayers) { // add existing layer to the group
+            this.allLayers[layerName].addTo(this.clusterGroup);
+            return;
+        }
+
+        this.getLayer(layerName) // request layer if it doesn't exist
             .then((data) =>  {
                 var layers = [];
                 if (layerName === 'Rec_point') { 
                     layers = this.splitLayerBySubtype(data); // Split different features into individual layers - comes as one layer from geoserver
-                } else {
-
-                }
+                } 
 
                 for (const [subtype, features] of Object.entries(layers)) { // loop through individual layers
                     var styledLayer = setMarkerStyles(subtype, features); // set marker styles for each individual layer 
-                    styledLayer.addTo(this.clusterGroup);
+                    styledLayer.addTo(this.clusterGroup); // add styled layer to cluster group
+                    this.allLayers[subtype] = styledLayer; // add new layer to layer dictionary
                 }
-
-                // const layer = this.setMarkerStyles(data); // customize layer icons 
-                // layer.addTo(this.clusterGroup); // add layer to layer group
-                // console.log(layer);
             })
             .catch(err => console.log("Rejected: " + err.message));
     }
@@ -126,8 +126,21 @@ export default class ClusterGroup {
         return layer;
     }
 
-    removeLayer(layerName) {
-        this.clusterGroup.removeLayer(layerName);
+    hideLayer(layerName) {
+        if (layerName in this.allLayers) {
+            this.clusterGroup.removeLayer(this.allLayers[layerName]);
+        }
+    }
+
+    showLayer(layerName) {
+        if (layerName in this.allLayers) {
+            this.clusterGroup.addLayer(this.allLayers[layerName]);
+        }
+    }
+
+    getClusterGroup() {
+        console.log(this.clusterGroup.getLayers());
+        return this.clusterGroup;
     }
     
     

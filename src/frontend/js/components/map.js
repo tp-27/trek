@@ -50,11 +50,11 @@ export class Map {
     }
 
     showFeatureIcon(feature) {
-        this.clusterGroup.addLayer('Rec_point');
+        this.clusterGroup.showLayer(feature);
     }
     
     hideFeatureIcon(feature) {
-        this.clusterGroup.removeLayer('Rec_point');
+        this.clusterGroup.hideLayer(feature);
     }
 
     
