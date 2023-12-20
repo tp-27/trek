@@ -62,7 +62,20 @@ export class Map {
         showFeatureIcon(feature, clusterGroup);
     }
 
-    
+    async addDirectionsToSidebar(pdata) {
+        const data = await this.clusterGroup.createDirectionsFromPath(pdata);
+        console.log("Adding Directions: ", pdata);
+        const ulElement = document.createElement('ul');
+        const outputDiv = document.getElementById('route-directions');
+        outputDiv.innerHTML = '';
+        data.forEach((item, index) => {
+            const liElement = document.createElement('li');
+            liElement.innerHTML = `Name: ${item.name} - &nbsp;${item.distance}m`;
+
+            ulElement.appendChild(liElement);
+        });
+        outputDiv.appendChild(ulElement);
+    }
 }
 
 export default Map;
@@ -101,7 +114,8 @@ async function addStartMarkers(map){
         // console.log(sLat, sLng);
         var sNewLL = new L.LatLng(sLat,sLng);
         start.setLatLng(sNewLL);
-        map.clusterGroup.addPath(map.sourceID, map.targetID);
+        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
+        map.addDirectionsToSidebar(pdata);
     });
         
         
@@ -118,7 +132,8 @@ async function addStartMarkers(map){
         console.log(lat, lng);
         var newLL = new L.LatLng(lat,lng);
         end.setLatLng(newLL);
-        map.clusterGroup.addPath(map.sourceID, map.targetID);
+        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
+        map.addDirectionsToSidebar(pdata);
     });
 }
 

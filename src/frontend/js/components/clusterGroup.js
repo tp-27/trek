@@ -17,7 +17,8 @@ class ClusterGroup {
         this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
-        this.path = undefined;
+        this.path = undefined; //Path Object for Leaflet
+        this.pathData = undefined; //Data for path
     }
 
     async addLayer(layerName) {
@@ -32,9 +33,13 @@ class ClusterGroup {
     
     async addPath(sourceID, targetID) {
         if(this.path != undefined) this.path.remove();
-        this.getPath(sourceID, targetID)
-        .then(data =>  this.path = L.geoJSON(data).addTo(this.mapLayerGroup)) // add layer to layer group
+        await this.getPath(sourceID, targetID)
+        .then(data =>  {
+            this.pathData = data;
+            this.path = L.geoJSON(data).addTo(this.mapLayerGroup)
+        }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
+        return this.pathData
     }
         
     async getLayer(layerName) {
@@ -56,6 +61,13 @@ class ClusterGroup {
         const response = await fetch(url);
         // console.log(response);
         return response.json();
+    }
+
+    async getSegmentByID(ID) {
+        var url = `${this.baseURL}get_segment${this.respFormat}&viewparams=oid:${ID};`;
+        const response = await fetch(url);
+        const obj = await response.json();
+        return obj.features[0];
     }
 
     setMarkerStyles(layer) {
@@ -90,6 +102,29 @@ class ClusterGroup {
         });
     
         return layer;
+    }
+
+    async createDirectionsFromPath(pathData) {
+        //var path = JSON.parse(pathData);
+        const directions = []
+        var lastDist = pathData.features[0].properties.distance;
+        var lastPathObj = await this.getSegmentByID(pathData.features[0].properties.oid);
+        var i = 0;
+
+        for(const edge of pathData.features) {
+            var pobj = await this.getSegmentByID(edge.properties.oid);
+            lastDist += edge.properties.distance;
+
+            if(lastPathObj.properties.ogf_id != pobj.properties.ogf_id && lastPathObj.properties.name != pobj.properties.name) { 
+                //console.log(`Path[${i}]: Dist: ${lastDist} Name: ${pobj.properties.name} Type: ${pobj.properties.type}`);
+
+                directions.push({distance: lastDist, name: pobj.properties.name, type: pobj.properties.type});
+                i++;
+                lastPathObj = pobj;
+                lastDist = 0;
+            }
+        }
+        return directions;
     }
     
     
