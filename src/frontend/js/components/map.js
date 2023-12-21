@@ -8,7 +8,7 @@ export class Map {
         this.sourceID = 17;
         this.targetID = 5742; //change to a list of target IDs
         this.srt_view = [45.84, -78.40];
-        this.markers = {};
+        this.directionMarkers = [];
         this.MapSettings = new mapSettings();
     }
 
@@ -65,8 +65,12 @@ export class Map {
     }
 
     async addDirectionsToSidebar(pdata) {
+        for(let marker of this.directionMarkers) {
+            marker.remove();
+        }
+        this.directionMarkers = [];
+
         const data = await this.clusterGroup.createDirectionsFromPath(pdata);
-        console.log("Adding Directions: ", pdata);
         
         const outputDiv = document.getElementById('directions-table');
         outputDiv.innerHTML = '';
@@ -80,6 +84,12 @@ export class Map {
                 <div class="table-cell ...">${item.distance}</div>`;
     
             outputDiv.appendChild(liElement);
+
+            if(this.MapSettings.dispdir) {
+                var marker = L.marker([item.pos[1], item.pos[0]]).addTo(this.map);
+                marker.bindPopup(`${item.name}\nType: ${item.type}`);
+                this.directionMarkers.push( marker );
+            }
         });
     }
     

@@ -114,6 +114,7 @@ class ClusterGroup {
     async createDirectionsFromPath(pathData) {
         //var path = JSON.parse(pathData);
         const directions = []
+        if(pathData.features.length == 0) return directions;
         var startPOS = pathData.features[0].geometry.coordinates[0][0];
         var lastPathObj = await this.getSegmentByID(pathData.features[0].properties.oid);
         var pathobj;
