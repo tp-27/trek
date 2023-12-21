@@ -2,8 +2,9 @@ import ClusterGroup from "./clusterGroup.js";
 import { mapSettings } from "./mapSettings.js";
 
 export class Map {
-    constructor() {
+    constructor(park) {
         this.map;
+        this.park;
         this.clusterGroup = new ClusterGroup();
         this.sourceID = 38509;
         this.targetID = 5742; //change to a list of target IDs
@@ -28,7 +29,8 @@ export class Map {
         console.log("Sidebar Added: ", sidebar);
     }
 
-    initMap() {
+    initMap(park) {
+        this.park = park;
         this.initMapDiv(); // show map in container
 
         
@@ -43,15 +45,8 @@ export class Map {
         });
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
-
-        // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
-        // maxZoom: 18,
-        // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        // }).addTo(this.clusterGroup);
-
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
-
-        addStartMarkers(this);
+        addStartMarkers(this); // add route planning markers
     }
 
     removeChooseParkBtn() {
@@ -63,11 +58,11 @@ export class Map {
     }
 
     showFeatureIcon(feature) {
-        showFeatureIcon(feature, clusterGroup);
+        this.clusterGroup.showLayer(feature);
     }
     
     hideFeatureIcon(feature) {
-        showFeatureIcon(feature, clusterGroup);
+        this.clusterGroup.hideLayer(feature);
     }
 
     
