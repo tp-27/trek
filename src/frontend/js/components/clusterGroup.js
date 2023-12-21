@@ -1,5 +1,16 @@
 import { setMarkerStyles } from "./mapStyles.js";
 
+const PathMarker = L.Marker.extend({
+    options: {
+        index: 0,
+        nearestVertex: 0
+    }
+});
+
+const pathMarker = function (latlng, options) {
+    return new PathMarker(latlng, options);
+};
+
 export default class ClusterGroup {
     constructor() {
         this.allLayers = {}; // dictionary containing layer identifiers, layer object pairs
@@ -40,6 +51,8 @@ export default class ClusterGroup {
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
         this.path = undefined; //Path Object for Leaflet
+        this.pathlist = []; //list of paths for markers
+        this.markerlist = []; //list of markers for paths
         this.pathData = undefined; //Data for path
     }
 
@@ -95,6 +108,15 @@ export default class ClusterGroup {
             this.path = L.geoJSON(data).addTo(this.mapLayerGroup)
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
+
+        const i = 0;
+        this.path.on('click', (e) => {
+            const coordinates = e.latlng;
+            console.log("Click coordinates:", coordinates);
+            console.log("adding new marker..", i);
+            this.addPathMarker(i, coordinates);
+        });
+
         return this.pathData
     }
     
@@ -206,7 +228,7 @@ export default class ClusterGroup {
         return directions;
 
     }
-    
+
     hideLayer(layerName) {
         if (layerName in this.allLayers) {
             this.clusterGroup.removeLayer(this.allLayers[layerName]);
@@ -223,6 +245,51 @@ export default class ClusterGroup {
         console.log(this.clusterGroup.getLayers());
         return this.clusterGroup;
 
+    }
+
+    async makeMarker(idx,pos) {
+        var m = pathMarker(pos,
+        {   draggable: true,
+            autoPan: true,
+            index: idx
+        }).addTo(this.mapLayerGroup);
+
+        console.log(m);
+            
+        m.bindPopup(m.getLatLng());
+        
+        m.on('dragend', async function(event) {
+            console.log("Dragging: ", m.index);
+            var pdata;
+            var S_latlng = event.target.getLatLng();
+            m.bindPopup(S_latlng);
+            var sResponse = await map.clusterGroup.getNearestVertex(S_latlng);
+            var sGeometry = sResponse.features[0].geometry.coordinates;
+            m.nearestVertex = sResponse.features[0].properties.id;
+            start.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
+            if(m.index == 0) {
+                pdata = await map.clusterGroup.addPath(m.nearestVertex, this.markerlist[m.index+1].nearestVertex);
+            } else {
+                pdata = await map.clusterGroup.addPath(this.markerlist[m.index-1].nearestVertex, m.nearestVertex);
+            }
+            
+            map.addDirectionsToSidebar(pdata);
+        });
+
+        return m;
+    }
+
+    async addPathMarker(pathIndex,pos) {
+
+        var marker = await this.makeMarker(pathIndex,pos);
+        console.log("New Marker [", pathIndex, "] - ", marker);
+        this.markerList.splice(pathIndex,0,marker);
+        console.log("Markers: ", this.markerlist);
+
+    }
+
+    async movePathMarker() {
+        //recalc path
     }
     
     

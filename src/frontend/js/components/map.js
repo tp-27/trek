@@ -123,8 +123,11 @@ async function addStartMarkers(map){
     var start = L.marker(([45.844645909959816 , -78.3995533866199]), {draggable: true,
         autoPan: true, icon : canoe_iconS}).addTo(map.map);
 
-        var end = L.marker([45.60012744 ,  -78.77631902 ], {draggable: true,
-            autoPan: true, icon: canoe_iconE}).addTo(map.map);
+    var end = L.marker([45.60012744 ,  -78.77631902 ], {draggable: true,
+        autoPan: true, icon: canoe_iconE}).addTo(map.map);
+
+    map.clusterGroup.markerlist.push(start);
+    map.clusterGroup.markerlist.push(end);
         
     start.bindPopup("Start" +  start.getLatLng());
     end.bindPopup("End." + end.getLatLng());
