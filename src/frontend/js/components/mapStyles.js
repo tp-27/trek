@@ -41,7 +41,7 @@ export function setMarkerStyles(layer) {
             if (subtype in icons) {
                 var a =  L.marker(latlng, { icon: icons[subtype] }); // assigned the icon for a feature 
                a.bindPopup(subtype + " " + feature.id.toString() + " Maintained: " + feature.properties.MAINTAINED);
-                
+            //console.log(feature);
                 return a; // assigned the icon for a feature 
             } else {
                 console.log("Subtype not found is " + subtype);

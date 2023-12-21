@@ -4,35 +4,81 @@ import { addLayer, getNearestVertex, addPath } from "./mapUtils.js";
 var map; 
 var clusterGroup;
 var mapLayerGroup;
-var sourceID = 17, targetID = 5742;
-var srt_view = [45.84, -78.40];
+var sourceID = 38509, targetID = 5742;
+var srt_view = [45.80, -78.40];
+var southWest = L.latLng(45.00, -80.00),
+    northEast = L.latLng(46.50 , -77.00),
+    bounds = L.latLngBounds(southWest, northEast);
 var markers = {};
 
 export function initMap() {
     initMapDiv(); // show map in container
 
     map = L.map("map", {
-        center: [-78.40, 45.84],
+        center: srt_view,
+        maxBounds: bounds,         
         zoom: 9, //set the zoom level
-        minZoom: 1,
-        maxZoom: 18
+        minZoom: 8,
+        maxZoom: 16
+        
     });
 
     mapLayerGroup = L.layerGroup();
     clusterGroup = L.markerClusterGroup({ // create cluster group for recreation point markers (campsite, access points, etc.)
+        iconUrl: "../../src/frontend/assets/Start_canoe.png",
+        //icon: canoe_icon,
         showCoverageOnHover: true,
         zoomToBoundsOnClick: true,
-        disableClusteringAtZoom: 15
+        removeOutsideVisibleBounds: true,
+        disableClusteringAtZoom: 15,
+
+        iconCreateFunction: function (cluster) {
+            var className = 'mycluster'
+            var cluster_markers = cluster.getAllChildMarkers();
+            //console.log(cluster_markers.length);
+            var n = 0;
+            //for (var i = 0; i < cluster_markers.length; i++) {
+                n += cluster_markers.length;
+               // console.log("Marker number:", cluster_markers[i].length);
+           // }
+            var scaledSize = Math.min(80, Math.max(30, n));
+            //var hue = (scaledSize / 200) * (200 - 0) + 0;
+            //var html =  "background-color: hsl(" + hue + ", 100%, 50%);"
+           // console.log(html);
+            //console.log(n);
+           //if(scaledSize >= 60){
+           console.log(scaledSize); 
+           className = 'mycluster1';
+          // }
+          // else if(scaledSize >= 55){
+          //  className = 'mycluster2';
+          // }    
+          // else if(scaledSize >= 35){
+           // className = 'myCluster3';
+          // }
+          // else{
+           // className = 'myCluster4';
+          // }
+
+            return  L.divIcon({
+                html: '<div class="mycluster1"><img src="../../src/frontend/assets/tent.svg" alt="Tent"><div class="cluster-text">' + n + '</div></div>',
+                className: 'mycluster1',
+                iconSize: L.point(scaledSize, scaledSize)
+            });
+                
+        }
+        
+
     }).addTo(mapLayerGroup);
 
     mapLayerGroup.addTo(map); // add layer group to map
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
-    maxZoom: 18,
+    maxZoom: 16,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(clusterGroup);
 
-    map.setView(srt_view, 20); // set map view to specified coordinates and zoom level
+    map.setView(srt_view, 9); // set map view to specified coordinates and zoom level
 
     addStartMarkers(map);
     markers = addLayer('Rec_point', clusterGroup);
@@ -60,8 +106,18 @@ function initMapDiv() {
 
 
 async function addStartMarkers(map){
-    var canoe_icon = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoe.png",
+    var canoe_iconS = L.icon({
+        iconUrl: "../../src/frontend/assets/Start_canoeS.png",
+        //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
+    
+        iconSize:     [38, 95], // size of the icon
+       // shadowSize:   [50, 64], // size of the shadow
+       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+       // shadowAnchor: [4, 62],  // the same for the shadow
+       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    var canoe_iconE = L.icon({
+        iconUrl: "../../src/frontend/assets/Start_canoeE.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
     
         iconSize:     [38, 95], // size of the icon
@@ -72,23 +128,23 @@ async function addStartMarkers(map){
     });
 
   
-    var start = L.marker((srt_view), {draggable: true,
-        autoPan: true, icon : canoe_icon}).addTo(map);
+    var start = L.marker(([45.844645909959816 , -78.3995533866199]), {draggable: true,
+        autoPan: true, icon : canoe_iconS}).addTo(map);
 
-        var end = L.marker([45.84, -78.10], {draggable: true,
-            autoPan: true, icon: canoe_icon}).addTo(map);
+        var end = L.marker([45.60012744 ,  -78.77631902 ], {draggable: true,
+            autoPan: true, icon: canoe_iconE}).addTo(map);
         
         start.bindPopup("Start" +  start.getLatLng());
         end.bindPopup("End." + end.getLatLng());
     
         start.on('dragend', async function(event) {
             var S_latlng = event.target.getLatLng();
-            // console.log("START: ", S_latlng.lat, S_latlng.lng)
+             console.log("START: ", S_latlng.lat, S_latlng.lng)
             start.bindPopup("Start" +  start.getLatLng());
            var sResponse = await getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
              sourceID = sResponse.features[0].properties.id;
-            // console.log("SOURCE ID ", sourceID);
+             console.log("SOURCE ID ", sourceID);
              var sLat = sGeometry[1];
             var sLng = sGeometry[0];
             // console.log(sLat, sLng);
@@ -105,7 +161,7 @@ async function addStartMarkers(map){
             var response = await getNearestVertex(E_latlng);
             var geometry = response.features[0].geometry.coordinates;
              targetID = response.features[0].properties.id;
-            //  console.log("TARGET ID ", targetID);
+              console.log("TARGET ID ", targetID);
              var lat = geometry[1];
             var lng = geometry[0];
             console.log(lat, lng);
