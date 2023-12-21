@@ -38,8 +38,9 @@ export default class ClusterGroup {
 
         this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
-        this.markers = this.addLayer('Rec_point'); // add campsite, picnic, building markers
-        this.path = undefined; // layer that defines users selected route
+        this.markers = this.addLayer('Rec_point');
+        this.path = undefined; //Path Object for Leaflet
+        this.pathData = undefined; //Data for path
     }
 
     initLayers() {
@@ -88,9 +89,13 @@ export default class ClusterGroup {
     
     async addPath(sourceID, targetID) {
         if(this.path != undefined) this.path.remove();
-        this.getPath(sourceID, targetID)
-        .then(data =>  this.path = L.geoJSON(data).addTo(this.mapLayerGroup)) // add layer to layer group
+        await this.getPath(sourceID, targetID)
+        .then(data =>  {
+            this.pathData = data;
+            this.path = L.geoJSON(data).addTo(this.mapLayerGroup)
+        }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
+        return this.pathData
     }
     
     // Request a layer from the Geoserver
@@ -111,6 +116,21 @@ export default class ClusterGroup {
         const response = await fetch(url);
         // console.log(response);
         return response.json();
+    }
+
+    async getSegmentByID(ID) {
+        var url = `${this.baseURL}get_segment${this.respFormat}&viewparams=oid:${ID};`;
+        const response = await fetch(url);
+        const obj = await response.json();
+        return obj.features[0];
+    }
+
+    //pass in a string of CSVs -> "1,23,45"
+    async getSegmentByIDs(IDs) {
+        var url = `${this.baseURL}Algonquin_Network&cql_filter=id IN (${IDs})${this.respFormat}`;
+        const response = await fetch(url);
+        const obj = await response.json();
+        return obj.features;
     }
 
     setMarkerStyles(layer) {
@@ -147,6 +167,44 @@ export default class ClusterGroup {
         return layer;
     }
 
+
+    async createDirectionsFromPath(pathData) {
+        //var path = JSON.parse(pathData);
+        const directions = []
+        if(pathData.features.length == 0) return directions;
+        var startPOS = pathData.features[0].geometry.coordinates[0][0];
+        var lastPathObj = await this.getSegmentByID(pathData.features[0].properties.oid);
+        var pathobj;
+        var oidList = "";
+
+        //build list
+        for(const edge of pathData.features) {
+            oidList = oidList + edge.properties.oid + ",";
+        }
+        oidList = oidList.slice(0, -1);
+        var pathObjects = await this.getSegmentByIDs(oidList);
+
+
+        for(const pobj of pathObjects) {
+            pathobj = pobj;
+            
+            if(lastPathObj.properties.ogf_id != pobj.properties.ogf_id && lastPathObj.properties.name != pobj.properties.name) { 
+                //Distance should be included in here
+                //but Algonquin_Network table must be updated with distance parameter first
+                directions.push({name: pobj.properties.name, type: pobj.properties.type, pos: startPOS});
+
+                lastPathObj = pobj;
+                startPOS = pobj.geometry.coordinates[0];
+            }
+        }
+
+        const geom = pathData.features[pathData.features.length - 1].geometry;
+        const endPOS = geom.coordinates[0][geom.coordinates[0].length - 1];
+        directions.push({name: pathobj.properties.name, type: pathobj.properties.type, pos: endPOS});
+
+        console.log("Dir: ", directions);
+        return directions;
+
     hideLayer(layerName) {
         if (layerName in this.allLayers) {
             this.clusterGroup.removeLayer(this.allLayers[layerName]);
@@ -162,6 +220,7 @@ export default class ClusterGroup {
     getClusterGroup() {
         console.log(this.clusterGroup.getLayers());
         return this.clusterGroup;
+
     }
     
     

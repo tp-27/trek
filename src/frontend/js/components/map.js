@@ -8,12 +8,12 @@ export class Map {
         this.clusterGroup = new ClusterGroup();
         this.sourceID = 38509;
         this.targetID = 5742; //change to a list of target IDs
+        this.directionMarkers = [];
         this.srt_view = [45.80, -78.40];
         this.SW = [45.00, -80.00];
         this.NE = [46.50 , -77.00];
 
         this.bounds;
-        this.markers = {};
         this.MapSettings = new mapSettings();
     }
 
@@ -65,6 +65,34 @@ export class Map {
         this.clusterGroup.hideLayer(feature);
     }
 
+    async addDirectionsToSidebar(pdata) {
+        for(let marker of this.directionMarkers) {
+            marker.remove();
+        }
+        this.directionMarkers = [];
+
+        const data = await this.clusterGroup.createDirectionsFromPath(pdata);
+        
+        const outputDiv = document.getElementById('directions-table');
+        outputDiv.innerHTML = '';
+    
+        data.forEach((item, index) => {
+            const liElement = document.createElement('div');
+            liElement.classList.add('table-row');
+    
+            liElement.innerHTML = `
+                <div class="table-cell ...">${item.name}</div>
+                <div class="table-cell ...">${item.distance}</div>`;
+    
+            outputDiv.appendChild(liElement);
+
+            if(this.MapSettings.dispdir) {
+                var marker = L.marker([item.pos[1], item.pos[0]]).addTo(this.map);
+                marker.bindPopup(`${item.name}\nType: ${item.type}`);
+                this.directionMarkers.push( marker );
+            }
+        });
+    }
     
 }
 
@@ -114,7 +142,8 @@ async function addStartMarkers(map){
         // console.log(sLat, sLng);
         var sNewLL = new L.LatLng(sLat,sLng);
         start.setLatLng(sNewLL);
-        map.clusterGroup.addPath(map.sourceID, map.targetID);
+        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
+        map.addDirectionsToSidebar(pdata);
     });
         
         
@@ -131,7 +160,8 @@ async function addStartMarkers(map){
         console.log(lat, lng);
         var newLL = new L.LatLng(lat,lng);
         end.setLatLng(newLL);
-        map.clusterGroup.addPath(map.sourceID, map.targetID);
+        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
+        map.addDirectionsToSidebar(pdata);
     });
 }
 
