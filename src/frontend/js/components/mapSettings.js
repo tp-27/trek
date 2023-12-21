@@ -9,7 +9,7 @@ export class mapSettings {
         this.canoeSpeed = 2; //Km/h
         this.portageSpeed = 1; //Km/h
         //Route Settings
-
+        this.displayDirectionsOnMap = false;
         this.maxDifficultLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
         this.mapFeatureIcons = ["Designated Camping Site", "Access Point", "Picnic"]
         this.skillLevel = 3; //1 = easy only, 2 = easy, intermediate, 3 = easy, intermediate, hard
@@ -41,6 +41,7 @@ export class mapSettings {
         this.tripleDist = val;
         console.log("Triple Portage Distance: ", val);
     }
+    set displayDirectionsOnMap(val) {}
     get triplePortageDistance(){ return this.tripleDist}
 
 //Setting Options

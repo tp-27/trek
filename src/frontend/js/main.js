@@ -27,11 +27,11 @@ window.addEventListener('DOMContentLoaded', function() {
     //});
 
     this.document.getElementById("canoespeed-btn").addEventListener("click", () => {
-        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value;
+        map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value;
     });
 
     this.document.getElementById("portagespeed-btn").addEventListener("click", () => {
-        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value;
+        map.MapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value;
     });
   
     var iconCheckboxes = document.querySelectorAll("input[type=checkbox][name=icons]");
@@ -50,33 +50,36 @@ window.addEventListener('DOMContentLoaded', function() {
     });
 
     this.document.getElementById("maxdist-btn").addEventListener("click", () => {
-        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value;
+        map.MapSettings.portageSpeed = this.document.getElementById("maxdist-in").value;
     });
 
     this.document.getElementById("beginner-btn").addEventListener("click", () => {
-        mapSettings.maxDifficultyLevel = 1
-        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 2.4;
-        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1;
-        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 10;
+        map.MapSettings.maxDifficultyLevel = 1
+        map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 2.4;
+        map.MapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1;
+        map.MapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 10;
     });
 
     this.document.getElementById("intermediate-btn").addEventListener("click", () => {
-        mapSettings.maxDifficultyLevel = 1
-        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 4;
-        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.2;
-        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 15;
+        map.MapSettings.maxDifficultyLevel = 1
+        map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 4;
+        map.MapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.2;
+        map.MapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 15;
     });
 
     this.document.getElementById("expert-btn").addEventListener("click", () => {
-        mapSettings.maxDifficultyLevel = 1
-        mapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 6;
-        mapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.5;
-        mapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 20;
+        map.MapSettings.maxDifficultyLevel = 1
+        map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value = 6;
+        map.MapSettings.portageSpeed = this.document.getElementById("portagespeed-in").value = 1.5;
+        map.MapSettings.portageSpeed = this.document.getElementById("maxdist-in").value = 20;
     });
 
     this.document.getElementById("tpd-btn").addEventListener("click", () => {
-        var value = !mapSettings.triplePortageDistance;
-        mapSettings.triplePortageDistance = value;
+        var value = !map.MapSettings.triplePortageDistance;
+        map.MapSettings.triplePortageDistance = value;
         this.document.getElementById("tpd-btn").textContent = "Triple Portage Dist: " + value;
+    });
+    this.document.getElementById("directions-checkbox").addEventListener("change", (event) => {
+        map.MapSettings.displayDirectionsOnMap = event.target.checked;
     });
 });

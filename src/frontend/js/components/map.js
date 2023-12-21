@@ -35,6 +35,8 @@ export class Map {
         });
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
+        
+        //this.clusterGroup.addLayer("apt_seg");
 
         // L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
         // maxZoom: 18,

@@ -43,7 +43,6 @@ class ClusterGroup {
     }
         
     async getLayer(layerName) {
-        console.log(this.baseURL + layerName + this.respFormat);
         const response = await fetch(this.baseURL + layerName + this.respFormat);
         const geoJSON = await response.json();
        
@@ -68,6 +67,14 @@ class ClusterGroup {
         const response = await fetch(url);
         const obj = await response.json();
         return obj.features[0];
+    }
+
+    //pass in a string of CSVs -> "1,23,45"
+    async getSegmentByIDs(IDs) {
+        var url = `${this.baseURL}Algonquin_Network&cql_filter=id IN (${IDs})${this.respFormat}`;
+        const response = await fetch(url);
+        const obj = await response.json();
+        return obj.features;
     }
 
     setMarkerStyles(layer) {
@@ -107,23 +114,37 @@ class ClusterGroup {
     async createDirectionsFromPath(pathData) {
         //var path = JSON.parse(pathData);
         const directions = []
-        var lastDist = pathData.features[0].properties.distance;
+        var startPOS = pathData.features[0].geometry.coordinates[0][0];
         var lastPathObj = await this.getSegmentByID(pathData.features[0].properties.oid);
-        var i = 0;
+        var pathobj;
+        var oidList = "";
 
+        //build list
         for(const edge of pathData.features) {
-            var pobj = await this.getSegmentByID(edge.properties.oid);
-            lastDist += edge.properties.distance;
+            oidList = oidList + edge.properties.oid + ",";
+        }
+        oidList = oidList.slice(0, -1);
+        var pathObjects = await this.getSegmentByIDs(oidList);
 
+
+        for(const pobj of pathObjects) {
+            pathobj = pobj;
+            
             if(lastPathObj.properties.ogf_id != pobj.properties.ogf_id && lastPathObj.properties.name != pobj.properties.name) { 
-                //console.log(`Path[${i}]: Dist: ${lastDist} Name: ${pobj.properties.name} Type: ${pobj.properties.type}`);
+                //Distance should be included in here
+                //but Algonquin_Network table must be updated with distance parameter first
+                directions.push({name: pobj.properties.name, type: pobj.properties.type, pos: startPOS});
 
-                directions.push({distance: lastDist, name: pobj.properties.name, type: pobj.properties.type});
-                i++;
                 lastPathObj = pobj;
-                lastDist = 0;
+                startPOS = pobj.geometry.coordinates[0];
             }
         }
+
+        const geom = pathData.features[pathData.features.length - 1].geometry;
+        const endPOS = geom.coordinates[0][geom.coordinates[0].length - 1];
+        directions.push({name: pathobj.properties.name, type: pathobj.properties.type, pos: endPOS});
+
+        console.log("Dir: ", directions);
         return directions;
     }
     
