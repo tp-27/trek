@@ -201,6 +201,7 @@
   .icons-container {
     margin-bottom: 50px;
     margin-top: 15px;
+    
   }
 
   .icons {
@@ -211,7 +212,7 @@
     padding: 10px;
     border-radius: 20px;
     width: fit-content;
-    background-color: #e9e4e4ca;
+    background-color: #f3f3f3;
   }
 
   .icons img {

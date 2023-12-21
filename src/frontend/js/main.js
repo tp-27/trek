@@ -16,7 +16,8 @@ hiddenElements.forEach((el) => observer.observe(el)); // observe all hidden elem
 
 window.addEventListener('DOMContentLoaded', function() {
     document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
-        map.initMap();
+        const park = 'algonquin';
+        map.initMap(park);
     });
 
     //Settings Functions
@@ -40,11 +41,12 @@ window.addEventListener('DOMContentLoaded', function() {
     iconCheckboxes.forEach(function(checkbox) {
         checkbox.addEventListener('click', function() {
             if (checkbox.checked) {
-                showFeatureIcon(checkbox.value); 
+                console.log(checkbox.value);
+                map.showFeatureIcon(checkbox.value); 
             } else {
-                hideFeatureIcon(checkbox.value);
+                map.hideFeatureIcon(checkbox.value);
             }
-            updateFeatureIconSettings();
+            // updateFeatureIconSettings();
             console.log(checkbox.value);
         })
     });
