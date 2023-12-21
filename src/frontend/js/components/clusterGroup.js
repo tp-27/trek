@@ -205,6 +205,8 @@ export default class ClusterGroup {
         console.log("Dir: ", directions);
         return directions;
 
+    }
+    
     hideLayer(layerName) {
         if (layerName in this.allLayers) {
             this.clusterGroup.removeLayer(this.allLayers[layerName]);
