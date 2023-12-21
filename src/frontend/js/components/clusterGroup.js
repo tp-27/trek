@@ -7,8 +7,29 @@ export default class ClusterGroup {
         this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
             showCoverageOnHover: true,
             zoomToBoundsOnClick: true,
-            disableClusteringAtZoom: 15
-        }).addTo(this.mapLayerGroup);
+            removeOutsideVisibleBounds: true,
+            disableClusteringAtZoom: 15,
+            iconCreateFunction :    function (cluster){
+                var cluster_markers = cluster.getAllChildMarkers();
+                var n = 0;
+                    n += cluster_markers.length;
+
+                var scaledSize = Math.min(80, Math.max(30, n));
+
+               //console.log(scaledSize); 
+
+    
+                return  L.divIcon({
+                    html: '<div class="mycluster1"><img src="../../src/frontend/assets/tent.svg" alt="Tent"><div class="cluster-text">' + n + '</div></div>',
+                    className: 'mycluster1',
+                    iconSize: L.point(scaledSize, scaledSize)
+                });
+            } 
+        },
+        
+        
+        
+        ).addTo(this.mapLayerGroup);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
         maxZoom: 18,
