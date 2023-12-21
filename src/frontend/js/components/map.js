@@ -5,9 +5,13 @@ export class Map {
     constructor() {
         this.map;
         this.clusterGroup = new ClusterGroup();
-        this.sourceID = 17;
+        this.sourceID = 38509;
         this.targetID = 5742; //change to a list of target IDs
-        this.srt_view = [45.84, -78.40];
+        this.srt_view = [45.80, -78.40];
+        this.SW = [45.00, -80.00];
+        this.NE = [46.50 , -77.00];
+
+        this.bounds;
         this.markers = {};
         this.MapSettings = new mapSettings();
     }
@@ -27,11 +31,15 @@ export class Map {
     initMap() {
         this.initMapDiv(); // show map in container
 
+        
         this.map = L.map("map", {
-            center: [-78.40, 45.84],
+            center: this.srt_view,
             zoom: 9, //set the zoom level
-            minZoom: 1,
-            maxZoom: 18
+            minZoom: 8,
+            maxZoom: 16,
+           maxBounds: L.latLngBounds(this.SW, this.NE)
+    
+
         });
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
@@ -41,7 +49,7 @@ export class Map {
         // attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         // }).addTo(this.clusterGroup);
 
-        this.map.setView(this.srt_view, 20); // set map view to specified coordinates and zoom level
+        this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
 
         addStartMarkers(this);
     }
@@ -68,8 +76,18 @@ export class Map {
 export default Map;
 
 async function addStartMarkers(map){
-    var canoe_icon = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoe.png",
+    var canoe_iconS = L.icon({
+        iconUrl: "../../src/frontend/assets/Start_canoeS.png",
+        //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
+    
+        iconSize:     [38, 95], // size of the icon
+       // shadowSize:   [50, 64], // size of the shadow
+       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+       // shadowAnchor: [4, 62],  // the same for the shadow
+       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+    var canoe_iconE = L.icon({
+        iconUrl: "../../src/frontend/assets/Start_canoeE.png",
         //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
     
         iconSize:     [38, 95], // size of the icon
@@ -79,11 +97,11 @@ async function addStartMarkers(map){
        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
   
-    var start = L.marker((map.srt_view), {draggable: true,
-        autoPan: true, icon : canoe_icon}).addTo(map.map);
+    var start = L.marker(([45.844645909959816 , -78.3995533866199]), {draggable: true,
+        autoPan: true, icon : canoe_iconS}).addTo(map.map);
 
-    var end = L.marker([45.84, -78.10], {draggable: true,
-        autoPan: true, icon: canoe_icon}).addTo(map.map);
+        var end = L.marker([45.60012744 ,  -78.77631902 ], {draggable: true,
+            autoPan: true, icon: canoe_iconE}).addTo(map.map);
         
     start.bindPopup("Start" +  start.getLatLng());
     end.bindPopup("End." + end.getLatLng());
