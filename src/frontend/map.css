@@ -40,16 +40,50 @@ body {
 
 .mycluster1 .cluster-text {
     position: absolute;
-   
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-
     color: white;
     z-index: 2; /* Ensure text is above the image */
 }
 
+.park-dropdown {
+    display: flex;
+    flex-direction: column;
+    height: 50px; 
+    width: 225px;
+    border-radius: 18px;
+    background-color: #ffffffd7;
+    position: absolute;
+    margin-left: 1225px;
+    margin-top: 25px;
+    z-index: 2000;
+}
 
-#map {
+.dropdown-header {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%; 
+    width: 100%;
+    border-radius: 18px;
+}
+
+.dropdown-header:hover {
+    background-color: #d6d1d1ed;
+}
+
+.dropdown-header p {
+    font-size: 25px;
+}
+
+.select-inactive {
     display: none;
+}
+
+
+@media(max-width: 890px) {
+    .park-dropdown {
+        margin-left: 575px;
+    }
 }

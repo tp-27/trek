@@ -1,15 +1,42 @@
 import Map from "../js/components/map.js"
 
+const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
+
 var map = new Map();
 
 window.addEventListener('DOMContentLoaded', function() {
     const parkDefault = "algonquin";
     map.initMap(parkDefault);
 
-    // document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
-    //     const park = 'algonquin';
-    //     map.initMap(park);
-    // });
+    var dropdownContainer = document.querySelector(".park-dropdown");
+    dropdownContainer.addEventListener("click", () => { // initialize map on click of button
+        var dropdownHeader = dropdownContainer.querySelector(".dropdown-header");
+        var selectedPark = dropdownHeader.querySelector("p");
+        console.log(selectedPark);
+    
+        if (dropdownContainer.style.height != "50px") { // dropdown is open
+            dropdownContainer.style.height = "50px" // close dropdown
+        } else { // dropdown is closed
+            dropdownContainer.style.height = "auto"; 
+            const hiddenOptions = dropdownContainer.querySelectorAll(".select-inactive");
+            hiddenOptions.forEach(function(opt) {
+                opt.style.display = "block";
+            })
+
+            // parks.forEach(function(park) {
+            //     var optionContainer = document.createElement("div");
+            //     var parkOption = document.createElement("p");
+
+            //     optionContainer.style.height = "100%";
+            //     optionContainer.style.width = "100%";
+            //     parkOption.innerText = park;
+            //     optionContainer.appendChild(parkOption);
+            //     dropdownContainer.appendChild(optionContainer);
+            //     console.log(dropdownContainer);
+            // })
+        }
+     
+    });
 
     //Settings Functions
     //document.getElementById('{SettingName}').addEventListener("click", () => {
