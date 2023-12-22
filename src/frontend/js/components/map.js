@@ -21,9 +21,9 @@ export class Map {
         var mapDiv = document.getElementById("map");
 
         mapDiv.style.display = "block"; // display map in map container
-        mapDiv.style.height = "600px";
-        mapDiv.style.width = "90%";
-        this.removeChooseParkBtn(); // remove select park button
+        mapDiv.style.height = "100%";
+        mapDiv.style.width = "100%";
+        // this.removeChooseParkBtn(); // remove select park button
 
         var sidebar = L.control.sidebar('sidebar').addTo(this.map);
         console.log("Sidebar Added: ", sidebar);
@@ -49,13 +49,13 @@ export class Map {
         addStartMarkers(this); // add route planning markers
     }
 
-    removeChooseParkBtn() {
-        var parkBtn = document.getElementById("park-btn");
-        parkBtn.style.display = "none";
+    // removeChooseParkBtn() {
+    //     var parkBtn = document.getElementById("park-btn");
+    //     parkBtn.style.display = "none";
 
-        var navBar = document.getElementById("sidebar");
-        navBar.style.display = "block";
-    }
+    //     var navBar = document.getElementById("sidebar");
+    //     navBar.style.display = "block";
+    // }
 
     showFeatureIcon(feature) {
         this.clusterGroup.showLayer(feature);

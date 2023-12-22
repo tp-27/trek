@@ -2,23 +2,14 @@ import Map from "../js/components/map.js"
 
 var map = new Map();
 
-// scroll animations
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) { // is entry intersecting viewport?
-            entry.target.classList.add('show'); // make entry visible
-        } 
-    });
-});
-
-const hiddenElements = document.querySelectorAll(".hidden");
-hiddenElements.forEach((el) => observer.observe(el)); // observe all hidden elements
-
 window.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
-        const park = 'algonquin';
-        map.initMap(park);
-    });
+    const parkDefault = "algonquin";
+    map.initMap(parkDefault);
+
+    // document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
+    //     const park = 'algonquin';
+    //     map.initMap(park);
+    // });
 
     //Settings Functions
     //document.getElementById('{SettingName}').addEventListener("click", () => {

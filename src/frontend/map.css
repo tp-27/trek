@@ -1,6 +1,11 @@
+body {
+    height: 100vh;
+    width: 100%;
+}
+
 .map-container {
-    height: 750px;
-    width: 80%;
+    height: 100%;
+    width: 100%;
     background-color: #362312;
     border-radius: 20px;
     margin: auto;
