@@ -36,7 +36,7 @@ export default class ClusterGroup {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.clusterGroup);
 
-        this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+        this.baseURL = "http://3.145.75.112:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
         this.path = undefined; //Path Object for Leaflet
