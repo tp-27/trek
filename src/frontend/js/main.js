@@ -8,35 +8,29 @@ window.addEventListener('DOMContentLoaded', function() {
     const parkDefault = "algonquin";
     map.initMap(parkDefault);
 
-    var dropdownContainer = document.querySelector(".park-dropdown");
-    dropdownContainer.addEventListener("click", () => { // initialize map on click of button
-        var dropdownHeader = dropdownContainer.querySelector(".dropdown-header");
-        var selectedPark = dropdownHeader.querySelector("p");
-        console.log(selectedPark);
-    
-        if (dropdownContainer.style.height != "50px") { // dropdown is open
-            dropdownContainer.style.height = "50px" // close dropdown
-        } else { // dropdown is closed
-            dropdownContainer.style.height = "auto"; 
-            const hiddenOptions = dropdownContainer.querySelectorAll(".select-inactive");
-            hiddenOptions.forEach(function(opt) {
-                opt.style.display = "block";
-            })
+    const dropdown = document.querySelector(".park-dropdown");
 
-            // parks.forEach(function(park) {
-            //     var optionContainer = document.createElement("div");
-            //     var parkOption = document.createElement("p");
+    const select = dropdown.querySelector(".dropdown-header");
+    const menu = dropdown.querySelector(".menu");
+    const options = dropdown.querySelectorAll(".menu li");
+    const selected = dropdown.querySelector(".selected");
 
-            //     optionContainer.style.height = "100%";
-            //     optionContainer.style.width = "100%";
-            //     parkOption.innerText = park;
-            //     optionContainer.appendChild(parkOption);
-            //     dropdownContainer.appendChild(optionContainer);
-            //     console.log(dropdownContainer);
-            // })
-        }
-     
+    select.addEventListener('click', () => {
+        select.classList.toggle('select-clicked');
+        menu.classList.toggle('menu-open');
     });
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            selected.innerText = option.innerText;
+            select.classList.remove('select-clicked');
+            menu.classList.remove('menu-open');
+            options.forEach(option => {
+                option.classList.remove('active');
+            });
+            option.classList.add('active');
+        })
+    })
 
     //Settings Functions
     //document.getElementById('{SettingName}').addEventListener("click", () => {
