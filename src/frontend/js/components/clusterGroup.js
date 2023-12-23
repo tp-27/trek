@@ -7,7 +7,7 @@ const PathMarker = L.Marker.extend({
     }
 });
 
-const pathMarker = function (latlng, options) {
+export const pathMarker = function (latlng, options) {
     return new PathMarker(latlng, options);
 };
 
@@ -47,7 +47,7 @@ export default class ClusterGroup {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.clusterGroup);
 
-        this.baseURL = "http://52.15.34.182:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+        this.baseURL = "http://18.223.170.29:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
         this.path = undefined; //Path Object for Leaflet
@@ -100,24 +100,25 @@ export default class ClusterGroup {
         return subTypes;
     }
     
-    async addPath(sourceID, targetID) {
-        if(this.path != undefined) this.path.remove();
+    async addPath(index,sourceID, targetID) {
+        this.removePath(index);
+        console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(data =>  {
             this.pathData = data;
-            this.path = L.geoJSON(data).addTo(this.mapLayerGroup)
+            console.log(index, " - New Path: ", path);
+            this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
+            this.pathlist[index].on('click', (e) => {
+                this.addPathMarker(index+1, e.latlng);
+            });
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
 
-        const i = 0;
-        this.path.on('click', (e) => {
-            const coordinates = e.latlng;
-            console.log("Click coordinates:", coordinates);
-            console.log("adding new marker..", i);
-            this.addPathMarker(i, coordinates);
-        });
-
         return this.pathData
+    }
+
+    removePath(index) {
+        if(this.pathlist[index] != undefined) this.pathlist[index].remove();
     }
     
     // Request a layer from the Geoserver
@@ -136,7 +137,7 @@ export default class ClusterGroup {
     async getPath(sourceID, targetID) {
         var url = `${this.baseURL}shortest_path${this.respFormat}&viewparams=source:${sourceID};target:${targetID};`;
         const response = await fetch(url);
-        // console.log(response);
+        console.log(response);
         return response.json();
     }
 
@@ -248,44 +249,42 @@ export default class ClusterGroup {
     }
 
     async makeMarker(idx,pos) {
+        console.log("pos: ", pos);
+        const nv = await this.getNearestVertex(pos);
         var m = pathMarker(pos,
         {   draggable: true,
             autoPan: true,
-            index: idx
+            index: idx,
+            nearestVertex: nv
         }).addTo(this.mapLayerGroup);
 
         console.log(m);
             
         m.bindPopup(m.getLatLng());
         
-        m.on('dragend', async function(event) {
-            console.log("Dragging: ", m.index);
+        m.on('dragend', async (event) => {
+            console.log("Dragging: ", m.options.index);
             var pdata;
             var S_latlng = event.target.getLatLng();
             m.bindPopup(S_latlng);
-            var sResponse = await map.clusterGroup.getNearestVertex(S_latlng);
+            var sResponse = await this.getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
-            m.nearestVertex = sResponse.features[0].properties.id;
-            start.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
-            if(m.index == 0) {
-                pdata = await map.clusterGroup.addPath(m.nearestVertex, this.markerlist[m.index+1].nearestVertex);
+            m.options.nearestVertex = sResponse.features[0].properties.id;
+            m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
+            const idx = m.options.index;
+            if(idx == 0) {
+                pdata = await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
             } else {
-                pdata = await map.clusterGroup.addPath(this.markerlist[m.index-1].nearestVertex, m.nearestVertex);
+                pdata = await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
             }
-            
-            map.addDirectionsToSidebar(pdata);
         });
 
         return m;
     }
 
     async addPathMarker(pathIndex,pos) {
-
         var marker = await this.makeMarker(pathIndex,pos);
-        console.log("New Marker [", pathIndex, "] - ", marker);
-        this.markerList.splice(pathIndex,0,marker);
-        console.log("Markers: ", this.markerlist);
-
+        this.markerlist.splice(pathIndex, 0, marker);
     }
 
     async movePathMarker() {

@@ -1,4 +1,5 @@
 import ClusterGroup from "./clusterGroup.js";
+import { pathMarker } from "./clusterGroup.js";
 import { mapSettings } from "./mapSettings.js";
 
 export class Map {
@@ -119,52 +120,8 @@ async function addStartMarkers(map){
        // shadowAnchor: [4, 62],  // the same for the shadow
        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
-  
-    var start = L.marker(([45.844645909959816 , -78.3995533866199]), {draggable: true,
-        autoPan: true, icon : canoe_iconS}).addTo(map.map);
 
-    var end = L.marker([45.60012744 ,  -78.77631902 ], {draggable: true,
-        autoPan: true, icon: canoe_iconE}).addTo(map.map);
-
-    map.clusterGroup.markerlist.push(start);
-    map.clusterGroup.markerlist.push(end);
-        
-    start.bindPopup("Start" +  start.getLatLng());
-    end.bindPopup("End." + end.getLatLng());
-    
-    start.on('dragend', async function(event) {
-        var S_latlng = event.target.getLatLng();
-        // console.log("START: ", S_latlng.lat, S_latlng.lng)
-        start.bindPopup("Start" +  start.getLatLng());
-        var sResponse = await map.clusterGroup.getNearestVertex(S_latlng);
-        var sGeometry = sResponse.features[0].geometry.coordinates;
-        map.sourceID = sResponse.features[0].properties.id;
-         //console.log("SOURCE ID ", map.sourceID);
-            var sLat = sGeometry[1];
-        var sLng = sGeometry[0];
-        // console.log(sLat, sLng);
-        var sNewLL = new L.LatLng(sLat,sLng);
-        start.setLatLng(sNewLL);
-        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
-        map.addDirectionsToSidebar(pdata);
-    });
-        
-        
-    end.on('dragend', async function(event) {
-        var E_latlng = event.target.getLatLng();
-        // console.log("END: ", E_latlng.lat, E_latlng.lng)
-        end.bindPopup("End." + end.getLatLng());
-        var response = await map.clusterGroup.getNearestVertex(E_latlng);
-        var geometry = response.features[0].geometry.coordinates;
-        map.targetID = response.features[0].properties.id;
-        //  console.log("TARGET ID ", targetID);
-            var lat = geometry[1];
-        var lng = geometry[0];
-        console.log(lat, lng);
-        var newLL = new L.LatLng(lat,lng);
-        end.setLatLng(newLL);
-        var pdata = await map.clusterGroup.addPath(map.sourceID, map.targetID);
-        map.addDirectionsToSidebar(pdata);
-    });
+    map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199});
+    map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 });
 }
 
