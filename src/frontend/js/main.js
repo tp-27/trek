@@ -1,24 +1,36 @@
 import Map from "../js/components/map.js"
 
+const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
+
 var map = new Map();
 
-// scroll animations
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-        if (entry.isIntersecting) { // is entry intersecting viewport?
-            entry.target.classList.add('show'); // make entry visible
-        } 
-    });
-});
-
-const hiddenElements = document.querySelectorAll(".hidden");
-hiddenElements.forEach((el) => observer.observe(el)); // observe all hidden elements
-
 window.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('park-btn').addEventListener("click", () => { // initialize map on click of button
-        const park = 'algonquin';
-        map.initMap(park);
+    const parkDefault = "algonquin";
+    map.initMap(parkDefault);
+
+    const dropdown = document.querySelector(".park-dropdown");
+
+    const select = dropdown.querySelector(".dropdown-header");
+    const menu = dropdown.querySelector(".menu");
+    const options = dropdown.querySelectorAll(".menu li");
+    const selected = dropdown.querySelector(".selected");
+
+    select.addEventListener('click', () => {
+        select.classList.toggle('select-clicked');
+        menu.classList.toggle('menu-open');
     });
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            selected.innerText = option.innerText;
+            select.classList.remove('select-clicked');
+            menu.classList.remove('menu-open');
+            options.forEach(option => {
+                option.classList.remove('active');
+            });
+            option.classList.add('active');
+        })
+    })
 
     //Settings Functions
     //document.getElementById('{SettingName}').addEventListener("click", () => {

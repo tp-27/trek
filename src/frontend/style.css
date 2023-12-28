@@ -87,7 +87,7 @@ section {
 }
 
 .choose-park-container {
-    /* bord
+    width: 80%;
     z-index: 1;
 }
 
@@ -113,10 +113,10 @@ section {
 .park-icon-container img {
     height: auto;
     width: 250px;
-    transition: filter 0.3s ease;
+    transition: filter 0.2s ease;
     filter: grayscale(100%);
     -webkit-filter: grayscale(100%);
-    transition: filter ease-in 0.3s;
+    transition: 0.2s;
 }
 
 .park-icon-container img:hover {
@@ -126,20 +126,6 @@ section {
 
 /****** Choose a Park ******/
 
-
-/********** Map ************/
-
-.map-container {
-    /* border: 2px solid red; */
-}
-
-#map {
-    height: 650px;
-    width: 80%;
-    border-radius: 20px;
-}
-
-/********** Map ************/
 
 @media(prefers-reduced-motion) {
     .hidden {
