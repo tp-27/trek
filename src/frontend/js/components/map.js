@@ -121,8 +121,8 @@ async function addStartMarkers(map){
        // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
-    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199});
-    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 });
+    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true);
+    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true);
     await map.clusterGroup.addPath(0,map.clusterGroup.markerlist[0].options.nearestVertex,map.clusterGroup.markerlist[1].options.nearestVertex);
 }
 

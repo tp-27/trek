@@ -109,7 +109,7 @@ export default class ClusterGroup {
             console.log(index, " - New Path: ", data);
             this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathlist[index].on('click', (e) => {
-                this.addPathMarker(index+1, e.latlng);
+                this.addPathMarker(index+1, e.latlng,false);
             });
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
@@ -251,7 +251,28 @@ export default class ClusterGroup {
 
     }
 
-    async makeMarker(idx,pos) {
+    async regenPaths(idx,onDeleteMarker) {
+        
+        console.log(`Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        if(this.markerlist.length > 1 && idx < this.markerlist.length) {
+            var m = this.markerlist[idx];
+            if(idx == 0) {
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
+            } else if(idx < this.markerlist.length - 1 && !onDeleteMarker){
+                    await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
+                    await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+            } else {
+                if(onDeleteMarker) {
+                    this.pathlist[idx].remove();
+                    this.pathlist.splice(idx,1);
+                    var m = this.markerlist[idx];
+                }
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+            }
+        }
+    }
+
+    async makeMarker(idx,pos,isStartOrEnd) {
         var m = pathMarker(pos,
         {   draggable: true,
             autoPan: true,
@@ -259,37 +280,35 @@ export default class ClusterGroup {
             nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
         }).addTo(this.mapLayerGroup);
 
-        console.log("New Marker: ", m);
-            
-        m.bindPopup(m.getLatLng());
-        
+        //m.bindPopup(m.getLatLng());
+
         m.on('dragend', async (event) => {
             console.log("Dragging: ", m.options.index);
             var S_latlng = event.target.getLatLng();
-            m.bindPopup(S_latlng);
+            //m.bindPopup(S_latlng);
             var sResponse = await this.getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
             m.options.nearestVertex = sResponse.features[0].properties.id;
             m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
-            const idx = m.options.index;
-            if(idx == 0) {
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
-            } else if(idx != this.markerlist.length){
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
-            } else {
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
-            }
+            await this.regenPaths(m.options.index,false);
         });
+
+        if(!isStartOrEnd) {
+            await this.regenPaths(m.options.index,false);
+            m.on('dblclick', async (event) => {
+                var idx = m.options.index;
+                await this.removePathMarker(idx);
+                await this.regenPaths(idx,true);
+            });
+        }
+        
 
         return m;
     }
 
-    async addPathMarker(pathIndex,pos) {
-        var marker = await this.makeMarker(pathIndex,pos);
+    async addPathMarker(pathIndex,pos,isStartOrEnd) {
+        var marker = await this.makeMarker(pathIndex,pos,isStartOrEnd);
         this.markerlist.splice(pathIndex, 0, marker);
-
-
         //change index of all future markers
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             console.log(this.markerlist[i].options.index = i);
@@ -297,9 +316,16 @@ export default class ClusterGroup {
 
     }
 
-    async movePathMarker() {
-        //recalc path
+    async removePathMarker(pathIndex) {
+        if (pathIndex >= 0 && pathIndex < this.markerlist.length) {
+            const removedMarker = this.markerlist.splice(pathIndex, 1)[0];
+            removedMarker.remove();
+            for (let i = pathIndex; i < this.markerlist.length; i++) {
+                this.markerlist[i].options.index = i;
+            }
+            return removedMarker;
+        } else {
+            console.log("Invalid pathIndex");
+        }
     }
-    
-    
 }
