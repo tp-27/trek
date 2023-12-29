@@ -47,14 +47,6 @@ export class Map {
         addStartMarkers(this); // add route planning markers
     }
 
-    removeChooseParkBtn() {
-        var parkBtn = document.getElementById("park-btn");
-        parkBtn.style.display = "none";
-
-        var navBar = document.getElementById("sidebar");
-        navBar.style.display = "block";
-    }
-
     showFeatureIcon(feature) {
         this.clusterGroup.showLayer(feature);
     }

@@ -18,12 +18,14 @@
         crossorigin=""></script>
         <script src="js/main.js" type="module" defer></script>
         <script src="js/components/map.js" type="module"></script>
-        <script src="js/components/navbar.js"></script>
+        <script src="js/components/navbar.js" type="module"></script>
+        <script src="js/components/pdf.js" type="module"></script>
         <script src="https://cdn.tailwindcss.com"></script> <!--Tailwind CSS-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
-        <!-- MarkerCluster CSS and JS -->
+        <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+        <script src="https://unpkg.com/downloadjs@1.4.7"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
@@ -31,189 +33,167 @@
         <link rel="stylesheet" href="../frontend/css/leaflet-sidebar.css" />
     </head>
     <body>        
-        <!-- <nav>
-            <ul class="sidebar-nav">
-                <li onclick="NavModule.closeMenu()"><img src="../../src/frontend/assets/close.svg" alt="Close icon" id="close-icon"></li>
-                <li class="nav-item"><a href="/">Home</a></li>
-                <li class="nav-item"><a href="/">Sign Up</a></li>
-                <li class="nav-item"><a href="/">About</a></li>
-                <li class="nav-item"><a href="/">Contact</a></li>
-                <li class="nav-item"><a href="/">Get Started</a></li>
-            </ul>
-
-            <ul>
-                <li><a href="/" id="logo">TripPlanner</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Home</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Sign Up</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">About</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Contact</a></li>
-                <li class="nav-item hideOnMobile"><a class="action-btn">Get Started</a></li>
-                <li id="menu-icon" onclick="NavModule.showMenu()"><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
-            </ul>
-        </nav> -->
+        <div id="map" class="sidebar-map">
+            <div id="sidebar" class="sidebar collapsed">
+                <!-- Nav tabs -->
+                <div class="sidebar-tabs">
+                    <ul role="tablist">
+                        <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                    </ul>
         
-            <!-- <button class="action-btn" id="park-btn">Choose a park</button>  -->
-            
-
-            <div id="map" class="sidebar-map">
-                <div id="sidebar" class="sidebar collapsed">
-                    <!-- Nav tabs -->
-                    <div class="sidebar-tabs">
-                        <ul role="tablist">
-                            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                        </ul>
-            
-                        <ul role="tablist">
-                            <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-                        </ul>
-
-                        <ul role="tablist">
-                            <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
-                        </ul>
-                      
-                        <ul role="tablist">
-                            <li><a href="#layers" role="tab"><i class="fa-solid fa-layer-group"></i></a></li>
-                        </ul>
-
-                        <ul role="tablist">
-                            <li><a href="#route-stats" role="tab"><i class="fa-solid fa-chart-simple"></i></a></li>
-                        </ul>
-
-                        <ul role="tablist">
-                            <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
-                        </ul>
-
-                    </div>
-            
-                    <!-- Tab panes -->
-                    <div class="sidebar-content">
-                        <div class="sidebar-pane" id="home">
-                            <h1 class="sidebar-header">
-                                sidebar-v2
-                                <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                            </h1>
-            
-                            <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
-                        </div>
-                        
-                        <!-- ROUTE DIRECTIONS PANE-->
-                        <div class="sidebar-pane" id="route-directions">
-                            <h1 class="sidebar-header">Directions<span class="sidebar-close"><i class="fa-solid fa-arrows-turn-to-dots"></i></span></h1>
-
-                            <div class="flex">
-                                <div class="flex items-center h-5">
-                                    <input id="directions-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                </div>
-                                <div class="ms-2 text-sm">
-                                    <label for="helper-checkbox" class="font-medium text-gray-900 dark:text-gray-300">Show Directions on Map</label>
-                                    <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Adds markers to the start and end of each trail segment.</p>
-                                </div>
-                            </div>
-
-                            <div class="table w-full ...">
-                                <div class="table-header-group ...">
-                                    <div class="table-row">
-                                      <div class="table-cell text-left ..."><h1>Trail Name</h1></div>
-                                      <div class="table-cell text-left ..."><h1>Distance (m)</h1></div>
-                                    </div>
-                                </div>
-                                <div class="table-row-group" id="directions-table"></div>
-                            </div>
-                        </div>
-
-                        <!-- ROUTE SETTINGS PANE-->
-                        <div class="sidebar-pane" id="route-settings">
-                            <h1 class="sidebar-header">Route Settings<span class="sidebar-close"><i class="fa-solid fa-route"></i></span></h1>
-
-                            <!-- Difficulty Selection Setting-->
-                            <h1><span class="bolded">Canoe/Portage Skill Level</span></h1>
-                            <h2><span class="bolded">Beginner: Slow Speed, Avoid Expert and Intermediate Portages</span></h2>
-                            <h2><span class="bolded">Intermediate: Medium Speed, Avoid Expert Portages</span></h2>
-                            <h2><span class="bolded">Expert: Fast Speed, Avoid No Portages</span></h2>
-                            <h2><span class="bolded">Note: this will change settings but you can override them below</span></h2>
-                            <div id="difficulty-btns" class="inline-flex rounded-md shadow-sm" role="group">
-                                <button id="beginner-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                                Beginner
-                                </button>
-                                <button id="intermediate-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border-t border-b border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                                Intermediate
-                                </button>
-                                <button id="expert-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                                Expert
-                                </button>
-                            </div>
-                            
-                            <!-- Portage Speed Setting -->
-                            <h1><span class="bolded">Portage Speed (Km/H)</span></h1>
-                            <input id="portagespeed-in" type="text" class="next-textinput" value="2">
-                            <button id="portagespeed-btn" class="next-button">Set</button>
-
-                            <!-- Canoe Speed Setting -->
-                            <h1><span class="bolded">Canoe Speed (Km/H)</span></h1>
-                            <input id="canoespeed-in" type="text" class="next-textinput" value="4">
-                            <button id="canoespeed-btn" class="next-button">Set</button>
-
-                            <!-- Max Daily Distance Setting -->
-                            <h1><span class="bolded">Maximum Daily Distance (Km)</span></h1>
-                            <input id="maxdist-in" type="text" class="next-textinput" value="12">
-                            <button id="maxdist-btn" class="next-button">Set</button>
-
-
-                            <!-- Triple Portage Distance Setting -->
-                            <h1><span class="bolded">Set Triple Portage Distance (There->Back->There)</span></h1>
-                            <button id="tpd-btn" class="next-button">Triple Portage Dist: False</button>
-                        </div>
-            
-                        <div class="sidebar-pane" id="settings">
-                            <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                        </div>
-
-                        <div class="sidebar-pane" id="layers">
-                            <h1 class="sidebar-header">Layers and Icons<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                            <div class="icons-container">
-                                <h2>Icons</h2>
-                                <div class="icons">
-                                    <div class="icon-item">
-                                        <img src="../../src/frontend/assets/tent.svg" alt="Tent">
-                                        <input type="checkbox" id="campsite" name="icons" value="Designated Camping Site" checked>
-                                    </div>
-
-                                    <div class="icon-item">
-                                        <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
-                                        <input type="checkbox" id="access-point" name="icons" value="Access Point" checked>
-                                    </div>
-
-                                    <div class="icon-item">
-                                        <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
-                                        <input type="checkbox" id="picnic-area" name="icons" value="Picnic" checked>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="layers-container">
-                                <h2>Layers</h2>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <script src="../frontend/js/leaflet-sidebar.js"></script>
-                <div class="park-dropdown">
-                    <div class="dropdown-header">
-                        <p class="selected">Algonquin</p>
-                        <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
-                    </div>
-                    <ul class="menu">
-                        <li>Kawartha</li>
-                        <li>Killarney</li>
-                        <li>Temagami</li>
-                        <li>Sleeping Giant</li>
-                        <li class="active">Algonquin</li>
+                    <ul role="tablist">
+                        <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
                     </ul>
 
-                 
+                    <ul role="tablist">
+                        <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
+                    </ul>
+                    
+                    <ul role="tablist">
+                        <li><a href="#layers" role="tab"><i class="fa-solid fa-layer-group"></i></a></li>
+                    </ul>
+
+                    <ul role="tablist">
+                        <li><a href="#route-stats" role="tab"><i class="fa-solid fa-chart-simple"></i></a></li>
+                    </ul>
+
+                    <ul role="tablist">
+                        <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
+                    </ul>
+
+                </div>
+        
+                <!-- Tab panes -->
+                <div class="sidebar-content">
+                    <div class="sidebar-pane" id="home">
+                        <h1 class="sidebar-header">
+                            sidebar-v2
+                            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        </h1>
+        
+                        <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+                    </div>
+                    
+                    <!-- ROUTE DIRECTIONS PANE-->
+                    <div class="sidebar-pane" id="route-directions">
+                        <h1 class="sidebar-header">Directions<span class="sidebar-close"><i class="fa-solid fa-arrows-turn-to-dots"></i></span></h1>
+
+                        <div class="flex">
+                            <div class="flex items-center h-5">
+                                <input id="directions-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            </div>
+                            <div class="ms-2 text-sm">
+                                <label for="helper-checkbox" class="font-medium text-gray-900 dark:text-gray-300">Show Directions on Map</label>
+                                <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Adds markers to the start and end of each trail segment.</p>
+                            </div>
+                        </div>
+
+                        <div class="table w-full ...">
+                            <div class="table-header-group ...">
+                                <div class="table-row">
+                                    <div class="table-cell text-left ..."><h1>Trail Name</h1></div>
+                                    <div class="table-cell text-left ..."><h1>Distance (m)</h1></div>
+                                </div>
+                            </div>
+                            <div class="table-row-group" id="directions-table"></div>
+                        </div>
+
+                        <button id="pdf">Export to PDF</button>
+                    </div>
+
+                    <!-- ROUTE SETTINGS PANE-->
+                    <div class="sidebar-pane" id="route-settings">
+                        <h1 class="sidebar-header">Route Settings<span class="sidebar-close"><i class="fa-solid fa-route"></i></span></h1>
+
+                        <!-- Difficulty Selection Setting-->
+                        <h1><span class="bolded">Canoe/Portage Skill Level</span></h1>
+                        <h2><span class="bolded">Beginner: Slow Speed, Avoid Expert and Intermediate Portages</span></h2>
+                        <h2><span class="bolded">Intermediate: Medium Speed, Avoid Expert Portages</span></h2>
+                        <h2><span class="bolded">Expert: Fast Speed, Avoid No Portages</span></h2>
+                        <h2><span class="bolded">Note: this will change settings but you can override them below</span></h2>
+                        <div id="difficulty-btns" class="inline-flex rounded-md shadow-sm" role="group">
+                            <button id="beginner-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                            Beginner
+                            </button>
+                            <button id="intermediate-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border-t border-b border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                            Intermediate
+                            </button>
+                            <button id="expert-btn" type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                            Expert
+                            </button>
+                        </div>
+                        
+                        <!-- Portage Speed Setting -->
+                        <h1><span class="bolded">Portage Speed (Km/H)</span></h1>
+                        <input id="portagespeed-in" type="text" class="next-textinput" value="2">
+                        <button id="portagespeed-btn" class="next-button">Set</button>
+
+                        <!-- Canoe Speed Setting -->
+                        <h1><span class="bolded">Canoe Speed (Km/H)</span></h1>
+                        <input id="canoespeed-in" type="text" class="next-textinput" value="4">
+                        <button id="canoespeed-btn" class="next-button">Set</button>
+
+                        <!-- Max Daily Distance Setting -->
+                        <h1><span class="bolded">Maximum Daily Distance (Km)</span></h1>
+                        <input id="maxdist-in" type="text" class="next-textinput" value="12">
+                        <button id="maxdist-btn" class="next-button">Set</button>
+
+
+                        <!-- Triple Portage Distance Setting -->
+                        <h1><span class="bolded">Set Triple Portage Distance (There->Back->There)</span></h1>
+                        <button id="tpd-btn" class="next-button">Triple Portage Dist: False</button>
+                    </div>
+        
+                    <div class="sidebar-pane" id="settings">
+                        <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    </div>
+
+                    <div class="sidebar-pane" id="layers">
+                        <h1 class="sidebar-header">Layers and Icons<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                        <div class="icons-container">
+                            <h2>Icons</h2>
+                            <div class="icons">
+                                <div class="icon-item">
+                                    <img src="../../src/frontend/assets/tent.svg" alt="Tent">
+                                    <input type="checkbox" id="campsite" name="icons" value="Designated Camping Site" checked>
+                                </div>
+
+                                <div class="icon-item">
+                                    <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
+                                    <input type="checkbox" id="access-point" name="icons" value="Access Point" checked>
+                                </div>
+
+                                <div class="icon-item">
+                                    <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
+                                    <input type="checkbox" id="picnic-area" name="icons" value="Picnic" checked>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="layers-container">
+                            <h2>Layers</h2>
+                        </div>
+
+                    </div>
                 </div>
             </div>
+            <script src="../frontend/js/leaflet-sidebar.js"></script>
+            <div class="park-dropdown">
+                <div class="dropdown-header">
+                    <p class="selected">Algonquin</p>
+                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                </div>
+                <ul class="menu">
+                    <li>Kawartha</li>
+                    <li>Killarney</li>
+                    <li>Temagami</li>
+                    <li>Sleeping Giant</li>
+                    <li class="active">Algonquin</li>
+                </ul>
+
+                
+            </div>
+        </div>
     </body>
 
 </html>
