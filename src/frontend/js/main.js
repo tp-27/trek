@@ -1,4 +1,5 @@
 import Map from "../js/components/map.js"
+import { createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
 
@@ -38,6 +39,12 @@ window.addEventListener('DOMContentLoaded', function() {
     //      mapSettings.set{SettingName}();
     //      mapSettings.setLocalStorage({SettingName},{Value})
     //});
+    this.document.getElementById("pdf").addEventListener("click", () => {
+        createPdf(); // get blob reference
+        
+        // this.window.open(pdfURL); // open pdf in new tab
+    })
+
 
     this.document.getElementById("canoespeed-btn").addEventListener("click", () => {
         map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value;
