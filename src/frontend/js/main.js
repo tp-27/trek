@@ -83,6 +83,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
     this.document.getElementById("directions-checkbox").addEventListener("change", (event) => {
         map.MapSettings.displayDirectionsOnMap = event.target.checked;
-        map.addDirectionsToSidebar(map.clusterGroup.pathData);
+        map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
     });
 });

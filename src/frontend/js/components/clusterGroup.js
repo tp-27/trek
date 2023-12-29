@@ -1,4 +1,5 @@
 import { setMarkerStyles } from "./mapStyles.js";
+import { mapSettings } from "./mapSettings.js";
 
 const PathMarker = L.Marker.extend({
     options: {
@@ -12,7 +13,7 @@ export const pathMarker = function (latlng, options) {
 };
 
 export default class ClusterGroup {
-    constructor() {
+    constructor(mapSettings) {
         this.allLayers = {}; // dictionary containing layer identifiers, layer object pairs
         this.mapLayerGroup = L.layerGroup(); // layer for route planning markers
         this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
@@ -23,13 +24,8 @@ export default class ClusterGroup {
             iconCreateFunction :    function (cluster){
                 var cluster_markers = cluster.getAllChildMarkers();
                 var n = 0;
-                    n += cluster_markers.length;
-
+                n += cluster_markers.length;
                 var scaledSize = Math.min(80, Math.max(30, n));
-
-               //console.log(scaledSize); 
-
-    
                 return  L.divIcon({
                     html: '<div class="mycluster1"><img src="../../src/frontend/assets/tent.svg" alt="Tent"><div class="cluster-text">' + n + '</div></div>',
                     className: 'mycluster1',
@@ -37,9 +33,6 @@ export default class ClusterGroup {
                 });
             } 
         },
-        
-        
-        
         ).addTo(this.mapLayerGroup);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { // initialize map with tile layer 
@@ -50,10 +43,13 @@ export default class ClusterGroup {
         this.baseURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
-        this.path = undefined; //Path Object for Leaflet
+        this.mapSettings = mapSettings;
+
+        //Multipoint Routing
         this.pathlist = []; //list of paths for markers
         this.markerlist = []; //list of markers for paths
-        this.pathData = undefined; //Data for path
+        this.pathDatalist = []; //Data for path
+        this.directionMarkers = [];
     }
 
     initLayers() {
@@ -105,17 +101,17 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         this.getPath(sourceID, targetID)
         .then(data =>  {
-            this.pathData = data;
-            console.log(index, " - New Path: ", data);
+            this.pathDatalist[index] = data;
+            //console.log(index, " - New Path: ", data);
             this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathlist[index].on('click', async (e) => {
-                console.log("Path index ", index, " clicked!");
+                //console.log("Path index ", index, " clicked!");
                 await this.addPathMarker(index+1, e.latlng,false);
             });
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
 
-        return this.pathData
+        return this.pathDatalist[index];
     }
 
     removePath(index) {
@@ -198,16 +194,20 @@ export default class ClusterGroup {
     async createDirectionsFromPath(pathData) {
         //var path = JSON.parse(pathData);
         const directions = []
-        if(pathData.features.length == 0) return directions;
-        var startPOS = pathData.features[0].geometry.coordinates[0][0];
-        var lastPathObj = await this.getSegmentByID(pathData.features[0].properties.oid);
+        if(pathData.length == 0 || pathData[0].features.length == 0) return directions;
+        var startPOS = pathData[0].features[0].geometry.coordinates[0][0];
+        var lastPathObj = await this.getSegmentByID(pathData[0].features[0].properties.oid);
         var pathobj;
         var oidList = "";
 
         //build list
-        for(const edge of pathData.features) {
-            oidList = oidList + edge.properties.oid + ",";
+        for(const path of pathData) {
+            if(path.features.length == 0) continue;
+            for(const edge of path.features) {
+                oidList = oidList + edge.properties.oid + ",";
+            }
         }
+        
         oidList = oidList.slice(0, -1);
         var pathObjects = await this.getSegmentByIDs(oidList);
 
@@ -224,14 +224,43 @@ export default class ClusterGroup {
                 startPOS = pobj.geometry.coordinates[0];
             }
         }
-
-        const geom = pathData.features[pathData.features.length - 1].geometry;
+        const endElement = pathData[pathData.length - 1];
+        const geom = endElement.features[endElement.features.length - 1].geometry;
         const endPOS = geom.coordinates[0][geom.coordinates[0].length - 1];
         directions.push({name: pathobj.properties.name, type: pathobj.properties.type, pos: endPOS});
 
         console.log("Dir: ", directions);
         return directions;
 
+    }
+
+    async addDirectionsToSidebar(pdata) {
+        for(let marker of this.directionMarkers) {
+            marker.remove();
+        }
+        this.directionMarkers = [];
+
+        const data = await this.createDirectionsFromPath(pdata);
+        
+        const outputDiv = document.getElementById('directions-table');
+        outputDiv.innerHTML = '';
+    
+        data.forEach((item, index) => {
+            const liElement = document.createElement('div');
+            liElement.classList.add('table-row');
+    
+            liElement.innerHTML = `
+                <div class="table-cell ...">${item.name}</div>
+                <div class="table-cell ...">${item.distance}</div>`;
+    
+            outputDiv.appendChild(liElement);
+
+            if(this.mapSettings.dispdir) {
+                var marker = L.marker([item.pos[1], item.pos[0]]).addTo(this.mapLayerGroup);
+                marker.bindPopup(`${item.name}\nType: ${item.type}`);
+                this.directionMarkers.push( marker );
+            }
+        });
     }
 
     hideLayer(layerName) {
@@ -254,7 +283,7 @@ export default class ClusterGroup {
 
     async regenPaths(idx,onDeleteMarker) {
         
-        console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        //console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) {
             var m = this.markerlist[idx];
             if(idx == 0) {
@@ -265,13 +294,15 @@ export default class ClusterGroup {
             } else {
                 if(onDeleteMarker) {
                     this.pathlist[idx].remove();
+                    this.pathDatalist.splice(idx,1);
                     this.pathlist.splice(idx,1);
                     var m = this.markerlist[idx];
                 }
                 await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
             }
         }
-        console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        //console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
 
@@ -286,7 +317,7 @@ export default class ClusterGroup {
         //m.bindPopup(m.getLatLng());
 
         m.on('dragend', async (event) => {
-            console.log("Dragging: ", m.options.index);
+            //console.log("Dragging: ", m.options.index);
             var S_latlng = event.target.getLatLng();
             //m.bindPopup(S_latlng);
             var sResponse = await this.getNearestVertex(S_latlng);
