@@ -47,7 +47,7 @@ export default class ClusterGroup {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.clusterGroup);
 
-        this.baseURL = "http://18.118.137.140:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+        this.baseURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
         this.path = undefined; //Path Object for Leaflet
@@ -108,8 +108,9 @@ export default class ClusterGroup {
             this.pathData = data;
             console.log(index, " - New Path: ", data);
             this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
-            this.pathlist[index].on('click', (e) => {
-                this.addPathMarker(index+1, e.latlng,false);
+            this.pathlist[index].on('click', async (e) => {
+                console.log("Path index ", index, " clicked!");
+                await this.addPathMarker(index+1, e.latlng,false);
             });
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
@@ -253,14 +254,14 @@ export default class ClusterGroup {
 
     async regenPaths(idx,onDeleteMarker) {
         
-        console.log(`Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) {
             var m = this.markerlist[idx];
             if(idx == 0) {
                 await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
             } else if(idx < this.markerlist.length - 1 && !onDeleteMarker){
-                    await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
-                    await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
             } else {
                 if(onDeleteMarker) {
                     this.pathlist[idx].remove();
@@ -270,6 +271,8 @@ export default class ClusterGroup {
                 await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
             }
         }
+        console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        return;
     }
 
     async makeMarker(idx,pos,isStartOrEnd) {
