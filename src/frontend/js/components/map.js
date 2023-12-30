@@ -54,6 +54,49 @@ export class Map {
     hideFeatureIcon(feature) {
         this.clusterGroup.hideLayer(feature);
     }
+
+    async addDirectionsToSidebar(pdata) {
+        for(let marker of this.directionMarkers) {
+            marker.remove();
+        }
+        this.directionMarkers = [];
+
+        const data = await this.clusterGroup.createDirectionsFromPath(pdata);
+        
+        const outputDiv = document.getElementById('directions-table');
+        outputDiv.innerHTML = '';
+    
+        data.forEach((item, index) => {
+            const liElement = document.createElement('div');
+            liElement.classList.add('table-row');
+    
+            liElement.innerHTML = `
+                <div class="table-cell ...">${item.name}</div>
+                <div class="table-cell ...">${item.distance}</div>`;
+    
+            outputDiv.appendChild(liElement);
+
+            if(this.MapSettings.dispdir) {
+                var marker = L.marker([item.pos[1], item.pos[0]]).addTo(this.map);
+                marker.bindPopup(`${item.name}\nType: ${item.type}`);
+                this.directionMarkers.push( marker );
+            }
+        });
+    }
+
+    // extract route information into dictonary for PDF
+    getRouteInfo() {
+        const routeInfo = {};
+        
+        routeInfo.route = "A route";
+        routeInfo.crew = "Thomas Adam Gryphon";
+        routeInfo.distances = "1000, 231, 500, 564";
+        routeInfo.portages = "943, 321, 432, 50";
+        routeInfo.totalPortage = "1500m";
+        routeInfo.totalCanoe = "5000m";
+
+        return routeInfo;
+    }
     
 }
 

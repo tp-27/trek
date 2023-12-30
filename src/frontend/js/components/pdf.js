@@ -1,83 +1,48 @@
-// const { PDFDocument, StandardFonts, rgb } = PDFLib
-
-// // creates a new pdf and converts it into a byte stream
-// async function createPdf() {
-//   const pdfDoc = await PDFDocument.create();
-//   const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
-
-//   const page = pdfDoc.addPage();
-//   const { width, height } = page.getSize();
-//   const fontSize = 30;
-//   page.drawText('Creating PDFs in JavaScript is awesome!', {
-//     x: 50,
-//     y: height - 4 * fontSize,
-//     size: fontSize,
-//     font: timesRomanFont,
-//     color: rgb(0, 0.53, 0.71),
-//   })
-
-//   const pdfBytes = await pdfDoc.save();
-  
-// //   console.log(pdfBytes);
-//   return pdfBytes
-
-// }
-
-// // converts a byte stream into a javascript blob
-// function bytesToBlob (pdfBytes) {
-//     const blob = new Blob([pdfBytes], {type: 'application/pdf'}); // specify MIME type
-
-
-//     const blobURL = URL.createObjectURL(blob); // reference to blob object
-
-//     return blobURL;
-// }
-
-// // Wrapper function to get PDF as a blob (binary large object)
-// export function getPDFBlob() {
-//     const pdfBytes = createPdf();
-//     const pdfBlob = bytesToBlob(pdfBytes);
-
-//      // Display the PDF in an iframe or another suitable HTML element
-//     const iframe = document.createElement('iframe');
-//     iframe.src = pdfBlob;
-//     iframe.width = '100%';
-//     iframe.height = '600px'; // Set the desired height
-//     document.body.appendChild(iframe);
-
-//     console.log('PDF displayed in the browser');
-//     // return pdfBlob;
-// }
-
-
 const { PDFDocument, StandardFonts, rgb } = PDFLib
 
-export async function createPdf() {
-  // Create a new PDFDocument
-  const pdfDoc = await PDFDocument.create()
+export async function modifyPdf(routeInfo) {
+  // load existing pdf
+  const pathToPdf = '../../src/frontend/assets/itinerary.pdf';
 
-  // Embed the Times Roman font
-  const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman)
+  // fetch and convert pdf to an array of bytes
+  fetch(pathToPdf)
+    .then((response) => response.arrayBuffer())
+    .then(async (arrayBuffer) => {
+      const pdfDoc = await PDFDocument.load(arrayBuffer); // load pdf
 
-  // Add a blank page to the document
-  const page = pdfDoc.addPage()
+      const form = pdfDoc.getForm();
+      const fields = form.getFields();
+      fields.forEach(field => {
+        const type = field.constructor.name;
+        const name = field.getName();
+        console.log(`${type}: ${name}`);
+      });
 
-  // Get the width and height of the page
-  const { width, height } = page.getSize()
+      // get the text fields
+      const routeField = form.getTextField('route');
+      const crewField = form.getTextField('crew');
+      const distancesField = form.getTextField('distances');
+      const portagesIndividualField = form.getTextField('portages_individual');
+      const totalPortageField = form.getTextField('total_portage');
+      const totalCanoeField = form.getTextField('total_canoe');
 
-  // Draw a string of text toward the top of the page
-  const fontSize = 30
-  page.drawText('Creating PDFs in JavaScript is awesome!', {
-    x: 50,
-    y: height - 4 * fontSize,
-    size: fontSize,
-    font: timesRomanFont,
-    color: rgb(0, 0.53, 0.71),
-  })
 
-  // Serialize the PDFDocument to bytes (a Uint8Array)
-  const pdfBytes = await pdfDoc.save()
+      // fill in the text fields
+      console.log(routeInfo);
+      routeField.setText(routeInfo.route);
+      crewField.setText(routeInfo.crew);
+      distancesField.setText(routeInfo.distances);
+      portagesIndividualField.setText(routeInfo.portages);
+      totalPortageField.setText(routeInfo.totalPortage);
+      totalCanoeField.setText(routeInfo.totalCanoe);
 
-        // Trigger the browser to download the PDF document
-  download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");
+      const pdfBytes = await pdfDoc.save(); // serialize the PDFDocument to bytes (a Uint8Array)
+
+      download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");  // trigger the browser to download the PDF document
+    })
+    .catch((error) => {
+      console.error('Error fetching PDF: ', error);
+    });
+
+
 }
