@@ -85,6 +85,20 @@ export class Map {
             }
         });
     }
+
+    // extract route information into dictonary for PDF
+    getRouteInfo() {
+        const routeInfo = {};
+        
+        routeInfo.route = "A route";
+        routeInfo.crew = "Thomas Adam Gryphon";
+        routeInfo.distances = "1000, 231, 500, 564";
+        routeInfo.portages = "943, 321, 432, 50";
+        routeInfo.totalPortage = "1500m";
+        routeInfo.totalCanoe = "5000m";
+
+        return routeInfo;
+    }
     
 }
 
