@@ -23,23 +23,23 @@ export class mapSettings {
     }
 
     set canoeSpeed(val) {
-        console.log("New Canoe Speed: ", val);
+        //console.log("New Canoe Speed: ", val);
     }
 
     set portageSpeed(val) {
-        console.log("New Portage Speed: ", val);
+        //console.log("New Portage Speed: ", val);
     }
 
     set skillLevel(val) {
-        console.log("New Skill Level: ", val);
+        //console.log("New Skill Level: ", val);
     }
 
     set maxDailyDist(val) {
-        console.log("New Max Daily Dist: ", val);
+        //console.log("New Max Daily Dist: ", val);
     }
     set triplePortageDistance(val) {
         this.tripleDist = val;
-        console.log("Triple Portage Distance: ", val);
+        //console.log("Triple Portage Distance: ", val);
     }
     set displayDirectionsOnMap(val) {
         this.dispdir = val;
