@@ -110,7 +110,7 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            this.pathlist[index] = await L.geoJSON(data).addTo(this.mapLayerGroup);
+            this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathDatalist[index] = data;
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
@@ -219,8 +219,6 @@ export default class ClusterGroup {
         
         oidList = oidList.slice(0, -1);
         var pathObjects = await this.getSegmentByIDs(oidList);
-
-
         for(const pobj of pathObjects) {
             pathobj = pobj;
             
@@ -228,7 +226,6 @@ export default class ClusterGroup {
                 //Distance should be included in here
                 //but Algonquin_Network table must be updated with distance parameter first
                 directions.push({name: pobj.properties.name, type: pobj.properties.type, pos: startPOS});
-
                 lastPathObj = pobj;
                 startPOS = pobj.geometry.coordinates[0];
             }
@@ -238,7 +235,7 @@ export default class ClusterGroup {
         const endPOS = geom.coordinates[0][geom.coordinates[0].length - 1];
         directions.push({name: pathobj.properties.name, type: pathobj.properties.type, pos: endPOS});
 
-        console.log("Dir: ", directions);
+        //console.log("Dir: ", directions);
         return directions;
 
     }
@@ -247,7 +244,7 @@ export default class ClusterGroup {
         for(const marker of this.directionMarkers) {
             marker.remove();
         }
-        console.log("Adding Direction to Sidebar!", pdata);
+        //console.log("Adding Direction to Sidebar!", pdata);
         this.directionMarkers = [];
 
         const data = await this.createDirectionsFromPath(pdata);
@@ -293,7 +290,7 @@ export default class ClusterGroup {
 
     async regenPaths(idx,onDeleteMarker) {
         
-        //console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) {
             var m = this.markerlist[idx];
             if(idx == 0) {
@@ -311,7 +308,7 @@ export default class ClusterGroup {
                 await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
             }
         }
-        //console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
@@ -327,10 +324,6 @@ export default class ClusterGroup {
         if(customIcon != undefined) {
             m.setIcon(customIcon)
         }
-        
-
-        //m.bindPopup(m.getLatLng());
-
         m.on('dragend', async (event) => {
             //console.log("Dragging: ", m.options.index);
             var S_latlng = event.target.getLatLng();
@@ -343,7 +336,6 @@ export default class ClusterGroup {
         });
 
         if(!isStartOrEnd) {
-            await this.regenPaths(m.options.index,false);
             m.on('dblclick', async (event) => {
                 var idx = m.options.index;
                 await this.removePathMarker(idx);
@@ -360,9 +352,9 @@ export default class ClusterGroup {
         this.markerlist.splice(pathIndex, 0, marker);
         //change index of all future markers
         for (let i = pathIndex; i < this.markerlist.length; i++) {
-            this.markerlist[i].options.index = i;
+            this.markerSetIndex(this.markerlist[i], i);
         }
-
+        await this.regenPaths(marker.options.index,false);
     }
 
     async removePathMarker(pathIndex) {
@@ -370,7 +362,7 @@ export default class ClusterGroup {
             const removedMarker = this.markerlist.splice(pathIndex, 1)[0];
             removedMarker.remove();
             for (let i = pathIndex; i < this.markerlist.length; i++) {
-                this.markerlist[i].options.index = i;
+                this.markerSetIndex(this.markerlist[i], i);
             }
             return removedMarker;
         } else {
@@ -378,7 +370,8 @@ export default class ClusterGroup {
         }
     }
 
+    //
     markerSetIndex(marker, idx) {
-        marker.options.index = i;
+        marker.options.index = idx;
     }
 }

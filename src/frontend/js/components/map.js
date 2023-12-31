@@ -75,7 +75,5 @@ async function addStartMarkers(map){
 
     await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
     await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
-    await map.clusterGroup.addPath(0,map.clusterGroup.markerlist[0].options.nearestVertex,map.clusterGroup.markerlist[1].options.nearestVertex);
-    await map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
 }
 
