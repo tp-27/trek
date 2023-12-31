@@ -19,9 +19,9 @@ export class Map {
         var mapDiv = document.getElementById("map");
 
         mapDiv.style.display = "block"; // display map in map container
-        mapDiv.style.height = "100%";
-        mapDiv.style.width = "100%";
-        // this.removeChooseParkBtn(); // remove select park button
+        mapDiv.style.height = "600px";
+        mapDiv.style.width = "90%";
+        //this.removeChooseParkBtn(); // remove select park button
 
         var sidebar = L.control.sidebar('sidebar').addTo(this.map);
         console.log("Sidebar Added: ", sidebar);
@@ -30,12 +30,16 @@ export class Map {
     initMap(park) {
         this.park = park;
         this.initMapDiv(); // show map in container
+
+        
         this.map = L.map("map", {
             center: this.srt_view,
             zoom: 9, //set the zoom level
             minZoom: 8,
             maxZoom: 16,
            maxBounds: L.latLngBounds(this.SW, this.NE)
+    
+
         });
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
@@ -43,13 +47,13 @@ export class Map {
         addStartMarkers(this); // add route planning markers
     }
 
-    // removeChooseParkBtn() {
-    //     var parkBtn = document.getElementById("park-btn");
-    //     parkBtn.style.display = "none";
+    removeChooseParkBtn() {
+        var parkBtn = document.getElementById("park-btn");
+        parkBtn.style.display = "none";
 
-    //     var navBar = document.getElementById("sidebar");
-    //     navBar.style.display = "block";
-    // }
+        var navBar = document.getElementById("sidebar");
+        navBar.style.display = "block";
+    }
 
     showFeatureIcon(feature) {
         this.clusterGroup.showLayer(feature);
