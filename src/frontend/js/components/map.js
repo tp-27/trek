@@ -19,8 +19,8 @@ export class Map {
         var mapDiv = document.getElementById("map");
 
         mapDiv.style.display = "block"; // display map in map container
-        mapDiv.style.height = "600px";
-        mapDiv.style.width = "90%";
+        mapDiv.style.height = "100%";
+        mapDiv.style.width = "100%";
         //this.removeChooseParkBtn(); // remove select park button
 
         var sidebar = L.control.sidebar('sidebar').addTo(this.map);
