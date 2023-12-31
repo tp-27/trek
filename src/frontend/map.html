@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="../frontend/css/leaflet-sidebar.css" />
     </head>
     <body>        
-        <nav>
+        <!-- <nav>
             <ul class="sidebar-nav">
                 <li onclick="NavModule.closeMenu()"><img src="../../src/frontend/assets/close.svg" alt="Close icon" id="close-icon"></li>
                 <li class="nav-item"><a href="/">Home</a></li>
@@ -50,11 +50,9 @@
                 <li class="nav-item hideOnMobile"><a class="action-btn">Get Started</a></li>
                 <li id="menu-icon" onclick="NavModule.showMenu()"><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
             </ul>
-        </nav>
+        </nav> -->
         
-        <section class="map-container">
-
-            <button class="action-btn" id="park-btn">Choose a park</button> 
+            <!-- <button class="action-btn" id="park-btn">Choose a park</button>  -->
             
 
             <div id="map" class="sidebar-map">
@@ -199,12 +197,23 @@
                         </div>
                     </div>
                 </div>
-    
                 <script src="../frontend/js/leaflet-sidebar.js"></script>
-                
-            </div>
+                <div class="park-dropdown">
+                    <div class="dropdown-header">
+                        <p class="selected">Algonquin</p>
+                        <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                    </div>
+                    <ul class="menu">
+                        <li>Kawartha</li>
+                        <li>Killarney</li>
+                        <li>Temagami</li>
+                        <li>Sleeping Giant</li>
+                        <li class="active">Algonquin</li>
+                    </ul>
 
-        </section>
+                 
+                </div>
+            </div>
     </body>
 
 </html>

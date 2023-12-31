@@ -41,6 +41,7 @@ export default class ClusterGroup {
         }).addTo(this.clusterGroup);
 
         this.baseURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point');
         this.mapSettings = mapSettings;
