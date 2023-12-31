@@ -44,7 +44,12 @@ export class Map {
 
         });
 
+<<<<<<< HEAD
         L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
+=======
+        L.control.bigImage({position: 'bottomright'}).addTo(this.map);
+
+>>>>>>> 819ef400b80f3a8d718c7159a333c9c127a499f8
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
         addStartMarkers(this); // add route planning markers
@@ -100,7 +105,10 @@ export class Map {
 
         return routeInfo;
     }
+<<<<<<< HEAD
     
+=======
+>>>>>>> 819ef400b80f3a8d718c7159a333c9c127a499f8
 }
 
 export default Map;
