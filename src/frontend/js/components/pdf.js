@@ -38,7 +38,7 @@ export async function modifyPdf(routeInfo) {
 
       const pdfBytes = await pdfDoc.save(); // serialize the PDFDocument to bytes (a Uint8Array)
 
-      download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");  // trigger the browser to download the PDF document
+      // download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");  // trigger the browser to download the PDF document
     })
     .catch((error) => {
       console.error('Error fetching PDF: ', error);
