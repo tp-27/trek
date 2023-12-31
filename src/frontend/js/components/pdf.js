@@ -26,7 +26,6 @@ export async function modifyPdf(routeInfo) {
       const totalPortageField = form.getTextField('total_portage');
       const totalCanoeField = form.getTextField('total_canoe');
 
-
       // fill in the text fields
       console.log(routeInfo);
       routeField.setText(routeInfo.route);
@@ -38,7 +37,7 @@ export async function modifyPdf(routeInfo) {
 
       const pdfBytes = await pdfDoc.save(); // serialize the PDFDocument to bytes (a Uint8Array)
 
-      // download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");  // trigger the browser to download the PDF document
+      download(pdfBytes, "pdf-lib_creation_example.pdf", "application/pdf");  // trigger the browser to download the PDF document
     })
     .catch((error) => {
       console.error('Error fetching PDF: ', error);
