@@ -40,6 +40,11 @@ window.addEventListener('DOMContentLoaded', function() {
     //      mapSettings.setLocalStorage({SettingName},{Value})
     //});
     this.document.getElementById("pdf").addEventListener("click", () => {
+        const mapImg = map.getMapImg();
+        console.log(mapImg);        
+
+
+
         modifyPdf(map.getRouteInfo()); 
         
         // this.window.open(pdfURL); // open pdf in new tab
