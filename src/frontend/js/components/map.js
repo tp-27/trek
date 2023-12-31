@@ -44,7 +44,7 @@ export class Map {
 
         });
 
-        // L.control.bigImage({position: 'topright'}).addTo(this.map);
+        L.control.bigImage({position: 'bottomright'}).addTo(this.map);
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
@@ -100,72 +100,6 @@ export class Map {
         routeInfo.totalCanoe = "5000m";
 
         return routeInfo;
-    }
-
-    getMapImg() {
-        let self = this;
-
-        self.tilesImgs = {};
-        self.markers = {};
-        self.path = {};
-        self.circles = {};
-
-        let dimensions = self.map.getSize();
-
-        self.zoom = self.map.getZoom();
-        self.bounds = self.map.getPixelBounds();
-
-        self.canvas = document.createElement('canvas');
-        self.canvas.width = dimensions.x;
-        self.canvas.height = dimensions.y;
-        self.ctx = self.canvas.getContext('2d');
-
-        // this.changeScale(document.getElementById('scale').value);
-        // this.changeScale(1);
-
-        let promise = new Promise(function (resolve, reject) {
-            self.map.getLayers(resolve);
-        });
-        promise.then(() => {
-            return new Promise(((resolve, reject) => {
-                for (const [key, layer] of Object.entries(self.tilesImgs)) {
-                    for (const [key, value] of Object.entries(layer)) {
-                        self.ctx.globalAlpha = value.opacity;
-                        self.ctx.drawImage(value.img, value.x, value.y, self.tileSize, self.tileSize);
-                        self.ctx.globalAlpha = 1;
-                    }
-                }
-                for (const [key, value] of Object.entries(self.path)) {
-                    self._drawPath(value);
-                }
-                for (const [key, value] of Object.entries(self.markers)) {
-                    if (!(value instanceof HTMLImageElement) && !value.img) {
-                        self._drawText(value, value.x, value.y);
-                    } else {
-                        self.ctx.drawImage(value.img, value.x, value.y);
-                    }
-                }
-                for (const [key, value] of Object.entries(self.circles)) {
-                    self._drawCircle(value);
-                }
-                resolve();
-            }));
-        }).then(() => {
-            self.canvas.toBlob(function (blob) {
-                let reader = new FileReader();
-                reader.readAsArrayBuffer(blob);
-                reader.onloadend = function () {
-                    console.log(reader.result);
-                }
-
-                // let link = document.createElement('a');
-                // link.download = "mapExport.png";
-                // link.href = URL.createObjectURL(blob);
-                // link.click();
-            });
-            self._containerParams.classList.remove('print-disabled');
-            self._loader.style.display = 'none';
-        });
     }
 }
 
