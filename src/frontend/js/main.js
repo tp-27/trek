@@ -1,5 +1,5 @@
 import Map from "../js/components/map.js"
-import { modifyPdf } from "../js/components/pdf.js";
+import { modifyPdf, createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
 
@@ -39,15 +39,15 @@ window.addEventListener('DOMContentLoaded', function() {
     //      mapSettings.set{SettingName}();
     //      mapSettings.setLocalStorage({SettingName},{Value})
     //});
-    this.document.getElementById("pdf").addEventListener("click", () => {
-        const mapImg = map.getMapImg();
-        console.log(mapImg);        
-
-
-
-        modifyPdf(map.getRouteInfo()); 
-        
-        // this.window.open(pdfURL); // open pdf in new tab
+    this.document.getElementById("pdf").addEventListener("click", async () => {
+        try {
+            // const routeInfo = await map.getRouteInfo();
+            // console.log(routeInfo);
+            // modifyPdf(routeInfo);
+            createPdf(map.getTripDetails());
+        } catch (error) {
+            console.error("Failed to get route for pdf: ", error);
+        }
     })
 
 
