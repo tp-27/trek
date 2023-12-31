@@ -50,6 +50,15 @@ export default class ClusterGroup {
         this.markerlist = []; //list of markers for paths
         this.pathDatalist = []; //Data for path
         this.directionMarkers = [];
+
+        this.directionMarkerIcon = new L.Icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [12, 24],
+            iconAnchor: [6, 24],
+            popupAnchor: [1, -34],
+            shadowSize: [10, 10]
+          });
     }
 
     initLayers() {
@@ -99,11 +108,10 @@ export default class ClusterGroup {
     async addPath(index,sourceID, targetID) {
         this.removePath(index);
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
-        this.getPath(sourceID, targetID)
-        .then(data =>  {
+        await this.getPath(sourceID, targetID)
+        .then(async data => {
+            this.pathlist[index] = await L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathDatalist[index] = data;
-            //console.log(index, " - New Path: ", data);
-            this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
                 await this.addPathMarker(index+1, e.latlng,false);
@@ -111,7 +119,7 @@ export default class ClusterGroup {
         }) // add layer to layer group
         .catch(err => console.log("Rejected: " + err.message));
 
-        return this.pathDatalist[index];
+        return this.pathDatalist;
     }
 
     removePath(index) {
@@ -192,9 +200,10 @@ export default class ClusterGroup {
 
 
     async createDirectionsFromPath(pathData) {
-        //var path = JSON.parse(pathData);
         const directions = []
-        if(pathData.length == 0 || pathData[0].features.length == 0) return directions;
+        if(pathData.length == 0 || pathData[0].features.length == 0) {
+            return directions;
+        }
         var startPOS = pathData[0].features[0].geometry.coordinates[0][0];
         var lastPathObj = await this.getSegmentByID(pathData[0].features[0].properties.oid);
         var pathobj;
@@ -235,9 +244,10 @@ export default class ClusterGroup {
     }
 
     async addDirectionsToSidebar(pdata) {
-        for(let marker of this.directionMarkers) {
+        for(const marker of this.directionMarkers) {
             marker.remove();
         }
+        console.log("Adding Direction to Sidebar!", pdata);
         this.directionMarkers = [];
 
         const data = await this.createDirectionsFromPath(pdata);
@@ -256,7 +266,7 @@ export default class ClusterGroup {
             outputDiv.appendChild(liElement);
 
             if(this.mapSettings.dispdir) {
-                var marker = L.marker([item.pos[1], item.pos[0]]).addTo(this.mapLayerGroup);
+                var marker = L.marker([item.pos[1], item.pos[0]], {icon: this.directionMarkerIcon}).addTo(this.mapLayerGroup);
                 marker.bindPopup(`${item.name}\nType: ${item.type}`);
                 this.directionMarkers.push( marker );
             }
@@ -302,17 +312,22 @@ export default class ClusterGroup {
             }
         }
         //console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
-        this.addDirectionsToSidebar(this.pathDatalist);
+        await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
 
-    async makeMarker(idx,pos,isStartOrEnd) {
+    async makeMarker(idx,pos,isStartOrEnd,customIcon) {
         var m = pathMarker(pos,
         {   draggable: true,
             autoPan: true,
             index: idx,
             nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
         }).addTo(this.mapLayerGroup);
+        
+        if(customIcon != undefined) {
+            m.setIcon(customIcon)
+        }
+        
 
         //m.bindPopup(m.getLatLng());
 
@@ -340,12 +355,12 @@ export default class ClusterGroup {
         return m;
     }
 
-    async addPathMarker(pathIndex,pos,isStartOrEnd) {
-        var marker = await this.makeMarker(pathIndex,pos,isStartOrEnd);
+    async addPathMarker(pathIndex,pos,isStartOrEnd,customIcon) {
+        var marker = await this.makeMarker(pathIndex,pos,isStartOrEnd,customIcon);
         this.markerlist.splice(pathIndex, 0, marker);
         //change index of all future markers
         for (let i = pathIndex; i < this.markerlist.length; i++) {
-            console.log(this.markerlist[i].options.index = i);
+            this.markerlist[i].options.index = i;
         }
 
     }
@@ -361,5 +376,9 @@ export default class ClusterGroup {
         } else {
             console.log("Invalid pathIndex");
         }
+    }
+
+    markerSetIndex(marker, idx) {
+        marker.options.index = i;
     }
 }

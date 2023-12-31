@@ -30,16 +30,12 @@ export class Map {
     initMap(park) {
         this.park = park;
         this.initMapDiv(); // show map in container
-
-        
         this.map = L.map("map", {
             center: this.srt_view,
             zoom: 9, //set the zoom level
             minZoom: 8,
             maxZoom: 16,
            maxBounds: L.latLngBounds(this.SW, this.NE)
-    
-
         });
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
@@ -70,27 +66,16 @@ export default Map;
 async function addStartMarkers(map){
     var canoe_iconS = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoeS.png",
-        //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
-    
         iconSize:     [38, 95], // size of the icon
-       // shadowSize:   [50, 64], // size of the shadow
-       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-       // shadowAnchor: [4, 62],  // the same for the shadow
-       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
     var canoe_iconE = L.icon({
         iconUrl: "../../src/frontend/assets/Start_canoeE.png",
-        //shadowUrl: "../../src/frontend/assets/leaf-shadow.png",
-    
         iconSize:     [38, 95], // size of the icon
-       // shadowSize:   [50, 64], // size of the shadow
-       // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-       // shadowAnchor: [4, 62],  // the same for the shadow
-       // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
-    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true);
-    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true);
+    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
+    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
     await map.clusterGroup.addPath(0,map.clusterGroup.markerlist[0].options.nearestVertex,map.clusterGroup.markerlist[1].options.nearestVertex);
+    await map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
 }
 
