@@ -6,6 +6,7 @@ export class Map {
     constructor(park) {
         this.map;
         this.park;
+        this.sidebar;
         this.MapSettings = new mapSettings();
         this.clusterGroup = new ClusterGroup(this.MapSettings);
         this.srt_view = [45.80, -78.40];
@@ -23,8 +24,17 @@ export class Map {
         mapDiv.style.width = "100%";
         //this.removeChooseParkBtn(); // remove select park button
 
-        var sidebar = L.control.sidebar('sidebar').addTo(this.map);
-        console.log("Sidebar Added: ", sidebar);
+        this.sidebar = L.control.sidebar('sidebar', {
+            position: 'left'
+        });
+        console.log(sidebar);
+        
+       this.sidebar.addTo(this.map);
+    }
+    
+    showSideBar() {
+        console.log(sidebar);
+        this.sidebar.open("home");
     }
 
     initMap(park) {

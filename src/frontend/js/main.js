@@ -97,4 +97,39 @@ window.addEventListener('DOMContentLoaded', function() {
         map.MapSettings.displayDirectionsOnMap = event.target.checked;
         map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
     });
+
+    this.document.getElementById("startBtn").addEventListener("click", () => {
+        map.showSideBar(); // show sidebar 
+    })
+  
+
+    var dateModal = document.getElementById("dateModal");
+    var addDay = document.querySelector(".day");
+    var closeModal = document.getElementsByClassName("close")[0];
+    
+    addDay.onclick = function() {
+        dateModal.style.display = "block";
+    }
+
+    closeModal.onclick = function() {
+        dateModal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == dateModal) {
+          dateModal.style.display = "none";
+        }
+    }
+
+    var dateInput = document.getElementById("dateStart");
+    var date = new Date();
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0');
+    var yyyy = String(date.getFullYear());
+
+    date = yyyy + '-' + mm + '-' + dd;
+    var maxDate = (yyyy + 5) + '-' + mm + '-' + dd;
+    dateInput.value = date;
+    dateInput.min = date;
+    dateInput.max = maxDate;
 });

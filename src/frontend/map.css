@@ -3,23 +3,8 @@ body {
     width: 100%;
 }
 
-.map-container {
-    height: 100%;
-    width: 100%;
-    background-color: #362312;
-    border-radius: 20px;
-    margin: auto;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.map-container .action-btn {
-    border: none;
-    height: 60px;
-    width: 200px;
+#map {
+    position: relative;
 }
 
 .mycluster1 {
@@ -45,6 +30,110 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     z-index: 2; /* Ensure text is above the image */
+}
+
+.day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.429);
+    gap: 5px;
+}
+
+.day:hover {
+    background-color: rgba(128, 128, 128, 0.429);
+}
+
+.day h2 {
+    font-size: 25px;
+    color: rgba(0, 0, 0, 0.364);
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2200; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #043B4B;
+    color: white;
+    text-align: center;
+}
+
+.modal-body {
+    padding: 20px 16px;
+    /* border: 2px solid red; */
+    text-align: center;
+}
+
+.modal-body label {
+    font-size: 30px;
+}
+
+#dateStart {
+    font-size: 30px;
+}
+
+
+.modal h1 {
+    font-size: 25px;
+}
+
+.close {
+    color: #fff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+.start  {
+    width: 50%;
+    position: absolute;
+    z-index: 2000;
+    text-align: center;
+    padding-top: 25px;
+    margin-left: 500px;
+    /* border: 2px solid red; */
+}
+
+.start button {
+    height: 50px; 
+    width: 225px;
+    background-color: #043B4B;
+    color: white;
+}
+
+.start button:hover {
+    background-color: #043a4bae;
 }
 
 .park-dropdown {
