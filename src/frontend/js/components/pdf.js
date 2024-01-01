@@ -52,7 +52,6 @@ export function modifyPdf(routeInfo) {
 
 export async function createPdf (tripDetails) {
     const pdfDoc = await PDFDocument.create(); // create new document
-
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); // embed font
     const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold); // embed font
 
@@ -62,84 +61,68 @@ export async function createPdf (tripDetails) {
     }
     
     const page = pdfDoc.addPage(); // add new page
-
-    const { width, height } = page.getSize(); // get width and height of page (595.28 841.89)
     var marginTop = 690; // starts at the bottom of the header line
 
-    const title =  `${tripDetails.type} trip to ${tripDetails.park} Park ${tripDetails.year}`.toUpperCase();
-    const header = await addHeader(page, pdfDoc, fonts, title); // add header
 
+    const title =  `${tripDetails.type} trip to ${tripDetails.park} Park ${tripDetails.year}`.toUpperCase(); // header title
     const intro = `Algonquin Provincial Park, located in Ontario, Canada, is a premier destination for backcountry camping. Renowned for its vast wilderness, this park offers a true escape into nature with over 7,600 square kilometers of forests, lakes, and rivers.  Backcountry camping in Algonquin is an immersive experience, allowing adventurers to explore a network of canoe routes and hiking trails. The park is home to a diverse array of wildlife, including moose, beavers, and numerous bird species, making it a haven for nature enthusiasts and photographers.`;
+
+    await addHeader(page, pdfDoc, fonts, title); // add header 1 (first page header)
     marginTop = addIntro(page, fonts, intro, marginTop);  // add intro sec - incorporate gpt later?
     marginTop = addRoutes(page, fonts, tripDetails.dates, marginTop); // add routes section
     marginTop = addCrew(page, fonts, tripDetails.crew, marginTop); // add crew member section
-  
+    addFooter(page, fonts, "Planning Brief");
+    const newPage = createPage(pdfDoc, fonts, title, "Planning Brief");
 
-    // footer line
-    page.drawLine({ // title line
-        start: { x: marginLeft, y: 50},
-        end: { x: marginRight, y: 50},
-        thickness: 1.5,
-        color: rgb(0, 0, 0), // black
-        opacity: 0.25,
-    })
-
-    const footerText = "Planning Brief";
-    page.drawText(
-        footerText,
-        {
-            x: marginLeft,
-            y: 25,
-            font: helveticaBold,
-            size: 16,
-            color: rgb(0, 0, 0),
-            lineHeight: 20,
-            opacity: 1,
-        }  
-    )
-
-    const pageNum = "Page 1 of 2";
-    page.drawText(
-        pageNum,
-        {
-            x: marginLeft + 395,
-            y: 25,
-            font: helveticaFont,
-            size: 12,
-            color: rgb(0, 0, 0),
-            lineHeight: 20,
-            opacity: 1,
-        }  
-    )
-
-
-
-
-
+    addPageCount(pdfDoc, fonts);
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
     window.open(url, '_blank'); // open in new tab
 }
 
+async function createPage(pdfDoc, fonts, headerTitle, footerTitle) {
+    const newPage = pdfDoc.addPage();
+
+    await addHeader(newPage, pdfDoc, fonts, headerTitle);
+    addFooter(newPage, fonts, footerTitle);
+}
+
 async function addHeader(page, pdfDoc, fonts, title) {
-    const response = await fetch("../../src/frontend/assets/logo.png");
-    const logoBytes = await response.arrayBuffer();
-    const pngImage = await pdfDoc.embedPng(logoBytes);
-    const pngDims = pngImage.scale(0.4);
+    const pages = pdfDoc.getPages();
+    var lineMarginTop, textMarginTop, textMarginLeft;
+    var fontSize;
 
-    // embed logo
-    page.drawImage(pngImage, {
-         x: marginLeft + 170,
-         y: 750,
-         width: pngDims.width,
-         height: pngDims.height,
-    })
+    if (pages.length == 1) { // if main page add logo to header
+        const response = await fetch("../../src/frontend/assets/logo.png");
+        const logoBytes = await response.arrayBuffer();
+        const pngImage = await pdfDoc.embedPng(logoBytes);
+        const pngDims = pngImage.scale(0.4);
+    
+        // embed logo
+        page.drawImage(pngImage, {
+             x: marginLeft + 170,
+             y: 750,
+             width: pngDims.width,
+             height: pngDims.height,
+        })    
 
+        fontSize = 18;
+        lineMarginTop = 710;
+        textMarginTop = 720;
+        textMarginLeft = 110;
+    } else {
+        fontSize = 16;
+        lineMarginTop = 770;
+        textMarginTop = 780;
+        textMarginLeft = 140;
+    }
+
+   
     // draw header line
     page.drawLine({ 
-        start: { x: marginLeft, y: 690},
-        end: { x: marginRight, y: 690},
+        start: { x: marginLeft, y: lineMarginTop},
+        end: { x: marginRight, y: lineMarginTop},
         thickness: 1.5,
         color: rgb(0, 0, 0), // black
         opacity: 0.25,
@@ -149,15 +132,62 @@ async function addHeader(page, pdfDoc, fonts, title) {
     page.drawText( 
         title,
         {
-            x: 110,
-            y: 710,
+            x: textMarginLeft,
+            y: textMarginTop,
             font: fonts["helveticaBold"],
-            size: 18,
+            size: fontSize,
             color: rgb(0, 0, 0),
             lineHeight: 24,
             opacity: 1,
         },
     )
+}
+
+function addFooter(page, fonts, footHeading) {
+    // footer line
+    page.drawLine({ 
+        start: { x: marginLeft, y: 50},
+        end: { x: marginRight, y: 50},
+        thickness: 1.5,
+        color: rgb(0, 0, 0), // black
+        opacity: 0.25,
+    })
+
+    page.drawText(
+        footHeading,
+        {
+            x: marginLeft,
+            y: 25,
+            font: fonts["helveticaBold"],
+            size: 16,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }  
+    )
+
+   
+}
+
+function addPageCount(pdfDoc, fonts) {
+    const pages = pdfDoc.getPages();
+    const numPages = pages.length;
+
+    pages.forEach(function(page, num) {
+        const pageNum = "Page " + (num + 1) + " of " + numPages;
+        page.drawText(
+            pageNum,
+            {
+                x: marginLeft + 395,
+                y: 25,
+                font: fonts["helveticaRegular"],
+                size: 12,
+                color: rgb(0, 0, 0),
+                lineHeight: 20,
+                opacity: 1,
+            }  
+        )
+    });
 }
 
 function addIntro(page, fonts, intro, marginTop) {
