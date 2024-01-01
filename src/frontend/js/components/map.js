@@ -102,7 +102,6 @@ export class Map {
         });
 
         // console.log(routeInfo);
-
         
         // routeInfo.route = "A route";
         routeInfo.crew = "Thomas Adam Gryphon";
@@ -157,6 +156,54 @@ export class Map {
             },
         }
 
+        details["distances"] = {
+            totalApproxCanoeKm: "67.5",
+            totalPortageMetre: "10,860",
+            bydate: [
+                {
+                    date: "July 30 (Sun)",
+                    targetLake: "Big Crow",
+                    approxCanoeKm: "10.7",
+                    totalPortageMetre: "1,275",
+                    individualPortageMetre: "310, 965"
+                },
+                {
+                    date: "July 31 (Mon)",
+                    targetLake: "La Muir",
+                    approxCanoeKm: "11.5",
+                    totalPortageMetre: "4,435",
+                    individualPortageMetre: "3750, 865"
+                },
+                {
+                    date: "Aug 1 (Tues)",
+                    targetLake: "Burnt Root",
+                    approxCanoeKm: "10.7",
+                    totalPortageMetre: "4,435",
+                    individualPortageMetre: "375"
+                },
+                {
+                    date: "Aug 2 (Wed)",
+                    targetLake: "Big Trout",
+                    approxCanoeKm: "10.7",
+                    totalPortageMetre: "4,435",
+                    individualPortageMetre: "75, 40, 300"
+                },
+                {
+                    date: "Aug 4 (Fri)",
+                    targetLake: "Happy Isle",
+                    approxCanoeKm: "10.7",
+                    totalPortageMetre: "4,435",
+                    individualPortageMetre: "310, 965"
+                },
+                {
+                    date: "Aug 5 (Sat)",
+                    targetLake: "Access Point 5",
+                    approxCanoeKm: "10.7",
+                    totalPortageMetre: "4,435",
+                    individualPortageMetre: "310, 965"
+                }
+            ]
+        }
         return details;
     }
 }

@@ -1,6 +1,7 @@
 const { PDFDocument, StandardFonts, rgb } = PDFLib
 const marginLeft = 70;
 const marginRight = 530;
+const marginTopNewPages = 770; // margin top for pages other than main page
 
 export function modifyPdf(routeInfo) {
   // load existing pdf
@@ -72,9 +73,13 @@ export async function createPdf (tripDetails) {
     marginTop = addRoutes(page, fonts, tripDetails.dates, marginTop); // add routes section
     marginTop = addCrew(page, fonts, tripDetails.crew, marginTop); // add crew member section
     addFooter(page, fonts, "Planning Brief");
-    const newPage = createPage(pdfDoc, fonts, title, "Planning Brief");
-
+    const newPage =  await createPage(pdfDoc, fonts, title, "Planning Brief");
+    addDistances(newPage, fonts, tripDetails.distances);
     addPageCount(pdfDoc, fonts);
+   
+    
+    
+    
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
@@ -86,6 +91,7 @@ async function createPage(pdfDoc, fonts, headerTitle, footerTitle) {
 
     await addHeader(newPage, pdfDoc, fonts, headerTitle);
     addFooter(newPage, fonts, footerTitle);
+    return newPage;
 }
 
 async function addHeader(page, pdfDoc, fonts, title) {
@@ -141,7 +147,195 @@ async function addHeader(page, pdfDoc, fonts, title) {
             opacity: 1,
         },
     )
+
+    return lineMarginTop;
 }
+
+function addDistances(page, fonts, distances) {
+    const distanceMarginTop = marginTopNewPages - 40;
+    const fontSize = 10;
+
+    // draw section header
+    page.drawText(
+        "Distances and Portaging",
+        {
+            x: marginLeft,
+            y: distanceMarginTop,
+            font: fonts["helveticaBold"],
+            size: 16,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }
+    )
+
+    // draw distance table headers
+    var headerMarginLeft = marginLeft + 70; // 80 is rough estimate of longest date name
+    var headerMarginTop = distanceMarginTop - 40;
+    const headerText = ["Target Lake", "Approximate canoeing (km)", "Total portaging (m)", "Portages Individually (m)"];
+    var headerTextMaxWidth = 65;
+    const headerLineHeight = 13;
+    const headerColShift =  15;
+
+    headerText.forEach((header) => {
+        if(header === "Portages Individually (m)") {
+            headerTextMaxWidth = 150;
+        }
+
+        page.drawText(
+            header,
+            {
+                x: headerMarginLeft,
+                y: headerMarginTop,
+                maxWidth: headerTextMaxWidth,
+                font: fonts["helveticaBold"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: headerLineHeight,
+                opacity: 1,
+            }
+        )
+
+        headerMarginLeft += headerTextMaxWidth + headerColShift; // shift over max length of header plus some padding
+    });
+
+    const dates = distances.bydate;
+    const datesLineHeight = 18;
+    var datesMarginTop = headerMarginTop - 45;
+    var targetLakeMarginLeft = marginLeft + 75;
+    var approxCanoeMarginLeft = targetLakeMarginLeft + (headerTextMaxWidth / 2) + 5;
+    var totalDayPortageMarginLeft = approxCanoeMarginLeft + (headerTextMaxWidth / 2) + 5;
+    var portagesIndividualMarginLeft =  totalDayPortageMarginLeft + (headerTextMaxWidth / 2) + 5;
+
+    dates.forEach((date) => {
+        page.drawText( // draw the date text
+            date.date, 
+            {
+                x: marginLeft,
+                y: datesMarginTop,
+                font: fonts["helveticaBold"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: datesLineHeight,
+                opacity: 1,
+            }
+        )
+
+        page.drawText( // draw the target lake text
+            date.targetLake, 
+            {
+                x: targetLakeMarginLeft,
+                y: datesMarginTop,
+                maxWidth: headerTextMaxWidth,
+                font: fonts["helveticaRegular"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: datesLineHeight,
+                opacity: 1,
+            }
+        )
+
+        page.drawText( // draw approx. canoe text
+            date.approxCanoeKm, 
+            {
+                x: approxCanoeMarginLeft,
+                y: datesMarginTop,
+                font: fonts["helveticaRegular"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: datesLineHeight,
+                opacity: 1,
+            }
+        )
+
+        page.drawText( // draw approx. canoe text
+            date.totalPortageMetre, 
+            {
+                x: totalDayPortageMarginLeft,
+                y: datesMarginTop,
+                font: fonts["helveticaRegular"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: datesLineHeight,
+                opacity: 1,
+            }
+        )
+
+        page.drawText( // draw approx. canoe text
+            date.individualPortageMetre, 
+            {
+                x: portagesIndividualMarginLeft,
+                y: datesMarginTop,
+                font: fonts["helveticaRegular"],
+                size: fontSize,
+                color: rgb(0, 0, 0),
+                lineHeight: datesLineHeight,
+                opacity: 1,
+            }
+        )
+        
+        datesMarginTop -= datesLineHeight; // shift down by line height plus some padding
+    });
+
+
+    // draw total text
+    const totalMarginTop = datesMarginTop - 10;  // append after last date added minus some more
+    page.drawText( 
+        "Total", 
+        {
+            x: marginLeft,
+            y: totalMarginTop,
+            font: fonts["helveticaBold"],
+            size: fontSize,
+            color: rgb(0, 0, 0),
+            lineHeight: datesLineHeight,
+            opacity: 1,
+        }
+    )
+
+    page.drawText( 
+        distances.totalApproxCanoeKm, 
+        {
+            x: approxCanoeMarginLeft,
+            y: totalMarginTop, // append after last date added minus some more
+            font: fonts["helveticaBold"],
+            size: fontSize,
+            color: rgb(0, 0, 0),
+            lineHeight: datesLineHeight,
+            opacity: 1,
+        }
+    )
+
+    page.drawText( 
+        distances.totalPortageMetre, 
+        {
+            x: totalDayPortageMarginLeft,
+            y: totalMarginTop, // append after last date added minus some more
+            font: fonts["helveticaBold"],
+            size: fontSize,
+            color: rgb(0, 0, 0),
+            lineHeight: datesLineHeight,
+            opacity: 1,
+        }
+    )
+
+
+    // draw table dividing line
+    const start = [portagesIndividualMarginLeft - 15, distanceMarginTop - 30];
+    const end = [portagesIndividualMarginLeft - 15, totalMarginTop - 10];
+
+    page.drawLine({
+        start: { x: start[0], y: start[1]},
+        end: { x: end[0], y: end[1]},
+        thickness: 1,
+        color: rgb(0, 0, 0), // black
+        opacity: 0.25,
+    })
+
+
+}
+
+
 
 function addFooter(page, fonts, footHeading) {
     // footer line
@@ -387,8 +581,7 @@ function addCrew(page, fonts, crew, marginTop) {
     })
 }
 
-
-// returns the width of the longest name 
+// Helper function - returns the width of the longest name 
 function findLongestName(crew, font, fontSize) {
     var maxWidth = 0;
 
@@ -402,7 +595,7 @@ function findLongestName(crew, font, fontSize) {
     return maxWidth;
 }
 
-
+// Helper function - calculates the height of text
 function calculateTextHeight(text, font, fontSize, lineHeight, maxWidth) {
     const words = text.split(' ');
     let line = '';
