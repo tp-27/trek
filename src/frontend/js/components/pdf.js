@@ -265,49 +265,113 @@ function addRoutes(page, fonts, dates, marginTop) {
 
 function addCrew(page, fonts, crew, marginTop) {
     const positions = "Bow" + "\n" + "Midship" + "\n" + "Stern";
-    let shiftLeft = marginLeft;
+    const lineHeight = 24;
+    var isNewRow = -1;
 
+    const marginHeader = marginTop - 30;
+    page.drawText( // draw crew header
+        "Crew",
+        {
+            x: marginLeft,
+            y: marginHeader, // 710 
+            font: fonts["helveticaBold"],
+            size: 16,
+            color: rgb(0, 0, 0),
+            lineHeight: lineHeight,
+            opacity: 1,
+        },
+    )
 
+    // add position headers
+    page.drawText( // draw boat column headers
+        positions,
+        {
+            x: marginLeft,
+            y: marginHeader - 50, // 710 
+            font: fonts["helveticaBold"],
+            size: 14,
+            color: rgb(0, 0, 0),
+            lineHeight: lineHeight,
+            opacity: 1,
+        },
+    )
 
-
-
-    console.log("crew: margin-top: "  + marginTop);
+    let shiftLeft = marginLeft + 100;
+    var colHeaderTop = marginHeader - 50;
     Object.keys(crew).forEach(boat => {
+        const maxWidthName = findLongestName(crew[boat], fonts["helveticaRegular"], 14);
+        let colItemMarginTop = colHeaderTop;
+
+        if ((shiftLeft + maxWidthName) > marginRight) { // if column overflows right margin
+            shiftLeft = marginLeft + 100; // reset left margin
+            colHeaderTop -= 3 * lineHeight + 20;  // shift down the height of the above columns x max amount of members
+
+            page.drawText( // draw boat column headers
+                positions,
+                {
+                    x: marginLeft,
+                    y: colHeaderTop, // 710 
+                    font: fonts["helveticaBold"],
+                    size: 14,
+                    color: rgb(0, 0, 0),
+                    lineHeight: lineHeight,
+                    opacity: 1,
+                },
+            )
+        }
+
         page.drawText( // draw boat column headers
             boat,
             {
                 x: shiftLeft,
-                y: marginTop - 30, // 710 
+                y: colHeaderTop, // 710 
                 font: fonts["helveticaBold"],
                 size: 14,
                 color: rgb(0, 0, 0),
-                lineHeight: 24,
+                lineHeight: lineHeight,
                 opacity: 1,
             },
         )
+        
+        colItemMarginTop = colHeaderTop - 20;  // shift down to write names for each boat
 
-        Object.keys(boat).forEach(member => {
+        Object.keys(crew[boat]).forEach(member => { // for each member from a boat
             page.drawText( // draw boat column names
-                boat,
+                member,
                 {
                     x: shiftLeft,
-                    y: marginTop - 30, // 710 
-                    font: fonts["helveticaBold"],
+                    y: colItemMarginTop, 
+                    font: fonts["helveticaRegular"],
                     size: 14,
                     color: rgb(0, 0, 0),
-                    lineHeight: 24,
+                    lineHeight: lineHeight,
                     opacity: 1,
                 },
             )
+
+            colItemMarginTop -= 20; // shift down for next name
         })
 
-        // increment margin left
-        shiftLeft += 100;
+       
+        shiftLeft += maxWidthName + 30; // shift by longest name plus some more
+    })
+}
+
+
+// returns the width of the longest name 
+function findLongestName(crew, font, fontSize) {
+    var maxWidth = 0;
+
+    Object.keys(crew).forEach(member => {
+        const length =  font.widthOfTextAtSize(member, fontSize);
+        if (length > maxWidth) {
+            maxWidth = length;
+        }
     })
 
-
-
+    return maxWidth;
 }
+
 
 function calculateTextHeight(text, font, fontSize, lineHeight, maxWidth) {
     const words = text.split(' ');

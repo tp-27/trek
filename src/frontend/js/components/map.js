@@ -130,16 +130,30 @@ export class Map {
             "Aug 4": "Happy Isle Lake",
         }
         details["crew"] = {
-            "boat1": {
-                "Thomas": "Bow",
-                "Gryphon": "Midship",
-                "Adam": "Stern",
+            "Boat 1": {
+                "Thomas Phan": "Bow",
+                "Gryphon Baird": "Midship",
+                "Adam Booth": "Stern",
             },
 
-            "boat2": {
-                "Adam": "Bow",
-                "Gryphon": "Midship",
-                "Thomas": "Stern",
+            "Boat 2": {
+                "Adam Booth": "Bow",
+                "Gryphon Baird": "Midship",
+                "Thomas Phan": "Stern",
+            },
+
+
+            "Boat 3": {
+                "Adam Booth": "Bow",
+                "Gryphon Baird": "Midship",
+                "Thomas Phan": "Stern",
+            },
+
+
+            "Boat 4": {
+                "Adam Booth": "Bow",
+                "Gryphon Baird": "Midship",
+                "Thomas Phan": "Stern",
             },
         }
 
