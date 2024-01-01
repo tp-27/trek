@@ -18,31 +18,48 @@
         <script src="js/components/navbar.js" type="module"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
     </head>
     <body>        
-        <nav>
-            <ul class="sidebar-nav">
-                <li onclick="NavModule.closeMenu()"><img src="../../src/frontend/assets/close.svg" alt="Close icon" id="close-icon"></li>
-                <li class="nav-item"><a href="/">Home</a></li>
-                <li class="nav-item"><a href="/">Sign Up</a></li>
-                <li class="nav-item"><a href="/">About</a></li>
-                <li class="nav-item"><a href="/">Contact</a></li>
-                <li class="nav-item"><a href="/">Get Started</a></li>
-            </ul>
+     
 
-            <ul>
-                <li><a href="/" id="logo">TripPlanner</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Home</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Sign Up</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">About</a></li>
-                <li class="nav-item hideOnMobile"><a href="/">Contact</a></li>
-                <li class="nav-item hideOnMobile"><a class="action-btn">Get Started</a></li>
-                <li id="menu-icon" onclick="NavModule.showMenu()"><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
-            </ul>
-        </nav>
+        <div class="header">
+            <nav>
+                <ul class="sidebar-nav">
+                    <li onclick="NavModule.closeMenu()"><img src="../../src/frontend/assets/close.svg" alt="Close icon" id="close-icon"></li>
+                    <li class="nav-item"><a href="/">Home</a></li>
+                    <li class="nav-item"><a href="/">Sign Up</a></li>
+                    <li class="nav-item"><a href="/">About</a></li>
+                    <li class="nav-item"><a href="/">Contact</a></li>
+                    <li class="nav-item"><a href="/">Get Started</a></li>
+                </ul>
+    
+                <ul>
+                    <li><a href="/" id="logo"> <img src="../../src/frontend/assets/logo-white.svg" alt="">Trek</a></li>
+                    <li class="nav-item hideOnMobile"><a href="/">Home</a></li>
+                    <li class="nav-item hideOnMobile"><a href="/">Sign Up</a></li>
+                    <li class="nav-item hideOnMobile"><a href="/">About</a></li>
+                    <li class="nav-item hideOnMobile"><a href="/">Contact</a></li>
+                    <li class="nav-item hideOnMobile"><a class="action-btn">Get Started</a></li>
+                    <li id="menu-icon" onclick="NavModule.showMenu()"><img src="../../src/frontend/assets/menu.svg" alt="Menu icon"></li>
+                </ul>
+            </nav>
 
-        <section class="home">
+            <div class="header-body">
+                <div class="intro">
+                    <p>Custom Routes, Limitless Adventures</p>
+                    <a class="action-btn">Get Started</a>
+                </div>
+
+                <div class="img-container">
+                    <img src="../../src/frontend/assets/truck.svg" alt="">
+                </div>
+            </div>
+        </div>
+
+        
+
+        <!-- <section class="home">
             <div class="home-left">
                 <h1>Charting your backcountry <br> journey, one click at a time</h1>
                 <a href="map.html" class="action-btn">Start</a>
@@ -70,11 +87,7 @@
             </div>
 
         </section>
-<!-- 
-        <section class="map-container hidden">
-            <div id="map"></div>
-        </section>
-        <script src="js/components/map.js" type="module" defer></script> -->
-        <script src="index.js" type="module" defer></script>
+
+        <script src="index.js" type="module" defer></script> -->
     </body>
 </html>
