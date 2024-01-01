@@ -131,27 +131,20 @@ export class Map {
         details["crew"] = {
             "Boat 1": {
                 "Thomas Phan": "Bow",
-                "Gryphon Baird": "Midship",
+                "Griffin Baird": "Midship",
                 "Adam Booth": "Stern",
             },
 
             "Boat 2": {
                 "Adam Booth": "Bow",
-                "Gryphon Baird": "Midship",
+                "Griffin Baird": "Midship",
                 "Thomas Phan": "Stern",
             },
 
 
             "Boat 3": {
                 "Adam Booth": "Bow",
-                "Gryphon Baird": "Midship",
-                "Thomas Phan": "Stern",
-            },
-
-
-            "Boat 4": {
-                "Adam Booth": "Bow",
-                "Gryphon Baird": "Midship",
+                "Griffin Baird": "Midship",
                 "Thomas Phan": "Stern",
             },
         }
