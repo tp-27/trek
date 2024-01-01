@@ -7,29 +7,36 @@ export class Map {
         this.map;
         this.park;
         this.sidebar;
+        this.searchLayer;
         this.MapSettings = new mapSettings();
         this.clusterGroup = new ClusterGroup(this.MapSettings);
         this.srt_view = [45.80, -78.40];
         this.SW = [45.00, -80.00];
         this.NE = [46.50 , -77.00];
-
         this.bounds;
     }
 
     initMapDiv() {
-        var mapDiv = document.getElementById("map");
-
-        mapDiv.style.display = "block"; // display map in map container
-        mapDiv.style.height = "100%";
-        mapDiv.style.width = "100%";
-        //this.removeChooseParkBtn(); // remove select park button
-
         this.sidebar = L.control.sidebar('sidebar', {
             position: 'left'
         });
-        console.log(sidebar);
         
-       this.sidebar.addTo(this.map);
+        this.sidebar.addTo(this.map);
+
+        // this.searchLayer = L.layerGroup();
+        // L.marker([45.8372, 78.3791], {
+        //     title: "Marker"
+        // }).addTo(this.searchLayer);
+        
+        // console.log(this.searchLayer);
+        // this.searchLayer.addTo(this.map);
+
+        // this.map.addControl(new L.Control.Search({
+        //     layer: this.searchLayer, //searchLayer is a L.LayerGroup contains searched markers
+        //     position: 'topright', 
+        // }));
+
+    
     }
     
     showSideBar() {
@@ -39,8 +46,6 @@ export class Map {
 
     initMap(park) {
         this.park = park;
-        this.initMapDiv(); // show map in container
-
         
         this.map = L.map("map", {
             center: this.srt_view,
@@ -51,6 +56,8 @@ export class Map {
     
 
         });
+
+        this.initMapDiv(); // show map in container
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level

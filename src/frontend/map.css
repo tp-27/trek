@@ -4,7 +4,9 @@ body {
 }
 
 #map {
-    position: relative;
+    /* position: relative; */
+    height: 100%;
+    width: 100%;
 }
 
 .mycluster1 {
@@ -118,7 +120,7 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     padding: 5px 5px;
-    height: 150px;
+    height: 200px;
     width: 100%;
     border-bottom: 1px solid rgba(128, 128, 128, 0.429);
 }
@@ -149,13 +151,23 @@ body {
 
 .deleteDayBtn {
     height: 120%;
-    width: 30%;
+    width: 10%;
     color: white;
+    font-size: 25px;
     background-color: red;
 }
 
 .deleteDayBtn:hover {
     background-color: rgba(255, 0, 0, 0.668);
+}
+
+.confirmDayBtn {
+    margin-top: 20px;
+    height: 30%;
+    width: 100%;
+    background-color: green;
+    color: white;
+    font-size: 25px;
 }
 
 .start  {

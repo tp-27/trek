@@ -154,6 +154,7 @@ function createDayDiv (date) {
     const selectStartDiv = document.createElement("div");
     const selectEndDiv = document.createElement("div");
     const deleteDayBtn = document.createElement("button");
+    const confirmDayBtn = document.createElement("button");
 
     dayDiv.classList.add("newDay");
     dayDivBody.classList.add("newDayBody"); 
@@ -165,6 +166,11 @@ function createDayDiv (date) {
     
     selectStartDiv.classList.add("selectBtns");
     selectStartDiv.innerText = "Start";
+    selectStartDiv.addEventListener("click", () => {
+        
+    })
+
+
     selectEndDiv.classList.add("selectBtns");
     selectEndDiv.innerText = "End";
 
@@ -173,17 +179,20 @@ function createDayDiv (date) {
     selectBtnContainer.append(selectEndDiv);
 
     deleteDayBtn.classList.add("deleteDayBtn");
-    deleteDayBtn.innerText = "DELETE";
+    deleteDayBtn.innerText = "x";
     deleteDayBtn.addEventListener("click", () => {
-        dayDiv.remove();
-    })
+        dayDiv.remove(); // remove current day on delete
+    });
 
-    dayDivBody.append(selectBtnContainer);
-    dayDivBody.append(deleteDayBtn);
+    confirmDayBtn.classList.add("confirmDayBtn");
+    confirmDayBtn.innerText = "Finish day";
 
-     
+    dayDivBody.append(selectBtnContainer); // add the select btn container
+    dayDivBody.append(deleteDayBtn); // add the delete btn
+
     dayDiv.appendChild(startDateHeader); // add the start date
     dayDiv.appendChild(dayDivBody); // append select and delete buttons
+    dayDiv.appendChild(confirmDayBtn); // append confirm day button
 
     return dayDiv;
 }
