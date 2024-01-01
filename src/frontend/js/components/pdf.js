@@ -1,4 +1,6 @@
 const { PDFDocument, StandardFonts, rgb } = PDFLib
+const marginLeft = 70;
+const marginRight = 530;
 
 export function modifyPdf(routeInfo) {
   // load existing pdf
@@ -48,68 +50,126 @@ export function modifyPdf(routeInfo) {
     });
 }
 
-
 export async function createPdf (tripDetails) {
     const pdfDoc = await PDFDocument.create(); // create new document
 
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica); // embed font
     const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold); // embed font
 
+    const fonts = {
+        "helveticaRegular": helveticaFont,
+        "helveticaBold": helveticaBold,
+    }
+    
     const page = pdfDoc.addPage(); // add new page
 
     const { width, height } = page.getSize(); // get width and height of page (595.28 841.89)
-    console.log(width, height);
-    const fontSize = 30;
+    var marginTop = 690; // starts at the bottom of the header line
 
+    const title =  `${tripDetails.type} trip to ${tripDetails.park} Park ${tripDetails.year}`.toUpperCase();
+    const header = await addHeader(page, pdfDoc, fonts, title); // add header
+
+    const intro = `Algonquin Provincial Park, located in Ontario, Canada, is a premier destination for backcountry camping. Renowned for its vast wilderness, this park offers a true escape into nature with over 7,600 square kilometers of forests, lakes, and rivers.  Backcountry camping in Algonquin is an immersive experience, allowing adventurers to explore a network of canoe routes and hiking trails. The park is home to a diverse array of wildlife, including moose, beavers, and numerous bird species, making it a haven for nature enthusiasts and photographers.`;
+    marginTop = addIntro(page, fonts, intro, marginTop);  // add intro sec - incorporate gpt later?
+    marginTop = addRoutes(page, fonts, tripDetails.dates, marginTop); // add routes section
+    marginTop = addCrew(page, fonts, tripDetails.crew, marginTop); // add crew member section
+  
+
+    // footer line
     page.drawLine({ // title line
-        start: { x: 70, y: 690},
-        end: { x: 530, y: 690},
+        start: { x: marginLeft, y: 50},
+        end: { x: marginRight, y: 50},
         thickness: 1.5,
         color: rgb(0, 0, 0), // black
         opacity: 0.25,
     })
 
-    // add title
-    const title =  `${tripDetails.type} trip to ${tripDetails.park} Park ${tripDetails.year}`.toUpperCase();
-
+    const footerText = "Planning Brief";
     page.drawText(
+        footerText,
+        {
+            x: marginLeft,
+            y: 25,
+            font: helveticaBold,
+            size: 16,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }  
+    )
+
+    const pageNum = "Page 1 of 2";
+    page.drawText(
+        pageNum,
+        {
+            x: marginLeft + 395,
+            y: 25,
+            font: helveticaFont,
+            size: 12,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }  
+    )
+
+
+
+
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank'); // open in new tab
+}
+
+async function addHeader(page, pdfDoc, fonts, title) {
+    const response = await fetch("../../src/frontend/assets/logo.png");
+    const logoBytes = await response.arrayBuffer();
+    const pngImage = await pdfDoc.embedPng(logoBytes);
+    const pngDims = pngImage.scale(0.4);
+
+    // embed logo
+    page.drawImage(pngImage, {
+         x: marginLeft + 170,
+         y: 750,
+         width: pngDims.width,
+         height: pngDims.height,
+    })
+
+    // draw header line
+    page.drawLine({ 
+        start: { x: marginLeft, y: 690},
+        end: { x: marginRight, y: 690},
+        thickness: 1.5,
+        color: rgb(0, 0, 0), // black
+        opacity: 0.25,
+    })
+
+    // draw header text
+    page.drawText( 
         title,
         {
             x: 110,
-            y: 700,
-            font: helveticaBold,
+            y: 710,
+            font: fonts["helveticaBold"],
             size: 18,
             color: rgb(0, 0, 0),
             lineHeight: 24,
             opacity: 1,
         },
     )
+}
 
-    // embed logo
-    const response = await fetch("../../src/frontend/assets/logo.png");
-    const logoBytes = await response.arrayBuffer();
-    const pngImage = await pdfDoc.embedPng(logoBytes);
-    const pngDims = pngImage.scale(0.32);
-    const marginLeft = 70;
+function addIntro(page, fonts, intro, marginTop) {
+    const introHeader = "Park";
 
-
-    page.drawImage(pngImage, {
-        x: marginLeft,
-        y: 750,
-        width: pngDims.width,
-        height: pngDims.height,
-    })
-
-    // add introduction paragraph - incorporate gpt later?
-    const intro = `Algonquin Provincial Park, located in Ontario, Canada, is a premier destination for backcountry camping. Renowned for its vast wilderness, this park offers a true escape into nature with over 7,600 square kilometers of forests, lakes, and rivers.  Backcountry camping in Algonquin is an immersive experience, allowing adventurers to explore a network of canoe routes and hiking trails. The park is home to a diverse array of wildlife, including moose, beavers, and numerous bird species, making it a haven for nature enthusiasts and photographers.`;
-    const introHeader = 'Park';
-
+    // draw intro header
     page.drawText(
         introHeader,
         {
             x: marginLeft,
             y: 660,
-            font: helveticaBold,
+            font: fonts["helveticaBold"],
             size: 16,
             color: rgb(0, 0, 0),
             lineHeight: 20,
@@ -117,13 +177,14 @@ export async function createPdf (tripDetails) {
         }
     )
 
+    // draw intro text
     page.drawText(
         intro,
         {
             x: marginLeft,
             y: 630,
             maxWidth: 480,
-            font: helveticaFont,
+            font: fonts["helveticaRegular"],
             size: 14,
             color: rgb(0, 0, 0),
             lineHeight: 20,
@@ -131,8 +192,143 @@ export async function createPdf (tripDetails) {
         },
     )
 
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank'); // open in new tab
+    const newMarginTop = marginTop - calculateTextHeight(intro,  fonts["helveticaRegular"], 14, 20, 480);
+    return newMarginTop;
+}
+
+function addRoutes(page, fonts, dates, marginTop) {
+    // draw route header
+    console.log("in route - margintop: " + marginTop);
+    const routeHeader = "Route";
+    var marginTopOffset;
+
+    marginTopOffset = marginTop - 80; // offset for route header
+    page.drawText(
+        routeHeader,
+        {
+            x: marginLeft,
+            y: marginTopOffset,
+            font: fonts["helveticaBold"],
+            size: 16,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }
+    )
+
+    let routeDates = "";
+    let routeLakes = "";
+    Object.keys(dates).forEach(key => {
+        const value = dates[key];
+        routeDates += `${key}` + "\n"; // add route dates to string
+        routeLakes += `${value}` + "\n"; // add lakes to string
+    });
+    
+    // draw route dates
+    marginTopOffset -= 30;
+    page.drawText(
+        routeDates,
+        {
+            x: marginLeft,
+            y: marginTopOffset,
+            font: fonts["helveticaRegular"],
+            size: 14,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }
+    )
+
+    // draw lakes text
+    page.drawText(
+        routeLakes,
+        {
+            x: marginLeft + 70,
+            y: marginTopOffset,
+            maxWidth: 100,
+            font: fonts["helveticaRegular"],
+            size: 14,
+            color: rgb(0, 0, 0),
+            lineHeight: 20,
+            opacity: 1,
+        }
+    )
+
+    const numberOfKeys = Object.keys(dates).length;
+    const heightSection = numberOfKeys * 20 // line height;
+    console.log(heightSection);
+
+    const newMarginTop = marginTopOffset - 100;
+    // const newMarginTop = marginTop - calculateTextHeight(routeLakes,  fonts["helveticaRegular"], 14, 20, 100);
+    return newMarginTop;
+}
+
+function addCrew(page, fonts, crew, marginTop) {
+    const positions = "Bow" + "\n" + "Midship" + "\n" + "Stern";
+    let shiftLeft = marginLeft;
+
+
+
+
+
+    console.log("crew: margin-top: "  + marginTop);
+    Object.keys(crew).forEach(boat => {
+        page.drawText( // draw boat column headers
+            boat,
+            {
+                x: shiftLeft,
+                y: marginTop - 30, // 710 
+                font: fonts["helveticaBold"],
+                size: 14,
+                color: rgb(0, 0, 0),
+                lineHeight: 24,
+                opacity: 1,
+            },
+        )
+
+        Object.keys(boat).forEach(member => {
+            page.drawText( // draw boat column names
+                boat,
+                {
+                    x: shiftLeft,
+                    y: marginTop - 30, // 710 
+                    font: fonts["helveticaBold"],
+                    size: 14,
+                    color: rgb(0, 0, 0),
+                    lineHeight: 24,
+                    opacity: 1,
+                },
+            )
+        })
+
+        // increment margin left
+        shiftLeft += 100;
+    })
+
+
+
+}
+
+function calculateTextHeight(text, font, fontSize, lineHeight, maxWidth) {
+    const words = text.split(' ');
+    let line = '';
+    let numberOfLines = 0;
+
+    words.forEach(word => {
+        const testLine = line + word + ' ';
+        const metrics = font.widthOfTextAtSize(testLine, fontSize);
+        if (metrics > maxWidth && line.length > 0) {
+            line = word + ' ';
+            numberOfLines++;
+        } else {
+            line = testLine;
+        }
+    });
+
+    if (line.length > 0) {
+        numberOfLines++;
+    }
+
+    const textHeight = numberOfLines * lineHeight;
+    return textHeight;
 }

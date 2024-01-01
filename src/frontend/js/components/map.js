@@ -122,6 +122,26 @@ export class Map {
         details["park"] = this.park;
         details["year"] = date.getFullYear();
         details["type"] = "canoe";
+        details["dates"] = {
+            "July 30": "Big Crow Lake",
+            "July 31": "Lake La Muir",
+            "Aug 1": "Burntroot lake",
+            "Aug 2-3": "Big Trout Lake",
+            "Aug 4": "Happy Isle Lake",
+        }
+        details["crew"] = {
+            "boat1": {
+                "Thomas": "Bow",
+                "Gryphon": "Midship",
+                "Adam": "Stern",
+            },
+
+            "boat2": {
+                "Adam": "Bow",
+                "Gryphon": "Midship",
+                "Thomas": "Stern",
+            },
+        }
 
         return details;
     }
