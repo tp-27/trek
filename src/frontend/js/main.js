@@ -132,4 +132,39 @@ window.addEventListener('DOMContentLoaded', function() {
     dateInput.value = date;
     dateInput.min = date;
     dateInput.max = maxDate;
+
+    dateInput.addEventListener("change", (event) => { // when user selects start date
+        dateModal.style.display = "none"; // close the modal
+        
+        const newDayDiv = createDayDiv(); // create a new day in side bar 
+        const addDayDiv = document.querySelector(".day");
+        const sideBarDiv = document.getElementById("home");
+        const startDateHeader = this.document.createElement("p");
+        startDateHeader.innerText = event.target.value;
+        startDateHeader.style.fontSize = "18px";
+        startDateHeader.style.color = "black";
+
+
+        // add the start date
+        newDayDiv.appendChild(startDateHeader);
+
+        sideBarDiv.insertBefore(newDayDiv, addDayDiv);
+    })
 });
+
+
+function createDayDiv () {
+    const dayDiv = document.createElement('div');
+    
+    dayDiv.style.cssText = 
+    `   
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+        width: 100%;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.429);
+    `;
+
+    return dayDiv;
+}
