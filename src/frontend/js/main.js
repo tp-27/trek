@@ -136,35 +136,54 @@ window.addEventListener('DOMContentLoaded', function() {
     dateInput.addEventListener("change", (event) => { // when user selects start date
         dateModal.style.display = "none"; // close the modal
         
-        const newDayDiv = createDayDiv(); // create a new day in side bar 
+        const newDayDiv = createDayDiv(event.target.value); // create a new day in side bar 
         const addDayDiv = document.querySelector(".day");
         const sideBarDiv = document.getElementById("home");
-        const startDateHeader = this.document.createElement("p");
-        startDateHeader.innerText = event.target.value;
-        startDateHeader.style.fontSize = "18px";
-        startDateHeader.style.color = "black";
-
-
-        // add the start date
-        newDayDiv.appendChild(startDateHeader);
+      
 
         sideBarDiv.insertBefore(newDayDiv, addDayDiv);
     })
 });
 
 
-function createDayDiv () {
+function createDayDiv (date) {
     const dayDiv = document.createElement('div');
+    const dayDivBody = document.createElement('div');
+    const startDateHeader = document.createElement("p");
+    const selectBtnContainer = document.createElement("div");
+    const selectStartDiv = document.createElement("div");
+    const selectEndDiv = document.createElement("div");
+    const deleteDayBtn = document.createElement("button");
+
+    dayDiv.classList.add("newDay");
+    dayDivBody.classList.add("newDayBody"); 
+
+    startDateHeader.innerText = date;
+    startDateHeader.style.fontSize = "18px";
+    startDateHeader.style.fontWeight = "700";
+    startDateHeader.style.color = "black";
     
-    dayDiv.style.cssText = 
-    `   
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100px;
-        width: 100%;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.429);
-    `;
+    selectStartDiv.classList.add("selectBtns");
+    selectStartDiv.innerText = "Start";
+    selectEndDiv.classList.add("selectBtns");
+    selectEndDiv.innerText = "End";
+
+    selectBtnContainer.classList.add("selectBtnContainer"); 
+    selectBtnContainer.append(selectStartDiv);
+    selectBtnContainer.append(selectEndDiv);
+
+    deleteDayBtn.classList.add("deleteDayBtn");
+    deleteDayBtn.innerText = "DELETE";
+    deleteDayBtn.addEventListener("click", () => {
+        dayDiv.remove();
+    })
+
+    dayDivBody.append(selectBtnContainer);
+    dayDivBody.append(deleteDayBtn);
+
+     
+    dayDiv.appendChild(startDateHeader); // add the start date
+    dayDiv.appendChild(dayDivBody); // append select and delete buttons
 
     return dayDiv;
 }
