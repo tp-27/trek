@@ -21,22 +21,20 @@ export class Map {
             position: 'left'
         });
         
-        this.sidebar.addTo(this.map);
+        this.sidebar.addTo(this.map);    
 
-        // this.searchLayer = L.layerGroup();
-        // L.marker([45.8372, 78.3791], {
-        //     title: "Marker"
-        // }).addTo(this.searchLayer);
-        
-        // console.log(this.searchLayer);
-        // this.searchLayer.addTo(this.map);
 
-        // this.map.addControl(new L.Control.Search({
-        //     layer: this.searchLayer, //searchLayer is a L.LayerGroup contains searched markers
-        //     position: 'topright', 
-        // }));
+    }
 
-    
+    addListenerContextMenu() {
+        this.map.on('contextmenu', function(e) {
+            var latlng = e.latlng;
+            console.log(latlng);
+            var marker = new L.marker(latlng);
+            console.log(this.map);
+            marker.addTo(this.map);
+            console.log("added");
+        });
     }
     
     showSideBar() {

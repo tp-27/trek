@@ -2,12 +2,11 @@ import Map from "../js/components/map.js"
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
 
-var map = new Map();
+
 
 window.addEventListener('DOMContentLoaded', function() {
-    const parkDefault = "algonquin";
-    map.initMap(parkDefault);
-
+    var map = new Map();
+    map.initMap("algonquin");
     const dropdown = document.querySelector(".park-dropdown");
 
     const select = dropdown.querySelector(".dropdown-header");
@@ -38,7 +37,7 @@ window.addEventListener('DOMContentLoaded', function() {
     //      mapSettings.set{SettingName}();
     //      mapSettings.setLocalStorage({SettingName},{Value})
     //});
-
+    
     this.document.getElementById("canoespeed-btn").addEventListener("click", () => {
         map.MapSettings.canoeSpeed = this.document.getElementById("canoespeed-in").value;
     });
@@ -136,7 +135,7 @@ window.addEventListener('DOMContentLoaded', function() {
     dateInput.addEventListener("change", (event) => { // when user selects start date
         dateModal.style.display = "none"; // close the modal
         
-        const newDayDiv = createDayDiv(event.target.value); // create a new day in side bar 
+        const newDayDiv = createDayDiv(event.target.value, map); // create a new day in side bar 
         const addDayDiv = document.querySelector(".day");
         const sideBarDiv = document.getElementById("home");
       
@@ -146,7 +145,7 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 
-function createDayDiv (date) {
+function createDayDiv (date, mapObj) {
     const dayDiv = document.createElement('div');
     const dayDivBody = document.createElement('div');
     const startDateHeader = document.createElement("p");
@@ -167,7 +166,8 @@ function createDayDiv (date) {
     selectStartDiv.classList.add("selectBtns");
     selectStartDiv.innerText = "Start";
     selectStartDiv.addEventListener("click", () => {
-        
+        console.log("add listener");
+        mapObj.addListenerContextMenu();
     })
 
 
