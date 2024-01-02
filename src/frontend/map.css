@@ -120,7 +120,9 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     padding: 5px 5px;
-    height: 200px;
+    padding-top: 20px;
+    padding-bottom: 25px;
+    height: auto;
     width: 100%;
     border-bottom: 1px solid rgba(128, 128, 128, 0.429);
 }
@@ -129,6 +131,14 @@ body {
     width: 100%;
     /* border: 2px solid red; */
     display: flex;
+    flex-direction: column;
+}
+
+.newDayBody .route-path-container {
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    /* border: 2px solid red; */
 }
 
 .selectBtnContainer {
@@ -167,8 +177,9 @@ body {
 }
 
 .deleteDayBtn {
-    height: 120%;
-    width: 10%;
+    margin-top: 25px;
+    height: 100%;
+    width: 100%;
     color: white;
     font-size: 25px;
     background-color: red;
@@ -178,8 +189,51 @@ body {
     background-color: rgba(255, 0, 0, 0.668);
 }
 
+.route-path-container {
+    height: auto;
+    width: 100%;
+    border: 1px solid grey;
+}
+
+.route-path-container span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    gap: 7px;
+    cursor: pointer;
+}
+
+
+.route-path-container img {
+    height: auto;
+    width: 15px;
+}
+
+.route-path-container span p {
+    color: grey;
+    font-size: 16px;
+}
+
+.route-path-container span p:hover {
+    color: darkgrey;
+}
+
+.route-path-span {
+    display: flex;
+    text-align: left;
+    justify-content: space-around;
+    /* border: 2px solid red; */
+}
+
+.route-path-container .route-path-span p {
+    /* border: 2px solid red; */
+    font-size: 12px;
+}
+
 .confirmDayBtn {
-    margin-top: 20px;
     height: 30%;
     width: 100%;
     background-color: green;

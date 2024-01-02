@@ -200,7 +200,7 @@ function createDayDiv (date, mapObj) {
     selectBtnContainer.append(selectEndDiv);
 
     deleteDayBtn.classList.add("deleteDayBtn");
-    deleteDayBtn.innerText = "x";
+    deleteDayBtn.innerText = "Delete day";
     deleteDayBtn.addEventListener("click", () => {
         dayDiv.remove(); // remove current day on delete
     });
@@ -209,10 +209,10 @@ function createDayDiv (date, mapObj) {
     confirmDayBtn.innerText = "Finish day";
 
     dayDivBody.append(selectBtnContainer); // add the select btn container
-    dayDivBody.append(deleteDayBtn); // add the delete btn
 
     dayDiv.appendChild(startDateHeader); // add the start date
     dayDiv.appendChild(dayDivBody); // append select and delete buttons
+    dayDiv.append(deleteDayBtn); // add the delete btn
     dayDiv.appendChild(confirmDayBtn); // append confirm day button
 
     return dayDiv;

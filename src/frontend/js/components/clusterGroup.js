@@ -136,7 +136,6 @@ export default class ClusterGroup {
         var url = `${this.baseURL}get_segment${this.respFormat}&viewparams=oid:${ID};`;
         const response = await fetch(url);
         const obj = await response.json();
-        console.log(obj.features[0]);
         return obj.features[0];
     }
 
@@ -335,18 +334,9 @@ export default class ClusterGroup {
             await this.regenPaths(m.options.index,false);
 
             // if start or end marker then update values in sidebar
-            if (idx == 0) {
-                const startSpan = document.getElementById("start");
-                const startSpanTextNode = startSpan.querySelector("p");
-                startSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
-
-        
-            } else if (idx == this.markerlist.length - 1) {
-                const endSpan = document.getElementById("end");
-                const endSpanTextNode = endSpan.querySelector("p");
-                endSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
+            if (idx == 0 || idx == this.markerlist.length - 1) {
+                await this.updatePathMarkersSideBar(m, idx);
             }
-         
 
         });
 
@@ -388,6 +378,88 @@ export default class ClusterGroup {
     //
     markerSetIndex(marker, idx) {
         marker.options.index = idx;
+    }
+
+
+    // Update the start and end marker locations on sidebar whenever they are moved
+    updatePathMarkersSideBar(m, idx) {
+        if (idx == 0) { // start marker
+            const startSpan = document.getElementById("start");
+            const startSpanTextNode = startSpan.querySelector("p");
+
+            startSpan.classList.add("active");
+            startSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
+    
+        } else if (idx == this.markerlist.length - 1) { // end marker
+            const endSpan = document.getElementById("end");
+            const endSpanTextNode = endSpan.querySelector("p");
+
+            endSpan.classList.add("active");
+            endSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
+        }
+        
+        const selectBtnContainer = document.querySelector(".selectBtnContainer");
+        const selectButtonSpans = selectBtnContainer.querySelectorAll("span");
+        var endPointsSelected = true;
+        selectButtonSpans.forEach((span) => {
+            if (!span.classList.contains("active")) {
+                endPointsSelected  = false; // not all end points have been selected
+            }
+        });
+
+        if (endPointsSelected) {
+            const routePathContainer = document.createElement("div");
+            const routePathSpan = document.createElement("span");
+            const routePathImg = document.createElement("img");
+            const routePathText = document.createElement("p");
+
+            // append the route container after the select start container
+            const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent 
+            const selectStartContainer = selectBtnContainer.firstChild; // get the select start container
+            
+            routePathContainer.classList.add("route-path-container");
+            routePathText.innerText = "Show path";
+            routePathImg.src = "../../src/frontend/assets/expand-all.svg";
+            routePathSpan.append(routePathImg);
+            routePathSpan.append(routePathText);
+            routePathContainer.append(routePathSpan);
+
+            routePathContainer.addEventListener("click", async () => { // on click append the route directions
+                if(routePathContainer.classList.contains("active")) {
+                    const pathDiv = routePathContainer.querySelector(".path-container");
+                    console.log(pathDiv);
+                    routePathContainer.remove(pathDiv);
+                    routePathContainer.classList.remove("active");
+                } else {
+                    routePathContainer.classList.add("active");
+                    const data = await this.createDirectionsFromPath(this.pathDatalist);
+                    const pathDiv = document.createElement("div");
+                    pathDiv.classList.add("path-container");
+    
+                    data.forEach((item, idx) => {
+                        const pathSpan = document.createElement("span");
+                        const pathNameNode = document.createElement("p");
+                        const pathDistanceNode = document.createElement("p");
+    
+                        pathNameNode.innerHTML = `${item.name}`;
+                        pathDistanceNode.innerHTML = `${item.distance}`;
+    
+                        pathSpan.classList.add("route-path-span");
+                        pathSpan.appendChild(pathNameNode);
+                        pathSpan.appendChild(pathDistanceNode);
+                        pathDiv.appendChild(pathSpan);
+                        routePathContainer.appendChild(pathDiv);
+                    })
+                }
+
+              
+
+            })
+
+
+            selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
+        }
+
     }
 
 
