@@ -1,6 +1,8 @@
 import { setMarkerStyles } from "./mapStyles.js";
 import { mapSettings } from "./mapSettings.js";
 
+const serverURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+
 const PathMarker = L.Marker.extend({
     options: {
         index: 0,
@@ -40,10 +42,9 @@ export default class ClusterGroup {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(this.clusterGroup);
 
-        this.baseURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
-
+        this.baseURL = serverURL;
         this.respFormat = "&outputFormat=application/json";
-        this.markers = this.addLayer('Rec_point');
+        this.markers = this.addLayer('Rec_point'); // campsites, access points, picnic area feature layer
         this.mapSettings = mapSettings;
 
         //Multipoint Routing
@@ -59,7 +60,7 @@ export default class ClusterGroup {
             iconAnchor: [6, 24],
             popupAnchor: [1, -34],
             shadowSize: [10, 10]
-          });
+        });
     }
 
     initLayers() {
@@ -86,24 +87,6 @@ export default class ClusterGroup {
                 }
             })
             .catch(err => console.log("Rejected: " + err.message));
-    }
-
-    splitLayerBySubtype(geoJSON) {
-        var subTypes = {};
-        var allFeatures = geoJSON.features;
-
-        // process geoJSON and separate into individual layers
-        allFeatures.forEach(function (feature) {
-            var type = feature.properties.SUBTYPE;
-            if (type in subTypes) { // if subtype exists - append feature to list
-                subTypes[type].push(feature);
-            } else {
-                subTypes[type] = []; // create new key 
-                subTypes[type].push(feature); // append new feature
-            }
-        });
-
-        return subTypes;
     }
     
     async addPath(index,sourceID, targetID) {
@@ -134,11 +117,11 @@ export default class ClusterGroup {
         return geoJSON;
     }
     
+    // Gets the nearest node on the map from a given coordinate
     async getNearestVertex(point) {
         var url = `${this.baseURL}nearest_vertex${this.respFormat}&viewparams=x:${point.lng};y:${point.lat};`;
         const response = await fetch(url);
         const geoJSON = await response.json();
-        console.log(geoJSON);
         return geoJSON;
     }
     
@@ -146,7 +129,6 @@ export default class ClusterGroup {
         var url = `${this.baseURL}shortest_path${this.respFormat}&viewparams=source:${sourceID};target:${targetID};`;
         const response = await fetch(url);
         const geoJSON = await response.json();
-        console.log(geoJSON);
         return geoJSON;
     }
 
@@ -154,6 +136,7 @@ export default class ClusterGroup {
         var url = `${this.baseURL}get_segment${this.respFormat}&viewparams=oid:${ID};`;
         const response = await fetch(url);
         const obj = await response.json();
+        console.log(obj.features[0]);
         return obj.features[0];
     }
 
@@ -201,11 +184,12 @@ export default class ClusterGroup {
 
 
     async createDirectionsFromPath(pathData) {
-        const directions = []
+        const directions = [];
         if(pathData.length == 0 || pathData[0].features.length == 0) {
             return directions;
         }
         var startPOS = pathData[0].features[0].geometry.coordinates[0][0];
+        console.log(pathData[0].features[0]);
         var lastPathObj = await this.getSegmentByID(pathData[0].features[0].properties.oid);
         var pathobj;
         var oidList = "";
@@ -286,13 +270,23 @@ export default class ClusterGroup {
     getClusterGroup() {
         console.log(this.clusterGroup.getLayers());
         return this.clusterGroup;
+    }
 
+    // Returns the start and end markers from path
+    getPathEndPoints() {
+        const endPoints = [];
+
+        if (this.markerlist.length > 1) { // if there exists a path 
+            endPoints.append(this.markerlist[0]); // get start marker
+            endPoints.append(this.markerlist[this.markerlist.length - 1]); // get end marker
+        }
+
+        return endPoints;
     }
 
     async regenPaths(idx,onDeleteMarker) {
-        
         console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
-        if(this.markerlist.length > 1 && idx < this.markerlist.length) {
+        if(this.markerlist.length > 1 && idx < this.markerlist.length) { 
             var m = this.markerlist[idx];
             if(idx == 0) {
                 await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
@@ -310,6 +304,10 @@ export default class ClusterGroup {
             }
         }
         console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        
+        console.log(this.pathDatalist);
+        console.log(this.pathlist);
+        console.log(this.markerlist);
         await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
@@ -323,17 +321,33 @@ export default class ClusterGroup {
         }).addTo(this.mapLayerGroup);
         
         if(customIcon != undefined) {
-            m.setIcon(customIcon)
+            m.setIcon(customIcon);
         }
         m.on('dragend', async (event) => {
             //console.log("Dragging: ", m.options.index);
-            var S_latlng = event.target.getLatLng();
+            var S_latlng = event.target.getLatLng(); // get coordinates of dragged marker
             //m.bindPopup(S_latlng);
-            var sResponse = await this.getNearestVertex(S_latlng);
-            var sGeometry = sResponse.features[0].geometry.coordinates;
+            
+            var sResponse = await this.getNearestVertex(S_latlng); // request nearest node to dragged marker
+            var sGeometry = sResponse.features[0].geometry.coordinates; // get the coordinates of nearest node
             m.options.nearestVertex = sResponse.features[0].properties.id;
-            m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
+            m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0])); // set coordinates of marker to nearest node found
             await this.regenPaths(m.options.index,false);
+
+            // if start or end marker then update values in sidebar
+            if (idx == 0) {
+                const startSpan = document.getElementById("start");
+                const startSpanTextNode = startSpan.querySelector("p");
+                startSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
+
+        
+            } else if (idx == this.markerlist.length - 1) {
+                const endSpan = document.getElementById("end");
+                const endSpanTextNode = endSpan.querySelector("p");
+                endSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
+            }
+         
+
         });
 
         if(!isStartOrEnd) {
@@ -355,7 +369,7 @@ export default class ClusterGroup {
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-        await this.regenPaths(marker.options.index,false);
+        // await this.regenPaths(marker.options.index,false);
     }
 
     async removePathMarker(pathIndex) {
@@ -374,5 +388,25 @@ export default class ClusterGroup {
     //
     markerSetIndex(marker, idx) {
         marker.options.index = idx;
+    }
+
+
+    // Helper function to split a layer into individual features by subtype
+    splitLayerBySubtype(geoJSON) {
+        var subTypes = {};
+        var allFeatures = geoJSON.features;
+
+        // process geoJSON and separate into individual layers
+        allFeatures.forEach(function (feature) {
+            var type = feature.properties.SUBTYPE;
+            if (type in subTypes) { // if subtype exists - append feature to list
+                subTypes[type].push(feature);
+            } else {
+                subTypes[type] = []; // create new key 
+                subTypes[type].push(feature); // append new feature
+            }
+        });
+
+        return subTypes;
     }
 }

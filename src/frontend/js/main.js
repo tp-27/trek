@@ -139,11 +139,11 @@ window.addEventListener('DOMContentLoaded', function() {
         const addDayDiv = document.querySelector(".day");
         const sideBarDiv = document.getElementById("home");
       
-
         sideBarDiv.insertBefore(newDayDiv, addDayDiv);
+        map.addStartMarkers(); // add start markers to map
+
     })
 });
-
 
 function createDayDiv (date, mapObj) {
     const dayDiv = document.createElement('div');
@@ -151,6 +151,14 @@ function createDayDiv (date, mapObj) {
     const startDateHeader = document.createElement("p");
     const selectBtnContainer = document.createElement("div");
     const selectStartDiv = document.createElement("div");
+    const selectStartSpan = document.createElement("span");
+    const selectStartIcon = document.createElement("img");
+    const selectStartText = document.createElement("p");
+
+    const selectEndSpan = document.createElement("span");
+    const selectEndIcon = document.createElement("img");
+    const selectEndText = document.createElement("p");
+
     const selectEndDiv = document.createElement("div");
     const deleteDayBtn = document.createElement("button");
     const confirmDayBtn = document.createElement("button");
@@ -164,15 +172,28 @@ function createDayDiv (date, mapObj) {
     startDateHeader.style.color = "black";
     
     selectStartDiv.classList.add("selectBtns");
-    selectStartDiv.innerText = "Start";
+    selectStartIcon.src = "../../src/frontend/assets/start-pin.svg"; 
+    selectStartSpan.classList.add("selectBtnSpan");
+    selectStartSpan.id = "start";
+    selectStartText.innerText = "Drag icon to select start";
+
+    selectStartSpan.appendChild(selectStartIcon);
+    selectStartSpan.appendChild(selectStartText);
+    selectStartDiv.appendChild(selectStartSpan);
+
     selectStartDiv.addEventListener("click", () => {
         console.log("add listener");
-        mapObj.addListenerContextMenu();
     })
 
 
     selectEndDiv.classList.add("selectBtns");
-    selectEndDiv.innerText = "End";
+    selectEndIcon.src = "../../src/frontend/assets/end-pin.svg"; 
+    selectEndSpan.classList.add("selectBtnSpan");
+    selectEndSpan.id = "end";
+    selectEndText.innerText = "Drag icon to select start";
+    selectEndSpan.appendChild(selectEndIcon);
+    selectEndSpan.appendChild(selectEndText);
+    selectEndDiv.appendChild(selectEndSpan);
 
     selectBtnContainer.classList.add("selectBtnContainer"); 
     selectBtnContainer.append(selectStartDiv);

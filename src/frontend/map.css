@@ -150,6 +150,22 @@ body {
     background-color: rgba(128, 128, 128, 0.429);
 }
 
+.selectBtnSpan {
+    display: flex;
+    width: 100%;
+    padding: 5px 10px;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 20px;
+    gap: 10px;
+    color: gray;
+}
+
+.selectBtnSpan img {
+    height: auto;
+    width: 25px;
+}
+
 .deleteDayBtn {
     height: 120%;
     width: 10%;

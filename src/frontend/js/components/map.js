@@ -22,26 +22,8 @@ export class Map {
         });
         
         this.sidebar.addTo(this.map);    
-
-
     }
-
-    addListenerContextMenu() {
-        this.map.on('contextmenu', function(e) {
-            var latlng = e.latlng;
-            console.log(latlng);
-            var marker = new L.marker(latlng);
-            console.log(this.map);
-            marker.addTo(this.map);
-            console.log("added");
-        });
-    }
-    
-    showSideBar() {
-        console.log(sidebar);
-        this.sidebar.open("home");
-    }
-
+  
     initMap(park) {
         this.park = park;
         
@@ -59,16 +41,9 @@ export class Map {
 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
-        addStartMarkers(this); // add route planning markers
+        // addStartMarkers(this); // add route planning markers
     }
 
-    removeChooseParkBtn() {
-        var parkBtn = document.getElementById("park-btn");
-        parkBtn.style.display = "none";
-
-        var navBar = document.getElementById("sidebar");
-        navBar.style.display = "block";
-    }
 
     showFeatureIcon(feature) {
         this.clusterGroup.showLayer(feature);
@@ -77,22 +52,45 @@ export class Map {
     hideFeatureIcon(feature) {
         this.clusterGroup.hideLayer(feature);
     }
+
+    showSideBar() {
+        console.log(sidebar);
+        this.sidebar.open("home");
+    }
+
+    async addStartMarkers(){
+        var canoe_iconS = L.icon({
+            iconUrl: "../../src/frontend/assets/start-pin.svg",
+            iconSize:     [38, 95], // size of the icon
+        });
+        var canoe_iconE = L.icon({
+            iconUrl: "../../src/frontend/assets/end-pin.svg",
+            iconSize:     [38, 95], // size of the icon
+        });
     
+        await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
+        await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
+    }
+
+    getStartEndMarkers() {
+        const endPoints = this.clusterGroup.getPathEndPoints();
+        console.log(endPoints);
+    }
 }
 
 export default Map;
 
-async function addStartMarkers(map){
-    var canoe_iconS = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoeS.png",
-        iconSize:     [38, 95], // size of the icon
-    });
-    var canoe_iconE = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoeE.png",
-        iconSize:     [38, 95], // size of the icon
-    });
+// async function addStartMarkers(map){
+//     var canoe_iconS = L.icon({
+//         iconUrl: "../../src/frontend/assets/Start_canoeS.png",
+//         iconSize:     [38, 95], // size of the icon
+//     });
+//     var canoe_iconE = L.icon({
+//         iconUrl: "../../src/frontend/assets/Start_canoeE.png",
+//         iconSize:     [38, 95], // size of the icon
+//     });
 
-    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
-    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
-}
+//     await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
+//     await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
+// }
 
