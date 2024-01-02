@@ -33,15 +33,31 @@ nav ul li {
 }
 
 nav ul li a {
-    display: inline-block;
+    /* display: inline-block; */
     height: 45px;
     width: 110%;
-    line-height: 40px;
-    text-align: center;
+    /* line-height: 40px; */
+    /* text-align: center; */
     color: white;
     text-decoration: none;
     font-size: 25px;
-    border-radius: 20px;
+    /* border-radius: 20px;  */
+}
+
+.desktop-nav {
+    /* border: 2px solid red; */
+}
+
+.desktop-nav li {
+    text-align: center;
+    padding: 2px 15px;
+    line-height: normal;
+    border-radius: 18px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.462);
+
 }
 
 nav li:first-child {
@@ -52,9 +68,9 @@ nav li:first-child {
     padding: 5px 10px;
 } */
 
-.nav-item a:hover {
+/* .nav-item a:hover {
     background: rgba(255, 255, 255, 0.462);
-}
+} */
 
 .action-btn {
     display: inline-block;
