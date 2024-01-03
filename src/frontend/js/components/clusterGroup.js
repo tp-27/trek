@@ -425,12 +425,16 @@ export default class ClusterGroup {
             routePathContainer.append(routePathSpan);
 
             routePathContainer.addEventListener("click", async () => { // on click append the route directions
-                if(routePathContainer.classList.contains("active")) {
-                    const pathDiv = routePathContainer.querySelector(".path-container");
-                    console.log(pathDiv);
-                    routePathContainer.remove(pathDiv);
-                    routePathContainer.classList.remove("active");
-                } else {
+                const pathDiv = routePathContainer.querySelector(".path-container");
+
+                if (pathDiv) { // if path container exists
+                    if (pathDiv.style.display === "none") {
+                        pathDiv.style.display = "flex";
+                        pathDiv.style.flexDirection = "column";
+                    } else {
+                        pathDiv.style.display = "none";
+                    }
+                } else { // create path container
                     routePathContainer.classList.add("active");
                     const data = await this.createDirectionsFromPath(this.pathDatalist);
                     const pathDiv = document.createElement("div");
@@ -451,6 +455,36 @@ export default class ClusterGroup {
                         routePathContainer.appendChild(pathDiv);
                     })
                 }
+
+
+                // if(routePathContainer.classList.contains("active")) { // path container is showing
+                //     const pathDiv = routePathContainer.querySelector(".path-container");
+                //     console.log(pathDiv);
+                //     // routePathContainer.remove(pathDiv);
+                //     routePathContainer.style.display = "none";
+
+                //     routePathContainer.classList.remove("active");
+                // } else {
+                //     routePathContainer.classList.add("active");
+                //     const data = await this.createDirectionsFromPath(this.pathDatalist);
+                //     const pathDiv = document.createElement("div");
+                //     pathDiv.classList.add("path-container");
+    
+                //     data.forEach((item, idx) => {
+                //         const pathSpan = document.createElement("span");
+                //         const pathNameNode = document.createElement("p");
+                //         const pathDistanceNode = document.createElement("p");
+    
+                //         pathNameNode.innerHTML = `${item.name}`;
+                //         pathDistanceNode.innerHTML = `${item.distance}`;
+    
+                //         pathSpan.classList.add("route-path-span");
+                //         pathSpan.appendChild(pathNameNode);
+                //         pathSpan.appendChild(pathDistanceNode);
+                //         pathDiv.appendChild(pathSpan);
+                //         routePathContainer.appendChild(pathDiv);
+                //     })
+                // }
 
               
 
