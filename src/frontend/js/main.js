@@ -14,10 +14,20 @@ window.addEventListener('DOMContentLoaded', function() {
     const selected = dropdown.querySelector(".selected");
     const startBtn = document.getElementById('startBtn')
 
+    var addDay = document.getElementById("addDay")
+
+    addDay.addEventListener("click", function () {
+        console.log('add')
+    })
 
     startBtn.addEventListener('click', () => {
         map.showSideBar(); // show sidebar  
     }) 
+
+
+    this.document.getElementById("addDay").addEventListener("click", function () {
+        console.log('add')
+    })
 
     select.addEventListener('click', () => {
         select.classList.toggle('select-clicked');
@@ -104,16 +114,8 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   
     var dateModal = document.getElementById("dateModal");
-    var addDay = document.getElementById("addDay")
     var closeModal = document.getElementsByClassName("close")[0];
-    
 
-    this.document.getElementById("addDay").addEventListener("click", function () {
-        console.log('add')
-    })
-    // addDay.addEventListener("click", function () {
-    //     console.log('add')
-    // })
 
 
     // addDay.onclick = function() {
