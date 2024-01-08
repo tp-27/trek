@@ -118,6 +118,15 @@ body {
     opacity: 1;
 }
 
+#pdf {
+    height: 50px;
+    width: 170px;
+    background-color: #FE6F2F;
+    border-radius: 18px;
+    color: white;
+    font-size: 20px;
+}
+
 
 @media(max-width: 890px) {
     .park-dropdown {
