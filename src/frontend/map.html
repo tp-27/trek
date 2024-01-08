@@ -18,11 +18,16 @@
         crossorigin=""></script>
         <script src="js/main.js" type="module" defer></script>
         <script src="js/components/map.js" type="module"></script>
-        <script src="js/components/navbar.js"></script>
+        <script src="js/components/navbar.js" type="module"></script>
+        <script src="js/components/pdf.js" type="module"></script>
         <script src="https://cdn.tailwindcss.com"></script> <!--Tailwind CSS-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
+        <script src="https://unpkg.com/pdf-lib@1.17.1"></script>
+        <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+        <link rel="stylesheet" href="css/Leaflet.BigImage.min.css">
+        <script src="js/components/Leaflet.BigImage.min.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
@@ -43,6 +48,7 @@
                         <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
                     </ul>
 
+
                     <ul role="tablist">
                         <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
                     </ul>
@@ -59,6 +65,23 @@
                         <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
                     </ul>
 
+                    <ul role="tablist">
+                        <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
+                    </ul>
+                    
+                    <ul role="tablist">
+                        <li><a href="#layers" role="tab"><i class="fa-solid fa-layer-group"></i></a></li>
+                    </ul>
+
+                    <ul role="tablist">
+                        <li><a href="#route-stats" role="tab"><i class="fa-solid fa-chart-simple"></i></a></li>
+                    </ul>
+
+                    <ul role="tablist">
+                        <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
+                    </ul>
+
+
                 </div>
         
                 <!-- Tab panes -->
@@ -72,6 +95,11 @@
                             <img src="../../src/frontend/assets/add.svg" alt="Plus icon">
                             <h2>Add a day</h2>
                         </div>
+                            sidebar-v2
+                            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                        </h1>
+        
+                        <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
                     </div>
                     
                     <!-- ROUTE DIRECTIONS PANE-->
@@ -97,6 +125,8 @@
                             </div>
                             <div class="table-row-group" id="directions-table"></div>
                         </div>
+                        <button id="pdf">Export to PDF</button>
+
                     </div>
 
                     <!-- ROUTE SETTINGS PANE-->
@@ -131,6 +161,7 @@
                         <input id="canoespeed-in" type="text" class="next-textinput" value="4">
                         <button id="canoespeed-btn" class="next-button">Set</button>
 
+
                         <!-- Max Daily Distance Setting -->
                         <h1><span class="bolded">Maximum Daily Distance (Km)</span></h1>
                         <input id="maxdist-in" type="text" class="next-textinput" value="12">
@@ -146,6 +177,24 @@
                         <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
                     </div>
 
+
+
+                        <!-- Max Daily Distance Setting -->
+                        <h1><span class="bolded">Maximum Daily Distance (Km)</span></h1>
+                        <input id="maxdist-in" type="text" class="next-textinput" value="12">
+                        <button id="maxdist-btn" class="next-button">Set</button>
+
+
+                        <!-- Triple Portage Distance Setting -->
+                        <h1><span class="bolded">Set Triple Portage Distance (There->Back->There)</span></h1>
+                        <button id="tpd-btn" class="next-button">Triple Portage Dist: False</button>
+                    </div>
+        
+                    <div class="sidebar-pane" id="settings">
+                        <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    </div>
+
+
                     <div class="sidebar-pane" id="layers">
                         <h1 class="sidebar-header">Layers and Icons<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
                         <div class="icons-container">
@@ -154,6 +203,20 @@
                                 <div class="icon-item">
                                     <img src="../../src/frontend/assets/tent.svg" alt="Tent">
                                     <input type="checkbox" id="campsite" name="icons" value="Designated Camping Site" checked>
+
+                                </div>
+
+                                <div class="icon-item">
+                                    <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
+                                    <input type="checkbox" id="access-point" name="icons" value="Access Point" checked>
+                                </div>
+
+                                <div class="icon-item">
+                                    <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
+                                    <input type="checkbox" id="picnic-area" name="icons" value="Picnic" checked>
+                                </div>
+
+
                                 </div>
 
                                 <div class="icon-item">
@@ -175,6 +238,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="modal" id="dateModal">
                 <div class="modal-content">
@@ -213,6 +277,23 @@
             </div> 
         </div>
         <script src="../frontend/js/leaflet-sidebar.js"></script>
+            <script src="../frontend/js/leaflet-sidebar.js"></script>
+            <div class="park-dropdown">
+                <div class="dropdown-header">
+                    <p class="selected">Algonquin</p>
+                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                </div>
+                <ul class="menu">
+                    <li>Kawartha</li>
+                    <li>Killarney</li>
+                    <li>Temagami</li>
+                    <li>Sleeping Giant</li>
+                    <li class="active">Algonquin</li>
+                </ul>
+
+                
+            </div>
+        </div>
     </body>
 
 </html>
