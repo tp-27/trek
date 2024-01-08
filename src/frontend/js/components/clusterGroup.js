@@ -106,13 +106,21 @@ export default class ClusterGroup {
         return subTypes;
     }
     
-    async addPath(index,sourceID, targetID) {
-        this.removePath(index);
+    async addPath(index,sourceID, targetID, onCreateMarker) {
+        if(onCreateMarker != true) {
+            this.removePath(index);
+        }
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
-            this.pathDatalist[index] = data;
+            var newPath = L.geoJSON(data).addTo(this.mapLayerGroup);
+            if(onCreateMarker == true) { //if a new marker is being created, instead of overwriting the old path, move it further in the array
+                this.pathlist.splice(index,0,newPath);
+                this.pathDatalist.splice(index,0,data);
+            } else {
+                this.pathlist[index] = newPath;
+                this.pathDatalist[index] = data;
+            }
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
                 await this.addPathMarker(index+1, e.latlng,false);
@@ -289,16 +297,16 @@ export default class ClusterGroup {
 
     }
 
-    async regenPaths(idx,onDeleteMarker) {
+    async regenPaths(idx,onDeleteMarker,onCreateMarker) {
         
         console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) {
             var m = this.markerlist[idx];
             if(idx == 0) {
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex,onCreateMarker);
             } else if(idx < this.markerlist.length - 1 && !onDeleteMarker){
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex,onCreateMarker);
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex,false);
             } else {
                 if(onDeleteMarker) {
                     this.pathlist[idx].remove();
@@ -306,7 +314,7 @@ export default class ClusterGroup {
                     this.pathlist.splice(idx,1);
                     var m = this.markerlist[idx];
                 }
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex,false);
             }
         }
         console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
@@ -321,26 +329,24 @@ export default class ClusterGroup {
             index: idx,
             nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
         }).addTo(this.mapLayerGroup);
-        
         if(customIcon != undefined) {
             m.setIcon(customIcon)
         }
         m.on('dragend', async (event) => {
             //console.log("Dragging: ", m.options.index);
             var S_latlng = event.target.getLatLng();
-            //m.bindPopup(S_latlng);
             var sResponse = await this.getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
             m.options.nearestVertex = sResponse.features[0].properties.id;
             m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
-            await this.regenPaths(m.options.index,false);
+            await this.regenPaths(m.options.index,false,false);
         });
 
         if(!isStartOrEnd) {
             m.on('dblclick', async (event) => {
                 var idx = m.options.index;
                 await this.removePathMarker(idx);
-                await this.regenPaths(idx,true);
+                await this.regenPaths(idx,true,false);
             });
         }
         
@@ -355,7 +361,8 @@ export default class ClusterGroup {
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-        await this.regenPaths(marker.options.index,false);
+
+        await this.regenPaths(marker.options.index,false,true);
     }
 
     async removePathMarker(pathIndex) {
