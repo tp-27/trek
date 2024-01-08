@@ -41,45 +41,6 @@ section {
 
 /********** Home ************/
 
-
-/*** Shoeprint Container ***/
-
-.shoeprint-container { 
-    position: absolute;   
-    min-height: 0; 
-}
-
-.shoeprint-container img {
-    height: auto;
-    width: 100px;
-    position: absolute;
-}
-
-#shoe1 {
-    left: 950px;
-    bottom: 80px;
-}
-
-#shoe2 {
-    width: 160px;
-    left: 850px;
-}
-
-#shoe3 {
-    width: 170px;
-    left: 700px;
-    top: 20px;
-    right: 50px;
-}
-
-#shoe4 {
-    width: 170px;
-    top: 100px;
-    right: 800px;
-}
-
-/*** Shoeprint Container ***/
-
 /****** Choose a Park ******/
 .choose-park {
     margin-top: 180px;

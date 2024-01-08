@@ -90,6 +90,7 @@ export class Map {
     getStartEndMarkers() {
         const endPoints = this.clusterGroup.getPathEndPoints();
         console.log(endPoints);
+    }
 
     // async addDirectionsToSidebar(pdata) {
     //     for(let marker of this.directionMarkers) {
@@ -233,7 +234,6 @@ export class Map {
         return details;
     }
 }
-
 export default Map;
 
 async function addStartMarkers(map){

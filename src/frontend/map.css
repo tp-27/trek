@@ -333,15 +333,24 @@ body {
     opacity: 1;
 }
 
+#addDay {
+    cursor: pointer
+}
+
+.pdf-btn-container {
+    padding-top: 2em;
+    width: 100%;
+    text-align: center;
+}
+
 #pdf {
-    height: 50px;
-    width: 170px;
+    height: 55px;
+    width: 250px;
     background-color: #FE6F2F;
     border-radius: 18px;
     color: white;
     font-size: 20px;
 }
-
 
 @media(max-width: 890px) {
     .park-dropdown {

@@ -37,17 +37,28 @@
     </head>
     <body>        
         <div id="map" class="sidebar-map">
+            <div class="start">
+                <button class="action-btn" id="startBtn">Start</button>
+            </div>
+            <div class="park-dropdown">
+                <div class="dropdown-header">
+                    <p class="selected">Algonquin</p>
+                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                </div>
+                <ul class="menu">
+                    <li>Kawartha</li>
+                    <li>Killarney</li>
+                    <li>Temagami</li>
+                    <li>Sleeping Giant</li>
+                    <li class="active">Algonquin</li>
+                </ul>
+            </div> 
             <div id="sidebar" class="sidebar collapsed">
                 <!-- Nav tabs -->
                 <div class="sidebar-tabs">
                     <ul role="tablist">
                         <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
                     </ul>
-        
-                    <ul role="tablist">
-                        <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-                    </ul>
-
 
                     <ul role="tablist">
                         <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
@@ -64,71 +75,25 @@
                     <ul role="tablist">
                         <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
                     </ul>
-
-                    <ul role="tablist">
-                        <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
-                    </ul>
-                    
-                    <ul role="tablist">
-                        <li><a href="#layers" role="tab"><i class="fa-solid fa-layer-group"></i></a></li>
-                    </ul>
-
-                    <ul role="tablist">
-                        <li><a href="#route-stats" role="tab"><i class="fa-solid fa-chart-simple"></i></a></li>
-                    </ul>
-
-                    <ul role="tablist">
-                        <li><a href="#route-directions" role="tab"><i class="fa-solid fa-arrows-turn-to-dots"></i></a></li>
-                    </ul>
-
-
                 </div>
         
                 <!-- Tab panes -->
                 <div class="sidebar-content">
+                    <!-- ROUTE PLAN PANE-->
                     <div class="sidebar-pane" id="home">
                         <h1 class="sidebar-header">
                             Plan your journey
                             <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                         </h1>
-                        <div class="day">
+                        <div class="day" id="addDay">
                             <img src="../../src/frontend/assets/add.svg" alt="Plus icon">
                             <h2>Add a day</h2>
                         </div>
-                            sidebar-v2
-                            <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                        </h1>
-        
-                        <p>A responsive sidebar for mapping libraries like <a href="http://leafletjs.com/">Leaflet</a> or <a href="http://openlayers.org/">OpenLayers</a>.</p>
+                        <div class="pdf-btn-container">
+                            <button id="pdf">Export to PDF</button>
+                        </div> 
                     </div>
                     
-                    <!-- ROUTE DIRECTIONS PANE-->
-                    <div class="sidebar-pane" id="route-directions">
-                        <h1 class="sidebar-header">Directions<span class="sidebar-close"><i class="fa-solid fa-arrows-turn-to-dots"></i></span></h1>
-
-                        <div class="flex">
-                            <div class="flex items-center h-5">
-                                <input id="directions-checkbox" aria-describedby="helper-checkbox-text" type="checkbox" value="" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                            </div>
-                            <div class="ms-2 text-sm">
-                                <label for="helper-checkbox" class="font-medium text-gray-900 dark:text-gray-300">Show Directions on Map</label>
-                                <p id="helper-checkbox-text" class="text-xs font-normal text-gray-500 dark:text-gray-300">Adds markers to the start and end of each trail segment.</p>
-                            </div>
-                        </div>
-
-                        <div class="table w-full ...">
-                            <div class="table-header-group ...">
-                                <div class="table-row">
-                                    <div class="table-cell text-left ..."><h1>Trail Name</h1></div>
-                                    <div class="table-cell text-left ..."><h1>Distance (m)</h1></div>
-                                </div>
-                            </div>
-                            <div class="table-row-group" id="directions-table"></div>
-                        </div>
-                        <button id="pdf">Export to PDF</button>
-
-                    </div>
-
                     <!-- ROUTE SETTINGS PANE-->
                     <div class="sidebar-pane" id="route-settings">
                         <h1 class="sidebar-header">Route Settings<span class="sidebar-close"><i class="fa-solid fa-route"></i></span></h1>
@@ -172,29 +137,8 @@
                         <h1><span class="bolded">Set Triple Portage Distance (There->Back->There)</span></h1>
                         <button id="tpd-btn" class="next-button">Triple Portage Dist: False</button>
                     </div>
-        
-                    <div class="sidebar-pane" id="settings">
-                        <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    </div>
 
-
-
-                        <!-- Max Daily Distance Setting -->
-                        <h1><span class="bolded">Maximum Daily Distance (Km)</span></h1>
-                        <input id="maxdist-in" type="text" class="next-textinput" value="12">
-                        <button id="maxdist-btn" class="next-button">Set</button>
-
-
-                        <!-- Triple Portage Distance Setting -->
-                        <h1><span class="bolded">Set Triple Portage Distance (There->Back->There)</span></h1>
-                        <button id="tpd-btn" class="next-button">Triple Portage Dist: False</button>
-                    </div>
-        
-                    <div class="sidebar-pane" id="settings">
-                        <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-                    </div>
-
-
+                    <!-- ROUTE LAYERS PANE-->
                     <div class="sidebar-pane" id="layers">
                         <h1 class="sidebar-header">Layers and Icons<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
                         <div class="icons-container">
@@ -230,51 +174,28 @@
                                 </div>
 
                             </div>
-                        </div>
-                        <div class="layers-container">
-                            <h2>Layers</h2>
-                        </div>
+                    </div>
 
+                    <div class="sidebar-pane" id="#route-stats">
+                        <h1 class="sidebar-header">Route Stats<span class="sidebar-close"><i class="fa-solid fa-route"></i></span></h1>
                     </div>
                 </div>
             </div>
+        </div>
 
-
-            <div class="modal" id="dateModal">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="close">&times;</span>
-                        <h1>Select the start date</h1>
-                 
-                    </div>
-                    <div class="modal-body">
-                        <label for="start">Start date:</label>
-                        <input type="date" id="dateStart" name="trip-start" value="" min="" max="" />
-                    </div>
+        <div class="modal" id="dateModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h1>Select the start date</h1>
                 </div>
-           
-            </div>
-            
-            <div class="start">
-                <button class="action-btn" id="startBtn">Start</button>
-            </div>
-
-
-            <div class="park-dropdown">
-                <div class="dropdown-header">
-                    <p class="selected">Algonquin</p>
-                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                <div class="modal-body">
+                    <label for="start">Start date:</label>
+                    <input type="date" id="dateStart" name="trip-start" value="" min="" max="" />
                 </div>
-                <ul class="menu">
-                    <li>Kawartha</li>
-                    <li>Killarney</li>
-                    <li>Temagami</li>
-                    <li>Sleeping Giant</li>
-                    <li class="active">Algonquin</li>
-                </ul>
-
-                
-            </div> 
+            </div>
+        </div>
+        
         </div>
         <script src="../frontend/js/leaflet-sidebar.js"></script>
             <script src="../frontend/js/leaflet-sidebar.js"></script>

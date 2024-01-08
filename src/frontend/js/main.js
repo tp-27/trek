@@ -3,17 +3,21 @@ import { modifyPdf, createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
 
-
-
 window.addEventListener('DOMContentLoaded', function() {
-    var map = new Map();
-    map.initMap("algonquin");
-    const dropdown = document.querySelector(".park-dropdown");
+    var map = new Map()
+    map.initMap('algonquin')
 
+    const dropdown = document.querySelector(".park-dropdown");
     const select = dropdown.querySelector(".dropdown-header");
     const menu = dropdown.querySelector(".menu");
     const options = dropdown.querySelectorAll(".menu li");
     const selected = dropdown.querySelector(".selected");
+    const startBtn = document.getElementById('startBtn')
+
+
+    startBtn.addEventListener('click', () => {
+        map.showSideBar(); // show sidebar  
+    }) 
 
     select.addEventListener('click', () => {
         select.classList.toggle('select-clicked');
@@ -32,27 +36,12 @@ window.addEventListener('DOMContentLoaded', function() {
         })
     })
 
-    //Settings Functions
-    //document.getElementById('{SettingName}').addEventListener("click", () => {
-    //      // Get Value
-    //      mapSettings.set{SettingName}();
-    //      mapSettings.setLocalStorage({SettingName},{Value})
-    //});
-
     this.document.getElementById("pdf").addEventListener("click", async () => {
         try {
-            // const routeInfo = await map.getRouteInfo();
-            // console.log(routeInfo);
-            // modifyPdf(routeInfo);
             createPdf(map.getTripDetails());
         } catch (error) {
             console.error("Failed to get route for pdf: ", error);
         }
-    })
-
-
-    this.document.getElementById("pdf").addEventListener("click", () => {      
-        modifyPdf(map.getRouteInfo()); // modify existing skeleton pdf and downloads
     })
 
     this.document.getElementById("canoespeed-btn").addEventListener("click", () => {
@@ -113,19 +102,24 @@ window.addEventListener('DOMContentLoaded', function() {
         map.MapSettings.displayDirectionsOnMap = event.target.checked;
         map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
     });
-
-    this.document.getElementById("startBtn").addEventListener("click", () => {
-        map.showSideBar(); // show sidebar 
-    })
   
-
     var dateModal = document.getElementById("dateModal");
-    var addDay = document.querySelector(".day");
+    var addDay = document.getElementById("addDay")
     var closeModal = document.getElementsByClassName("close")[0];
     
-    addDay.onclick = function() {
-        dateModal.style.display = "block";
-    }
+
+    this.document.getElementById("addDay").addEventListener("click", function () {
+        console.log('add')
+    })
+    // addDay.addEventListener("click", function () {
+    //     console.log('add')
+    // })
+
+
+    // addDay.onclick = function() {
+    //     console.log('add')
+    //     dateModal.style.display = "block";
+    // }
 
     closeModal.onclick = function() {
         dateModal.style.display = "none";
