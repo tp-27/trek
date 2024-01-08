@@ -207,6 +207,9 @@ function createDayDiv (date, mapObj) {
 
     confirmDayBtn.classList.add("confirmDayBtn");
     confirmDayBtn.innerText = "Finish day";
+    confirmDayBtn.addEventListener("click", () => {
+        
+    })
 
     dayDivBody.append(selectBtnContainer); // add the select btn container
 

@@ -94,7 +94,11 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
+            const newPath = L.geoJSON(data).setStyle({fillColor: '#808080'});
+            // this.pathlist[index] = newPath.addTo(this.mapLayerGroup);
+
+
+            // this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
             this.pathDatalist[index] = data;
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
