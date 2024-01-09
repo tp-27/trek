@@ -3,23 +3,10 @@ body {
     width: 100%;
 }
 
-.map-container {
+#map {
+    /* position: relative; */
     height: 100%;
     width: 100%;
-    background-color: #362312;
-    border-radius: 20px;
-    margin: auto;
-    margin-top: 150px;
-    margin-bottom: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.map-container .action-btn {
-    border: none;
-    height: 60px;
-    width: 200px;
 }
 
 .mycluster1 {
@@ -45,6 +32,234 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     z-index: 2; /* Ensure text is above the image */
+}
+
+.day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    width: 100%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.429);
+    gap: 5px;
+}
+
+.day:hover {
+    background-color: rgba(128, 128, 128, 0.429);
+}
+
+.day h2 {
+    font-size: 25px;
+    color: rgba(0, 0, 0, 0.364);
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 2200; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Could be more or less, depending on screen size */
+}
+
+.modal-header {
+    padding: 2px 16px;
+    background-color: #043B4B;
+    color: white;
+    text-align: center;
+}
+
+.modal-body {
+    padding: 20px 16px;
+    /* border: 2px solid red; */
+    text-align: center;
+}
+
+.modal-body label {
+    font-size: 30px;
+}
+
+#dateStart {
+    font-size: 30px;
+}
+
+
+.modal h1 {
+    font-size: 25px;
+}
+
+.close {
+    color: #fff;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.newDay {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 5px 5px;
+    padding-top: 20px;
+    padding-bottom: 25px;
+    height: auto;
+    width: 100%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.429);
+}
+
+.newDayBody {
+    width: 100%;
+    /* border: 2px solid red; */
+    display: flex;
+    flex-direction: column;
+}
+
+.newDayBody .route-path-container {
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    /* border: 2px solid red; */
+}
+
+.selectBtnContainer {
+    width: 100%;
+}
+
+.selectBtns {
+    height: 60%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    border: 1px solid rgba(128, 128, 128, 0.429);
+    cursor: pointer;
+}
+
+.selectBtns:hover {
+    background-color: rgba(128, 128, 128, 0.429);
+}
+
+.selectBtnSpan {
+    display: flex;
+    width: 100%;
+    padding: 5px 10px;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 20px;
+    gap: 10px;
+    color: gray;
+}
+
+.selectBtnSpan img {
+    height: auto;
+    width: 25px;
+}
+
+.deleteDayBtn {
+    margin-top: 25px;
+    height: 100%;
+    width: 100%;
+    color: white;
+    font-size: 25px;
+    background-color: red;
+}
+
+.deleteDayBtn:hover {
+    background-color: rgba(255, 0, 0, 0.668);
+}
+
+.route-path-container {
+    height: auto;
+    width: 100%;
+    border: 1px solid grey;
+}
+
+.route-path-container span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    gap: 7px;
+    cursor: pointer;
+}
+
+
+.route-path-container img {
+    height: auto;
+    width: 15px;
+}
+
+.route-path-container span p {
+    color: grey;
+    font-size: 16px;
+}
+
+.route-path-container span p:hover {
+    color: darkgrey;
+}
+
+.route-path-span {
+    display: flex;
+    text-align: left;
+    justify-content: space-around;
+    /* border: 2px solid red; */
+}
+
+.route-path-container .route-path-span p {
+    /* border: 2px solid red; */
+    font-size: 12px;
+}
+
+.confirmDayBtn {
+    height: 30%;
+    width: 100%;
+    background-color: green;
+    color: white;
+    font-size: 25px;
+}
+
+.start  {
+    width: 50%;
+    position: absolute;
+    z-index: 2000;
+    text-align: center;
+    padding-top: 25px;
+    margin-left: 500px;
+    /* border: 2px solid red; */
+}
+
+.start button {
+    height: 50px; 
+    width: 225px;
+    background-color: #043B4B;
+    color: white;
+}
+
+.start button:hover {
+    background-color: #043a4bae;
 }
 
 .park-dropdown {
@@ -118,6 +333,24 @@ body {
     opacity: 1;
 }
 
+#addDay {
+    cursor: pointer
+}
+
+.pdf-btn-container {
+    padding-top: 2em;
+    width: 100%;
+    text-align: center;
+}
+
+#pdf {
+    height: 55px;
+    width: 250px;
+    background-color: #FE6F2F;
+    border-radius: 18px;
+    color: white;
+    font-size: 20px;
+}
 
 @media(max-width: 890px) {
     .park-dropdown {
