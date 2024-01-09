@@ -298,7 +298,6 @@ export default class ClusterGroup {
     }
 
     async regenPaths(idx,onDeleteMarker,onCreateMarker) {
-        
         console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) {
             var m = this.markerlist[idx];
@@ -333,13 +332,14 @@ export default class ClusterGroup {
             m.setIcon(customIcon)
         }
         m.on('dragend', async (event) => {
-            //console.log("Dragging: ", m.options.index);
+            m.dragging.disable();
             var S_latlng = event.target.getLatLng();
             var sResponse = await this.getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
             m.options.nearestVertex = sResponse.features[0].properties.id;
             m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
             await this.regenPaths(m.options.index,false,false);
+            m.dragging.enable();
         });
 
         if(!isStartOrEnd) {
