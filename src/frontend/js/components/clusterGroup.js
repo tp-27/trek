@@ -96,7 +96,7 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            var newPath = L.geoJSON(data).addTo(this.mapLayerGroup);
+            var newPath = L.geoJSON(data).setStyle({fillColor: '#808080'}).addTo(this.mapLayerGroup);
             if(onCreateMarker == true) { //if a new marker is being created, instead of overwriting the old path, move it further in the array
                 this.pathlist.splice(index,0,newPath);
                 this.pathDatalist.splice(index,0,data);
@@ -316,7 +316,7 @@ export default class ClusterGroup {
         console.log(this.pathDatalist);
         console.log(this.pathlist);
         console.log(this.markerlist);
-        await this.addDirectionsToSidebar(this.pathDatalist);
+        //await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
 
@@ -338,6 +338,12 @@ export default class ClusterGroup {
             m.options.nearestVertex = sResponse.features[0].properties.id;
             m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
             await this.regenPaths(m.options.index,false,false);
+
+            // if start or end marker then update values in sidebar
+            if (idx == 0 || idx == this.markerlist.length - 1) {
+                await this.updatePathMarkersSideBar(m, idx);
+            }
+
             m.dragging.enable();
         });
 
@@ -360,7 +366,6 @@ export default class ClusterGroup {
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-
         await this.regenPaths(marker.options.index,false,true);
     }
 
