@@ -16,6 +16,76 @@ section {
 }
 
 
+.header {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../../src/frontend/assets/header-background.png");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+#logo{
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo img {
+    height: auto;
+    width: 40px;
+}
+
+.header-body {
+    height: 100%;
+    width: 100%;
+    /* border: 2px solid red; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 15%;
+    padding-left: 12%;
+    /* border: 2px solid red; */
+    height: 100%;
+    width: 50%;
+    gap: 10px;
+    white-space: nowrap;
+}
+
+.intro p {
+    font-size: 50px;
+    color: white;
+    position: relative;
+}
+
+.img-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 2px solid red; */
+    height: 100%;
+    width: 40%;
+    padding-top: 5%;
+    padding-right: 60px;
+    padding-bottom: 50px;
+}
+
+.header-body .img-container img {
+    height: auto;
+    width: 400px;
+}
+
+.text-break {
+    display: none;
+}
+
 /********** Home ************/
 
 .home {
@@ -35,61 +105,71 @@ section {
 
 .home-left .action-btn {
     margin-top: 30px;
-    line-height: 60px;
+    line-height: 65px;
     width: 225px;
 }
 
 /********** Home ************/
 
-/****** Choose a Park ******/
-.choose-park {
-    margin-top: 180px;
-    min-height: 0;
-}
-
-.choose-park-container {
-    width: 80%;
-    z-index: 1;
-}
-
-.choose-park-container h2 {
-    color: white;
-    font-weight: 400;
-    font-size: 45px;
-}
-
-.park-icon-container { 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    height: 400px;
-    width: 100%;
-    background-color: #ffffff4a;
-    border-radius: 20px;
-    margin-top: 30px;
-    box-shadow: 5px 10px 8px 10px rgba(0, 0, 0, 0.1); 
-}
-
-.park-icon-container img {
-    height: auto;
-    width: 250px;
-    transition: filter 0.2s ease;
-    filter: grayscale(100%);
-    -webkit-filter: grayscale(100%);
-    transition: 0.2s;
-}
-
-.park-icon-container img:hover {
-    filter: contrast(100%); /* Remove grayscale and restore full contrast on hover */
-    -webkit-filter: contrast(100%); /* WebKit-prefixed version */
-}
-
-/****** Choose a Park ******/
-
-
-@media(prefers-reduced-motion) {
-    .hidden {
-        transition: none;
+@media(max-width: 1000px) {
+    #truck {
+        padding-top: 80px;
+        width: 350px;
     }
 }
+
+@media(max-width: 780px) {
+    #truck {
+        padding-top: 100px;
+        width: 300px;
+    }
+
+    .intro {
+        padding-left: 7%;
+    }
+
+    .intro p {
+        font-size: 55px;
+        overflow-wrap: break-word;
+    }
+
+    .text-break {
+        display: inline;
+    }
+}
+
+@media(max-width: 480px) {
+    .header {
+        background-color: #043B4B;
+    }
+
+
+    .header-body {
+        flex-direction: column;
+    }
+
+    .intro {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding-top: 150px;
+        /* border: 2px solid red;*/
+        padding-right: 3%;
+    }
+
+    .intro p {
+        font-size: 48px;
+    }
+
+    .intro .action-btn {
+        width: 85%;
+    }
+
+    .img-container {
+        width: 100%;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0;
+    }
+}
+
