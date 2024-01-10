@@ -83,7 +83,7 @@ export default class ClusterGroup {
 
                 if(layerName === 'apt_seg') {
                     var trails = setPathStyles(data, false);
-                    this.allLayers[layerName] = trails;
+                    // this.allLayers[layerName] = trails;
                     trails.addTo(this.clusterGroup);
                 }
 
@@ -348,14 +348,16 @@ export default class ClusterGroup {
 
     async makeMarker(idx,pos,isStartOrEnd,customIcon) {
         var m = pathMarker(pos,
-        {   draggable: true,
-            autoPan: true,
-            index: idx,
-            nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
-        }).addTo(this.mapLayerGroup);
+            {   draggable: true,
+                autoPan: true,
+                index: idx,
+                nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
+            }).addTo(this.mapLayerGroup);
+
         if(customIcon != undefined) {
             m.setIcon(customIcon);
         }
+
         m.on('dragend', async (event) => {
             console.log("Disabled Dragging");
             m.dragging.disable();
@@ -363,12 +365,13 @@ export default class ClusterGroup {
             var sResponse = await this.getNearestVertex(S_latlng);
             var sGeometry = sResponse.features[0].geometry.coordinates;
             m.options.nearestVertex = sResponse.features[0].properties.id;
+            console.log(sResponse.features[0].properties.id)
             m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
             await this.regenPaths(m.options.index,false,false);
 
             // if start or end marker then update values in sidebar
             if (idx == 0 || idx == this.markerlist.length - 1) {
-                //await this.updatePathMarkersSideBar(m, idx);
+                this.updatePathMarkersSideBar(m, idx);
             }
 
             console.log("Re-Enabled Dragging");
@@ -389,12 +392,13 @@ export default class ClusterGroup {
 
     async addPathMarker(pathIndex,pos,isStartOrEnd,customIcon) {
         var marker = await this.makeMarker(pathIndex,pos,isStartOrEnd,customIcon);
+        console.log('hello 1')
         this.markerlist.splice(pathIndex, 0, marker);
         //change index of all future markers
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-        await this.regenPaths(marker.options.index,false,true);
+        await this.regenPaths(marker.options.index,true,true);
     }
 
     async removePathMarker(pathIndex) {
@@ -443,92 +447,73 @@ export default class ClusterGroup {
         });
 
         if (endPointsSelected) {
-            const routePathContainer = document.createElement("div");
-            const routePathSpan = document.createElement("span");
-            const routePathImg = document.createElement("img");
-            const routePathText = document.createElement("p");
-
             // append the route container after the select start container
             const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent 
             const selectStartContainer = selectBtnContainer.firstChild; // get the select start container
             
-            routePathContainer.classList.add("route-path-container");
-            routePathText.innerText = "Show path";
-            routePathImg.src = "../../src/frontend/assets/expand-all.svg";
-            routePathSpan.append(routePathImg);
-            routePathSpan.append(routePathText);
-            routePathContainer.append(routePathSpan);
+            let routePathContainer = document.querySelector(".route-path-container")
+            if (routePathContainer) {
+                routePathContainer.remove()
+            }
 
-            routePathContainer.addEventListener("click", async () => { // on click append the route directions
-                const pathDiv = routePathContainer.querySelector(".path-container");
-
-                if (pathDiv) { // if path container exists
-                    if (pathDiv.style.display === "none") {
-                        pathDiv.style.display = "flex";
-                        pathDiv.style.flexDirection = "column";
-                    } else {
-                        pathDiv.style.display = "none";
-                    }
-                } else { // create path container
-                    routePathContainer.classList.add("active");
-                    const data = await this.createDirectionsFromPath(this.pathDatalist);
-                    const pathDiv = document.createElement("div");
-                    pathDiv.classList.add("path-container");
-    
-                    data.forEach((item, idx) => {
-                        const pathSpan = document.createElement("span");
-                        const pathNameNode = document.createElement("p");
-                        const pathDistanceNode = document.createElement("p");
-    
-                        pathNameNode.innerHTML = `${item.name}`;
-                        pathDistanceNode.innerHTML = `${item.distance}`;
-    
-                        pathSpan.classList.add("route-path-span");
-                        pathSpan.appendChild(pathNameNode);
-                        pathSpan.appendChild(pathDistanceNode);
-                        pathDiv.appendChild(pathSpan);
-                        routePathContainer.appendChild(pathDiv);
-                    })
-                }
-
-
-                // if(routePathContainer.classList.contains("active")) { // path container is showing
-                //     const pathDiv = routePathContainer.querySelector(".path-container");
-                //     console.log(pathDiv);
-                //     // routePathContainer.remove(pathDiv);
-                //     routePathContainer.style.display = "none";
-
-                //     routePathContainer.classList.remove("active");
-                // } else {
-                //     routePathContainer.classList.add("active");
-                //     const data = await this.createDirectionsFromPath(this.pathDatalist);
-                //     const pathDiv = document.createElement("div");
-                //     pathDiv.classList.add("path-container");
-    
-                //     data.forEach((item, idx) => {
-                //         const pathSpan = document.createElement("span");
-                //         const pathNameNode = document.createElement("p");
-                //         const pathDistanceNode = document.createElement("p");
-    
-                //         pathNameNode.innerHTML = `${item.name}`;
-                //         pathDistanceNode.innerHTML = `${item.distance}`;
-    
-                //         pathSpan.classList.add("route-path-span");
-                //         pathSpan.appendChild(pathNameNode);
-                //         pathSpan.appendChild(pathDistanceNode);
-                //         pathDiv.appendChild(pathSpan);
-                //         routePathContainer.appendChild(pathDiv);
-                //     })
-                // }
-
-              
-
-            })
-
-
+            routePathContainer = this.createRoutePathContainer()
+            console.log(routePathContainer)
             selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
         }
 
+    }
+
+    createRoutePathContainer() {
+        const routePathContainer = document.createElement("div");
+        const routePathSpan = document.createElement("span");
+        const routePathImg = document.createElement("img");
+        const routePathText = document.createElement("p");
+
+        routePathContainer.classList.add("route-path-container");
+        routePathText.innerText = "Show path";
+        routePathImg.src = "../../src/frontend/assets/expand-all.svg";
+        routePathSpan.append(routePathImg);
+        routePathSpan.append(routePathText);
+        routePathContainer.append(routePathSpan);
+
+        routePathContainer.addEventListener("click", async () => { // on click append the route directions
+            const pathTable = routePathContainer.querySelector(".path-table");
+
+            if (pathTable) { // if path container exists
+                pathTable.style.display === "block" ? pathTable.style.display = "none" :  pathTable.style.display = "block"
+            } else { // create path container
+                const data = await this.createDirectionsFromPath(this.pathDatalist);
+                const pathTable = document.createElement("table")
+                const pathTableHeaderRow = document.createElement("tr")
+                const pathTypeHeader = document.createElement("th")
+                const pathDistanceHeader = document.createElement("th")
+
+                routePathContainer.classList.add("active");
+                pathTable.classList.add('path-table')
+                pathTypeHeader.innerHTML = "Portage/Lake"
+                pathDistanceHeader.innerHTML = "Distance (m)"
+
+                pathTableHeaderRow.appendChild(pathTypeHeader)
+                pathTableHeaderRow.appendChild(pathDistanceHeader)
+                pathTable.appendChild(pathTableHeaderRow)
+                
+                data.forEach((item, idx) => {
+                    const pathTableRow = document.createElement("tr")
+                    const pathTypeData = document.createElement("td")
+                    const pathDistData = document.createElement("td")
+
+                    pathTableRow.classList.add('path-row')
+                    pathTypeData.innerHTML = `${item.name}`;
+                    pathDistData.innerHTML = `${item.distance}`;
+
+                    pathTableRow.appendChild(pathTypeData)
+                    pathTableRow.appendChild(pathDistData)
+                    pathTable.appendChild(pathTableRow)
+                })
+                routePathContainer.appendChild(pathTable);
+            }              
+        })
+        return routePathContainer
     }
 
 

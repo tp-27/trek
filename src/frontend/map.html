@@ -22,8 +22,9 @@
         <script src="js/components/pdf.js" type="module"></script>
         <script src="https://cdn.tailwindcss.com"></script> <!--Tailwind CSS-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
         <script src="https://unpkg.com/pdf-lib@1.17.1"></script>
         <script src="https://unpkg.com/downloadjs@1.4.7"></script>
         <link rel="stylesheet" href="css/Leaflet.BigImage.min.css">
@@ -57,11 +58,11 @@
                 <!-- Nav tabs -->
                 <div class="sidebar-tabs">
                     <ul role="tablist">
-                        <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                        <li><a href="#home" role="tab"><i class="fa-solid fa-route"></i></a></li>
                     </ul>
 
                     <ul role="tablist">
-                        <li><a href="#route-settings" role="tab"><i class="fa-solid fa-route"></i></a></li>
+                        <li><a href="#route-settings" role="tab"><i class="fa-solid fa-gear"></i></a></li>
                     </ul>
                     
                     <ul role="tablist">
@@ -96,7 +97,7 @@
                     
                     <!-- ROUTE SETTINGS PANE-->
                     <div class="sidebar-pane" id="route-settings">
-                        <h1 class="sidebar-header">Route Settings<span class="sidebar-close"><i class="fa-solid fa-route"></i></span></h1>
+                        <h1 class="sidebar-header">Route Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
 
                         <!-- Difficulty Selection Setting-->
                         <h1><span class="bolded">Canoe/Portage Skill Level</span></h1>
@@ -162,17 +163,6 @@
 
 
                                 </div>
-
-                                <div class="icon-item">
-                                    <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
-                                    <input type="checkbox" id="access-point" name="icons" value="Access Point" checked>
-                                </div>
-
-                                <div class="icon-item">
-                                    <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
-                                    <input type="checkbox" id="picnic-area" name="icons" value="Picnic" checked>
-                                </div>
-
                             </div>
                     </div>
 

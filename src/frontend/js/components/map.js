@@ -27,14 +27,6 @@ export class Map {
         
         this.sidebar.addTo(this.map);    
 
-//         var mapDiv = document.getElementById("map");
-//         mapDiv.style.display = "block"; // display map in map container
-//         mapDiv.style.height = "100%";
-//         mapDiv.style.width = "100%";
-
-//         var sidebar = L.control.sidebar('sidebar').addTo(this.map);
-//         console.log("Sidebar Added: ", sidebar);
-
     }
   
     initMap(park) {
@@ -46,10 +38,7 @@ export class Map {
             minZoom: 8,
             maxZoom: 16,
            maxBounds: L.latLngBounds(this.SW, this.NE)
-    
-
         });
-
 
         this.initMapDiv(); // show map in container
         L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
@@ -83,6 +72,7 @@ export class Map {
             iconSize:     [38, 95], // size of the icon
         });
     
+
         await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
         await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
     }

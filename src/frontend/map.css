@@ -1,3 +1,10 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
 body {
     height: 100vh;
     width: 100%;
@@ -142,18 +149,35 @@ body {
     /* border: 2px solid red; */
 }
 
+.day-header {
+    border: 2px solid red;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.edit-btn {
+    display: block;
+    color: grey;
+}
+
+.edit-btn .inactive {
+    display: none;
+}
+
 .selectBtnContainer {
+    text-align: left;
     width: 100%;
 }
 
 .selectBtns {
-    height: 60%;
+    height: 40%;
     width: 100%;
     display: flex;
-    justify-content: center;
+    /* justify-content: flex-start; */
     align-items: center;
     font-size: 25px;
-    border: 1px solid rgba(128, 128, 128, 0.429);
+    /* border: 1px solid rgba(128, 128, 128, 0.429); */
     cursor: pointer;
 }
 
@@ -191,9 +215,11 @@ body {
 }
 
 .route-path-container {
-    height: auto;
-    width: 100%;
-    border: 1px solid grey;
+    padding-top: 0;
+    width: 80%;
+    border-top: 0.5px solid rgba(128, 128, 128, 0.552);
+    border-bottom: 0.5px solid rgba(128, 128, 128, 0.561);
+    
 }
 
 .route-path-container span {
@@ -201,8 +227,6 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding-top: 6px;
-    padding-bottom: 6px;
     gap: 7px;
     cursor: pointer;
 }
@@ -331,6 +355,7 @@ body {
 
 .active {
     background: #fff;
+    padding: 1em 2em;
 }
 
 .menu-open {
@@ -355,6 +380,33 @@ body {
     border-radius: 18px;
     color: white;
     font-size: 20px;
+}
+
+.icons-container h2 {
+    font-size: 25px;
+}
+
+.path-table {
+    /* border: 2px solid blue; */
+    display: block;
+    width: 100%;
+    font-size: 18px;
+    align-items: center;
+}
+
+.path-table th {
+    text-align: left;
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+.path-row {
+    text-align: left;
+    padding-left: 1em;
+}
+
+.path-row td {
+    color: rgb(86, 84, 84);
 }
 
 @media(max-width: 890px) {
