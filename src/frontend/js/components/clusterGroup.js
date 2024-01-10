@@ -89,17 +89,22 @@ export default class ClusterGroup {
             .catch(err => console.log("Rejected: " + err.message));
     }
     
-    async addPath(index,sourceID, targetID) {
-        this.removePath(index);
+    async addPath(index,sourceID, targetID, onCreateMarker) {
+        if(onCreateMarker != true) {
+            this.removePath(index);
+        }
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            const newPath = L.geoJSON(data).setStyle({fillColor: '#808080'});
-            // this.pathlist[index] = newPath.addTo(this.mapLayerGroup);
+            var newPath = L.geoJSON(data).setStyle({fillColor: '#808080'}).addTo(this.mapLayerGroup);
+            if(onCreateMarker == true) { //if a new marker is being created, instead of overwriting the old path, move it further in the array
+                this.pathlist.splice(index,0,newPath);
+                this.pathDatalist.splice(index,0,data);
+            } else {
+                this.pathlist[index] = newPath;
+                this.pathDatalist[index] = data;
+            }
 
-
-            // this.pathlist[index] = L.geoJSON(data).addTo(this.mapLayerGroup);
-            this.pathDatalist[index] = data;
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
                 await this.addPathMarker(index+1, e.latlng,false);
@@ -287,15 +292,15 @@ export default class ClusterGroup {
         return endPoints;
     }
 
-    async regenPaths(idx,onDeleteMarker) {
+    async regenPaths(idx,onDeleteMarker,onCreateMarker) {
         console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) { 
             var m = this.markerlist[idx];
             if(idx == 0) {
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex,onCreateMarker);
             } else if(idx < this.markerlist.length - 1 && !onDeleteMarker){
-                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex);
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+                await this.addPath(idx, m.options.nearestVertex, this.markerlist[idx+1].options.nearestVertex,onCreateMarker);
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex,false);
             } else {
                 if(onDeleteMarker) {
                     this.pathlist[idx].remove();
@@ -303,7 +308,7 @@ export default class ClusterGroup {
                     this.pathlist.splice(idx,1);
                     var m = this.markerlist[idx];
                 }
-                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex);
+                await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex,false);
             }
         }
         console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
@@ -311,7 +316,7 @@ export default class ClusterGroup {
         console.log(this.pathDatalist);
         console.log(this.pathlist);
         console.log(this.markerlist);
-        await this.addDirectionsToSidebar(this.pathDatalist);
+        //await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
 
@@ -322,33 +327,31 @@ export default class ClusterGroup {
             index: idx,
             nearestVertex: (await this.getNearestVertex(pos)).features[0].properties.id,
         }).addTo(this.mapLayerGroup);
-        
         if(customIcon != undefined) {
             m.setIcon(customIcon);
         }
         m.on('dragend', async (event) => {
-            //console.log("Dragging: ", m.options.index);
-            var S_latlng = event.target.getLatLng(); // get coordinates of dragged marker
-            //m.bindPopup(S_latlng);
-            
-            var sResponse = await this.getNearestVertex(S_latlng); // request nearest node to dragged marker
-            var sGeometry = sResponse.features[0].geometry.coordinates; // get the coordinates of nearest node
+            m.dragging.disable();
+            var S_latlng = event.target.getLatLng();
+            var sResponse = await this.getNearestVertex(S_latlng);
+            var sGeometry = sResponse.features[0].geometry.coordinates;
             m.options.nearestVertex = sResponse.features[0].properties.id;
-            m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0])); // set coordinates of marker to nearest node found
-            await this.regenPaths(m.options.index,false);
+            m.setLatLng(new L.LatLng(sGeometry[1],sGeometry[0]));
+            await this.regenPaths(m.options.index,false,false);
 
             // if start or end marker then update values in sidebar
             if (idx == 0 || idx == this.markerlist.length - 1) {
                 await this.updatePathMarkersSideBar(m, idx);
             }
 
+            m.dragging.enable();
         });
 
         if(!isStartOrEnd) {
             m.on('dblclick', async (event) => {
                 var idx = m.options.index;
                 await this.removePathMarker(idx);
-                await this.regenPaths(idx,true);
+                await this.regenPaths(idx,true,false);
             });
         }
         
@@ -363,7 +366,7 @@ export default class ClusterGroup {
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-        // await this.regenPaths(marker.options.index,false);
+        await this.regenPaths(marker.options.index,false,true);
     }
 
     async removePathMarker(pathIndex) {
