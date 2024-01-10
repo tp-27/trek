@@ -111,6 +111,19 @@ export default class ClusterGroup {
                 this.pathlist[index] = newPath;
                 this.pathDatalist[index] = data;
             }
+            //add name hover for path segment
+            //can also add distance easily
+            //and maybe add highlighting when
+            for(var p in newPath._layers) {
+                var e = newPath._layers[p];
+                e.bindPopup(e.feature.properties.name);
+                e.on('mouseover', function (e) {
+                    this.openPopup();
+                });
+                e.on('mouseout', function (e) {
+                    this.closePopup();
+                });
+            }
 
             this.pathlist[index].on('click', async (e) => {
                 //console.log("Path index ", index, " clicked!");
@@ -246,7 +259,7 @@ export default class ClusterGroup {
         }
         //console.log("Adding Direction to Sidebar!", pdata);
         this.directionMarkers = [];
-
+        
         const data = await this.createDirectionsFromPath(pdata);
         
         const outputDiv = document.getElementById('directions-table');
@@ -323,6 +336,8 @@ export default class ClusterGroup {
         return;
     }
 
+
+
     async makeMarker(idx,pos,isStartOrEnd,customIcon) {
         var m = pathMarker(pos,
         {   draggable: true,
@@ -345,7 +360,7 @@ export default class ClusterGroup {
 
             // if start or end marker then update values in sidebar
             if (idx == 0 || idx == this.markerlist.length - 1) {
-                await this.updatePathMarkersSideBar(m, idx);
+                //await this.updatePathMarkersSideBar(m, idx);
             }
 
             console.log("Re-Enabled Dragging");

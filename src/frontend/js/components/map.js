@@ -235,17 +235,3 @@ export class Map {
     }
 }
 export default Map;
-
-async function addStartMarkers(map){
-    var canoe_iconS = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoeS.png",
-        iconSize:     [38, 95], // size of the icon
-    });
-    var canoe_iconE = L.icon({
-        iconUrl: "../../src/frontend/assets/Start_canoeE.png",
-        iconSize:     [38, 95], // size of the icon
-    });
-
-    await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
-    await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
-}
