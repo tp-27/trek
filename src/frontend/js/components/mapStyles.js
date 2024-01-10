@@ -2,30 +2,30 @@ export function setMarkerStyles(subtype, geoJSON) {
     const icons =  { // icon styles for various features
         "Designated Camping Site": L.icon({
             iconUrl: '../../src/frontend/assets/tent.svg',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
+            iconSize: [20, 20],
+            iconAnchor: [10, 20],
+            popupAnchor: [0, -20],
         }),
         
         "Access Point": L.icon({
             iconUrl: '../../src/frontend/assets/access.svg',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
+            iconSize: [20, 20],
+            iconAnchor: [10, 20],
+            popupAnchor: [0, -20],
         }),
     
         "Picnic Site": L.icon({
             iconUrl: '../../src/frontend/assets/picnic_shelters.svg',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
+            iconSize: [20, 20],
+            iconAnchor: [10, 20],
+            popupAnchor: [0, -20],
         }),
     
         "Clubhouse": L.icon({
             iconUrl: '../../src/frontend/assets/historic_buildings.svg',
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -32],
+            iconSize: [20, 20],
+            iconAnchor: [10, 20],
+            popupAnchor: [0, -20],
         }),
     };
 
@@ -44,4 +44,24 @@ export function setMarkerStyles(subtype, geoJSON) {
     });
 
     return layer;
+}
+
+export function setPathStyles(geoJSON, isRoute) {
+    //isRoute -> change styling based on if path is a route or part of main trail display
+    //Types:
+    //  LakeRoute (Only exists if isRoute == true because apt_seg does not contain lakeroutes)
+    //  canoeRoute
+    //  portageRoute (could be a portageRoute or a trail)
+    console.log("PathStyle GeoJSON: ", geoJSON);
+    geoJSON = L.geoJSON(geoJSON, {
+        style: function(obj) {
+            var opacity;
+            return {
+                //set styles here
+                
+            };
+        }
+    });
+
+    return geoJSON;
 }

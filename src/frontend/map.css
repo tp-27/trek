@@ -15,8 +15,8 @@ body {
     
     text-align: center;
     font-size: 24px;
-    width: 60px; /* Adjust the width as needed */
-    height: 60px; /* Adjust the height as needed */
+    width: 40px; /* Adjust the width as needed */
+    height: 40px; /* Adjust the height as needed */
 }
 
 .mycluster1 img {
@@ -32,6 +32,7 @@ body {
     transform: translate(-50%, -50%);
     color: white;
     z-index: 2; /* Ensure text is above the image */
+    font-size: small;
 }
 
 .day {

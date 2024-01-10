@@ -55,7 +55,7 @@ export class Map {
         L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
-         addStartMarkers(this); // add route planning markers
+        // addStartMarkers(this); // add route planning markers
     }
 
 

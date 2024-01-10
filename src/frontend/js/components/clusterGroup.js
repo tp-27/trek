@@ -1,4 +1,4 @@
-import { setMarkerStyles } from "./mapStyles.js";
+import { setMarkerStyles, setPathStyles } from "./mapStyles.js";
 import { mapSettings } from "./mapSettings.js";
 
 const serverURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
@@ -19,15 +19,15 @@ export default class ClusterGroup {
         this.allLayers = {}; // dictionary containing layer identifiers, layer object pairs
         this.mapLayerGroup = L.layerGroup(); // layer for route planning markers
         this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
-            showCoverageOnHover: true,
+            showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
             removeOutsideVisibleBounds: true,
-            disableClusteringAtZoom: 15,
+            disableClusteringAtZoom: 14,
             iconCreateFunction :    function (cluster){
                 var cluster_markers = cluster.getAllChildMarkers();
                 var n = 0;
                 n += cluster_markers.length;
-                var scaledSize = Math.min(80, Math.max(30, n));
+                var scaledSize = Math.min(20, Math.max(10, n));
                 return  L.divIcon({
                     html: '<div class="mycluster1"><img src="../../src/frontend/assets/tent.svg" alt="Tent"><div class="cluster-text">' + n + '</div></div>',
                     className: 'mycluster1',
@@ -45,6 +45,7 @@ export default class ClusterGroup {
         this.baseURL = serverURL;
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point'); // campsites, access points, picnic area feature layer
+        //this.trails = this.addLayer('apt_seg'); //trails, portages, canoe routes
         this.mapSettings = mapSettings;
 
         //Multipoint Routing
@@ -80,6 +81,12 @@ export default class ClusterGroup {
                     layers = this.splitLayerBySubtype(data); // Split different features into individual layers - comes as one layer from geoserver
                 } 
 
+                if(layerName === 'apt_seg') {
+                    var trails = setPathStyles(data, false);
+                    this.allLayers[layerName] = trails;
+                    trails.addTo(this.clusterGroup);
+                }
+
                 for (const [subtype, features] of Object.entries(layers)) { // loop through individual layers
                     var styledLayer = setMarkerStyles(subtype, features); // set marker styles for each individual layer 
                     styledLayer.addTo(this.clusterGroup); // add styled layer to cluster group
@@ -96,7 +103,7 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            var newPath = L.geoJSON(data).setStyle({fillColor: '#808080'}).addTo(this.mapLayerGroup);
+            var newPath = setPathStyles(data,true).addTo(this.mapLayerGroup);
             if(onCreateMarker == true) { //if a new marker is being created, instead of overwriting the old path, move it further in the array
                 this.pathlist.splice(index,0,newPath);
                 this.pathDatalist.splice(index,0,data);
@@ -293,7 +300,7 @@ export default class ClusterGroup {
     }
 
     async regenPaths(idx,onDeleteMarker,onCreateMarker) {
-        console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
+        //console.log(`Before - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         if(this.markerlist.length > 1 && idx < this.markerlist.length) { 
             var m = this.markerlist[idx];
             if(idx == 0) {
@@ -311,11 +318,7 @@ export default class ClusterGroup {
                 await this.addPath(idx - 1, this.markerlist[idx-1].options.nearestVertex, m.options.nearestVertex,false);
             }
         }
-        console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
-        
-        console.log(this.pathDatalist);
-        console.log(this.pathlist);
-        console.log(this.markerlist);
+        //console.log(`After - Regen: [${idx}] OnDel: [${onDeleteMarker}] MLen: [${this.markerlist.length}] PLen: [${this.pathlist.length}]`);
         //await this.addDirectionsToSidebar(this.pathDatalist);
         return;
     }
@@ -331,6 +334,7 @@ export default class ClusterGroup {
             m.setIcon(customIcon);
         }
         m.on('dragend', async (event) => {
+            console.log("Disabled Dragging");
             m.dragging.disable();
             var S_latlng = event.target.getLatLng();
             var sResponse = await this.getNearestVertex(S_latlng);
@@ -344,6 +348,7 @@ export default class ClusterGroup {
                 await this.updatePathMarkersSideBar(m, idx);
             }
 
+            console.log("Re-Enabled Dragging");
             m.dragging.enable();
         });
 
