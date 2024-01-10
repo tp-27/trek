@@ -19,7 +19,7 @@ export default class ClusterGroup {
         this.allLayers = {}; // dictionary containing layer identifiers, layer object pairs
         this.mapLayerGroup = L.layerGroup(); // layer for route planning markers
         this.clusterGroup =  L.markerClusterGroup({ // layer for campsites, access points, picnic areas
-            showCoverageOnHover: true,
+            showCoverageOnHover: false,
             zoomToBoundsOnClick: true,
             removeOutsideVisibleBounds: true,
             disableClusteringAtZoom: 15,
@@ -96,7 +96,7 @@ export default class ClusterGroup {
         console.log(`New Path [${index}] - from ${sourceID} to ${targetID}`);
         await this.getPath(sourceID, targetID)
         .then(async data => {
-            var newPath = L.geoJSON(data).setStyle({fillColor: '#808080'}).addTo(this.mapLayerGroup);
+            var newPath = L.geoJSON(data).setStyle({weight: 2, color: '#303030'}).addTo(this.mapLayerGroup);
             if(onCreateMarker == true) { //if a new marker is being created, instead of overwriting the old path, move it further in the array
                 this.pathlist.splice(index,0,newPath);
                 this.pathDatalist.splice(index,0,data);

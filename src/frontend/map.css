@@ -247,15 +247,19 @@ body {
     z-index: 2000;
     text-align: center;
     padding-top: 25px;
+
     margin-left: 500px;
     /* border: 2px solid red; */
 }
 
 .start button {
-    height: 50px; 
+    
+    height: 60px; 
     width: 225px;
+    
     background-color: #043B4B;
     color: white;
+   
 }
 
 .start button:hover {
