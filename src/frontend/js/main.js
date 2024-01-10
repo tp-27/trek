@@ -22,13 +22,6 @@ window.addEventListener('DOMContentLoaded', function() {
     var dateModal = document.getElementById("dateModal");
     var closeModal = document.getElementsByClassName("close")[0];
 
-
-
-    // addDay.onclick = function() {
-    //     console.log('add')
-    //     dateModal.style.display = "block";
-    // }
-
     closeModal.onclick = function() {
         dateModal.style.display = "none";
     }
@@ -63,12 +56,9 @@ window.addEventListener('DOMContentLoaded', function() {
 
     })
 
-
     this.document.getElementById("addDay").addEventListener("click", function () {
         dateModal.style.display = "block";
     })
-
-
 
 
     select.addEventListener('click', () => {
@@ -150,10 +140,11 @@ window.addEventListener('DOMContentLoaded', function() {
         map.MapSettings.triplePortageDistance = value;
         this.document.getElementById("tpd-btn").textContent = "Triple Portage Dist: " + value;
     });
-    this.document.getElementById("directions-checkbox").addEventListener("change", (event) => {
-        map.MapSettings.displayDirectionsOnMap = event.target.checked;
-        map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
-    });
+
+    // this.document.getElementById("directions-checkbox").addEventListener("change", (event) => {
+    //     map.MapSettings.displayDirectionsOnMap = event.target.checked;
+    //     map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
+    // });
   
 });
 
@@ -174,14 +165,20 @@ function createDayDiv (date, mapObj) {
     const selectEndDiv = document.createElement("div");
     const deleteDayBtn = document.createElement("button");
     const confirmDayBtn = document.createElement("button");
+    const editDayBtn = document.createElement("button");
 
     dayDiv.classList.add("newDay");
     dayDivBody.classList.add("newDayBody"); 
 
+    startDateHeader.classList.add("day-header")
     startDateHeader.innerText = date;
     startDateHeader.style.fontSize = "18px";
     startDateHeader.style.fontWeight = "700";
     startDateHeader.style.color = "black";
+    editDayBtn.innerText = "Edit"
+    editDayBtn.classList.add("edit-btn")
+    editDayBtn.classList.add("inactive")
+
     
     selectStartDiv.classList.add("selectBtns");
     selectStartIcon.src = "../../src/frontend/assets/start-pin.svg"; 
@@ -198,11 +195,12 @@ function createDayDiv (date, mapObj) {
     })
 
 
+
     selectEndDiv.classList.add("selectBtns");
     selectEndIcon.src = "../../src/frontend/assets/end-pin.svg"; 
     selectEndSpan.classList.add("selectBtnSpan");
     selectEndSpan.id = "end";
-    selectEndText.innerText = "Drag icon to select start";
+    selectEndText.innerText = "Drag icon to select end";
     selectEndSpan.appendChild(selectEndIcon);
     selectEndSpan.appendChild(selectEndText);
     selectEndDiv.appendChild(selectEndSpan);
@@ -220,7 +218,9 @@ function createDayDiv (date, mapObj) {
     confirmDayBtn.classList.add("confirmDayBtn");
     confirmDayBtn.innerText = "Finish day";
     confirmDayBtn.addEventListener("click", () => {
-        
+        deleteDayBtn.remove()
+        confirmDayBtn.remove()
+        startDateHeader.appendChild(editDayBtn)
     })
 
     dayDivBody.append(selectBtnContainer); // add the select btn container

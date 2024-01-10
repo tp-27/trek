@@ -22,7 +22,7 @@ section {
     background-image: url("../../src/frontend/assets/header-background.png");
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-color: #043B4B;
+    /* background-color: #043B4B; */
 }
 
 #logo{
