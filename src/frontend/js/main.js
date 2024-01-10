@@ -14,20 +14,62 @@ window.addEventListener('DOMContentLoaded', function() {
     const selected = dropdown.querySelector(".selected");
     const startBtn = document.getElementById('startBtn')
 
-    var addDay = document.getElementById("addDay")
-
-    addDay.addEventListener("click", function () {
-        console.log('add')
-    })
 
     startBtn.addEventListener('click', () => {
         map.showSideBar(); // show sidebar  
     }) 
 
+    var dateModal = document.getElementById("dateModal");
+    var closeModal = document.getElementsByClassName("close")[0];
+
+
+
+    // addDay.onclick = function() {
+    //     console.log('add')
+    //     dateModal.style.display = "block";
+    // }
+
+    closeModal.onclick = function() {
+        dateModal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == dateModal) {
+          dateModal.style.display = "none";
+        }
+    }
+
+    var dateInput = document.getElementById("dateStart");
+    var date = new Date();
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0');
+    var yyyy = String(date.getFullYear());
+
+    date = yyyy + '-' + mm + '-' + dd;
+    var maxDate = (yyyy + 5) + '-' + mm + '-' + dd;
+    dateInput.value = date;
+    dateInput.min = date;
+    dateInput.max = maxDate;
+
+    dateInput.addEventListener("change", (event) => { // when user selects start date
+        dateModal.style.display = "none"; // close the modal
+        
+        const newDayDiv = createDayDiv(event.target.value, map); // create a new day in side bar 
+        const addDayDiv = document.querySelector(".day");
+        const sideBarDiv = document.getElementById("home");
+      
+        sideBarDiv.insertBefore(newDayDiv, addDayDiv);
+        map.addStartMarkers(); // add start markers to map
+
+    })
+
 
     this.document.getElementById("addDay").addEventListener("click", function () {
-        console.log('add')
+        dateModal.style.display = "block";
     })
+
+
+
 
     select.addEventListener('click', () => {
         select.classList.toggle('select-clicked');
@@ -113,49 +155,6 @@ window.addEventListener('DOMContentLoaded', function() {
         map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
     });
   
-    var dateModal = document.getElementById("dateModal");
-    var closeModal = document.getElementsByClassName("close")[0];
-
-
-
-    // addDay.onclick = function() {
-    //     console.log('add')
-    //     dateModal.style.display = "block";
-    // }
-
-    closeModal.onclick = function() {
-        dateModal.style.display = "none";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == dateModal) {
-          dateModal.style.display = "none";
-        }
-    }
-
-    var dateInput = document.getElementById("dateStart");
-    var date = new Date();
-    var dd = String(date.getDate()).padStart(2, '0');
-    var mm = String(date.getMonth() + 1).padStart(2, '0');
-    var yyyy = String(date.getFullYear());
-
-    date = yyyy + '-' + mm + '-' + dd;
-    var maxDate = (yyyy + 5) + '-' + mm + '-' + dd;
-    dateInput.value = date;
-    dateInput.min = date;
-    dateInput.max = maxDate;
-
-    dateInput.addEventListener("change", (event) => { // when user selects start date
-        dateModal.style.display = "none"; // close the modal
-        
-        const newDayDiv = createDayDiv(event.target.value, map); // create a new day in side bar 
-        const addDayDiv = document.querySelector(".day");
-        const sideBarDiv = document.getElementById("home");
-      
-        sideBarDiv.insertBefore(newDayDiv, addDayDiv);
-        map.addStartMarkers(); // add start markers to map
-
-    })
 });
 
 function createDayDiv (date, mapObj) {
