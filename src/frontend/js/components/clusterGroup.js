@@ -119,9 +119,17 @@ export default class ClusterGroup {
                 e.bindPopup(e.feature.properties.name);
                 e.on('mouseover', function (e) {
                     this.openPopup();
+                    this.setStyle({
+                        color: '#D92701',
+                        weight: 4.4
+                    })
                 });
                 e.on('mouseout', function (e) {
                     this.closePopup();
+                    this.setStyle({
+                        color: '#0093FF',
+                        weight: 3
+                    })
                 });
             }
 

@@ -53,18 +53,17 @@ export function setPathStyles(geoJSON, isRoute) {
     //  canoeRoute
     //  portageRoute (could be a portageRoute or a trail)
     console.log("PathStyle GeoJSON: ", geoJSON);
-    /*
+    
 
     geoJSON = L.geoJSON(geoJSON, {
         style: function(obj) {
             var opacity;
             return {
-                //set styles here
-                
+                color: '#0093FF'
             };
         }
     });
-    */
+    
 
-    return L.geoJSON(geoJSON);
+    return geoJSON;
 }
