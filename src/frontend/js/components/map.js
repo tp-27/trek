@@ -111,6 +111,27 @@ export class Map {
     //     });
     // }
 
+    disableMapInteraction() {
+        console.log("Disabling map Interaction");
+        this.map.dragging.disable();
+        this.map.touchZoom.disable();
+        this.map.doubleClickZoom.disable();
+        this.map.scrollWheelZoom.disable();
+        this.map.boxZoom.disable();
+        this.map.keyboard.disable();
+        document.getElementById('map').style.cursor='default';
+    }
+
+    enableMapInteraction() {
+        console.log("Enabling map Interaction");
+        this.map.dragging.enable();
+        this.map.touchZoom.enable();
+        this.map.doubleClickZoom.enable();
+        this.map.scrollWheelZoom.enable();
+        this.map.boxZoom.enable();
+        this.map.keyboard.enable();
+        document.getElementById('map').style.cursor='grab';
+    }
     // extract route information into dictonary for PDF
     async getRouteInfo() {
         // this.map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
@@ -225,17 +246,3 @@ export class Map {
     }
 }
 export default Map;
-
-// async function addStartMarkers(map){
-//     var canoe_iconS = L.icon({
-//         iconUrl: "../../src/frontend/assets/Start_canoeS.png",
-//         iconSize:     [38, 95], // size of the icon
-//     });
-//     var canoe_iconE = L.icon({
-//         iconUrl: "../../src/frontend/assets/Start_canoeE.png",
-//         iconSize:     [38, 95], // size of the icon
-//     });
-
-//     await map.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
-//     await map.clusterGroup.addPathMarker(1,{lat:45.60012744 ,  lng:-78.77631902 },true,canoe_iconE);
-// }

@@ -141,11 +141,13 @@ window.addEventListener('DOMContentLoaded', function() {
         this.document.getElementById("tpd-btn").textContent = "Triple Portage Dist: " + value;
     });
 
-    // this.document.getElementById("directions-checkbox").addEventListener("change", (event) => {
-    //     map.MapSettings.displayDirectionsOnMap = event.target.checked;
-    //     map.clusterGroup.addDirectionsToSidebar(map.clusterGroup.pathDatalist);
-    // });
-  
+    this.document.getElementById("sidebar").addEventListener("mouseover", (event) => {
+        map.disableMapInteraction();
+    },false);
+
+    this.document.getElementById("sidebar").addEventListener("mouseleave", (event) => {
+        map.enableMapInteraction();
+    },false);  
 });
 
 function createDayDiv (date, mapObj) {
