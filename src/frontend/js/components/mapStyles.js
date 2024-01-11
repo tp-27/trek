@@ -53,28 +53,43 @@ export function setPathStyles(geoJSON, isRoute) {
     //  canoeRoute
     //  portageRoute (could be a portageRoute or a trail)
     var styledFeature = L.geoJSON(geoJSON);
-    /*
+    
      console.log("PathStyle GeoJSON: ", styledFeature);
     for(var fid in styledFeature._layers) {
-        var feat = styledFeature._layers
-        if(feat[fid].feature.properties == 'LakeRoute') {
-            feat.setStyle({
-                //set custom style for lakeRoute
-            });
-        } else if (feat[fid].feature.properties == 'canoeRoute') {
-            feat.setStyle({
-                //set custom style for canoeRoute
-            });
-        } else if(feat[fid].feature.properties == 'portageRoute') {
-            feat.setStyle({
-                //set custom style for portageRoute
-            });
-        } else { //Base Style
-            feat.setStyle({
-                //set custom style for anything else
-            });
-        }
-    }*/
-   
+        var feat = styledFeature._layers[fid];
+        setPathElementStyle(feat, isRoute)
+    }
     return styledFeature;
+}
+
+export function setPathElementStyle(pathElement, isRoute) {
+    var feat = pathElement;
+    if(feat.feature.properties.type =='LakeRoute') {
+        feat.setStyle({
+            color: "#0074FF",
+            weight: 6,
+            opacity: 0.5
+        });
+    } else if (feat.feature.properties.type == 'canoeRoute') {
+        feat.setStyle({
+            color: "#0074FF",
+            weight: 6,
+            opacity: 0.5
+            //set custom style for canoeRoute
+        });
+    } else if(feat.feature.properties.type == 'portageRoute') {
+        feat.setStyle({
+            color: "#FFB600",
+            weight: 4,
+            opacity: 0.7,
+            dasharray: '5,10'
+            //set custom style for portageRoute
+        });
+    } else { //Base Style
+        feat.setStyle({
+            color: '#0093FF',
+            weight: 3
+            //set custom style for anything else
+        });
+    }
 }

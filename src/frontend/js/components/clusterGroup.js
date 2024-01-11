@@ -1,4 +1,4 @@
-import { setMarkerStyles, setPathStyles } from "./mapStyles.js";
+import { setMarkerStyles, setPathElementStyle, setPathStyles } from "./mapStyles.js";
 import { mapSettings } from "./mapSettings.js";
 
 const serverURL = "http://18.224.61.35:8080/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
@@ -121,15 +121,12 @@ export default class ClusterGroup {
                     this.openPopup();
                     this.setStyle({
                         color: '#D92701',
-                        weight: 4.4
+                        weight: 5
                     })
                 });
                 e.on('mouseout', function (e) {
                     this.closePopup();
-                    this.setStyle({
-                        color: '#0093FF',
-                        weight: 3
-                    })
+                    setPathElementStyle(this,true);
                 });
             }
 
