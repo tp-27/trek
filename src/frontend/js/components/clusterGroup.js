@@ -398,7 +398,7 @@ export default class ClusterGroup {
         for (let i = pathIndex; i < this.markerlist.length; i++) {
             this.markerSetIndex(this.markerlist[i], i);
         }
-        await this.regenPaths(marker.options.index,true,true);
+        await this.regenPaths(marker.options.index,false,true);
     }
 
     async removePathMarker(pathIndex) {

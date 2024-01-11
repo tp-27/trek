@@ -52,18 +52,29 @@ export function setPathStyles(geoJSON, isRoute) {
     //  LakeRoute (Only exists if isRoute == true because apt_seg does not contain lakeroutes)
     //  canoeRoute
     //  portageRoute (could be a portageRoute or a trail)
-    console.log("PathStyle GeoJSON: ", geoJSON);
-    
-
-    geoJSON = L.geoJSON(geoJSON, {
-        style: function(obj) {
-            var opacity;
-            return {
-                color: '#0093FF'
-            };
+    var styledFeature = L.geoJSON(geoJSON);
+    /*
+     console.log("PathStyle GeoJSON: ", styledFeature);
+    for(var fid in styledFeature._layers) {
+        var feat = styledFeature._layers
+        if(feat[fid].feature.properties == 'LakeRoute') {
+            feat.setStyle({
+                //set custom style for lakeRoute
+            });
+        } else if (feat[fid].feature.properties == 'canoeRoute') {
+            feat.setStyle({
+                //set custom style for canoeRoute
+            });
+        } else if(feat[fid].feature.properties == 'portageRoute') {
+            feat.setStyle({
+                //set custom style for portageRoute
+            });
+        } else { //Base Style
+            feat.setStyle({
+                //set custom style for anything else
+            });
         }
-    });
-    
-
-    return geoJSON;
+    }*/
+   
+    return styledFeature;
 }
