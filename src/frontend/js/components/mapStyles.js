@@ -64,6 +64,7 @@ export function setPathStyles(geoJSON, isRoute) {
 
 export function setPathElementStyle(pathElement, isRoute) {
     var feat = pathElement;
+    console.log("Setting Style for Feat: ", feat);
     if(feat.feature.properties.type =='LakeRoute') {
         feat.setStyle({
             color: "#0074FF",
@@ -77,7 +78,10 @@ export function setPathElementStyle(pathElement, isRoute) {
             opacity: 0.5
             //set custom style for canoeRoute
         });
-    } else if(feat.feature.properties.type == 'portageRoute') {
+    } else if(feat.feature.properties.type == 'portageRoute' || 
+            (!isRoute && (feat.feature.properties.infrastruc == 'Portage'|| 
+            feat.feature.properties.infrastruc == 'Backpacking' ||
+            feat.feature.properties.infrastruc == 'Cart Trail'))) {
         feat.setStyle({
             color: "#FFB600",
             weight: 4,

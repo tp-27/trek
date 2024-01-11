@@ -45,7 +45,7 @@ export default class ClusterGroup {
         this.baseURL = serverURL;
         this.respFormat = "&outputFormat=application/json";
         this.markers = this.addLayer('Rec_point'); // campsites, access points, picnic area feature layer
-        //this.trails = this.addLayer('apt_seg'); //trails, portages, canoe routes
+        this.trails = this.addLayer('apt_seg'); //trails, portages, canoe routes
         this.mapSettings = mapSettings;
 
         //Multipoint Routing
