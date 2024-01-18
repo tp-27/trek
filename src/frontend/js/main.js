@@ -55,11 +55,9 @@ window.addEventListener('DOMContentLoaded', function() {
         sideBarDiv.insertBefore(newDayDiv, addDayDiv);
 
         if (day === 1) {
-            console.log('day 1')
             map.addStartMarkers(); // add start markers to map
             day += 1
         } else {
-            console.log('day ' + day)
             map.addNextMarker(day)
             day += 1
         }
