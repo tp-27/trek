@@ -73,8 +73,20 @@ export class Map {
         });
     
 
+        console.log('Hello World')
         await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
         await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
+    }
+
+    async addNextMarker(day) {
+        var canoe_iconS = L.icon({
+            iconUrl: "../../src/frontend/assets/start-pin.svg",
+            iconSize:     [38, 95], // size of the icon
+        });
+
+        const numMarkers = this.clusterGroup.getMarkerLength()
+        console.log(numMarkers)
+        await this.clusterGroup.addPathMarker(numMarkers, {lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
     }
 
     getStartEndMarkers() {

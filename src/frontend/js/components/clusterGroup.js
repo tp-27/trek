@@ -53,6 +53,7 @@ export default class ClusterGroup {
         this.markerlist = []; //list of markers for paths
         this.pathDatalist = []; //Data for path
         this.directionMarkers = [];
+        this.totalPath = [] // contains an array of pathdatalist 
 
         this.directionMarkerIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png',
@@ -344,8 +345,6 @@ export default class ClusterGroup {
         return;
     }
 
-
-
     async makeMarker(idx,pos,isStartOrEnd,customIcon) {
         var m = pathMarker(pos,
             {   draggable: true,
@@ -399,6 +398,7 @@ export default class ClusterGroup {
             this.markerSetIndex(this.markerlist[i], i);
         }
         await this.regenPaths(marker.options.index,true,true);
+        console.log('Add path')
     }
 
     async removePathMarker(pathIndex) {
@@ -437,8 +437,11 @@ export default class ClusterGroup {
             endSpanTextNode.innerText = m.options.nearestVertex;  // FIX ME - change to name of feature 
         }
         
-        const selectBtnContainer = document.querySelector(".selectBtnContainer");
-        const selectButtonSpans = selectBtnContainer.querySelectorAll("span");
+        const selectBtnContainer = document.querySelectorAll(".selectBtnContainer");
+        const lastRoutedDayContainer = selectBtnContainer[selectBtnContainer.length - 1]
+        
+        const selectButtonSpans = lastRoutedDayContainer.querySelectorAll("span");
+        console.log(selectButtonSpans)
         var endPointsSelected = true;
         selectButtonSpans.forEach((span) => {
             if (!span.classList.contains("active")) {
@@ -449,15 +452,20 @@ export default class ClusterGroup {
         if (endPointsSelected) {
             // append the route container after the select start container
             const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent 
+            console.log(selectBtnContainer)
+            
+
             const selectStartContainer = selectBtnContainer.firstChild; // get the select start container
+            console.log(selectStartContainer)
             
             let routePathContainer = document.querySelector(".route-path-container")
-            if (routePathContainer) {
-                routePathContainer.remove()
-            }
+            // if (routePathContainer) {
+            //     routePathContainer.remove()
+            // }
 
             routePathContainer = this.createRoutePathContainer()
-            console.log(routePathContainer)
+            // selectStartContainer.after(routePathContainer, selectStartContainer)
+
             selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
         }
 
@@ -534,5 +542,9 @@ export default class ClusterGroup {
         });
 
         return subTypes;
+    }
+
+    getMarkerLength() {
+        return this.markerlist.length
     }
 }
