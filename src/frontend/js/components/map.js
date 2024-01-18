@@ -40,7 +40,7 @@ export class Map {
            maxBounds: L.latLngBounds(this.SW, this.NE)
         });
 
-        this.initMapDiv(); // show map in container
+        // this.initMapDiv(); // show map in container
         L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
