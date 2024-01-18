@@ -40,8 +40,8 @@ export class Map {
            maxBounds: L.latLngBounds(this.SW, this.NE)
         });
 
-        // this.initMapDiv(); // show map in container
-        L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
+        this.initMapDiv(); // show map in container
+        // L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
         // addStartMarkers(this); // add route planning markers
@@ -64,11 +64,11 @@ export class Map {
 
     async addStartMarkers(){
         var canoe_iconS = L.icon({
-            iconUrl: "../../src/frontend/assets/start-pin.svg",
+            iconUrl: "../assets/start-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
         var canoe_iconE = L.icon({
-            iconUrl: "../../src/frontend/assets/end-pin.svg",
+            iconUrl: "../assets/end-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
     
@@ -80,7 +80,7 @@ export class Map {
 
     async addNextMarker(day) {
         var canoe_iconS = L.icon({
-            iconUrl: "../../src/frontend/assets/start-pin.svg",
+            iconUrl: "../assets/start-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
 
