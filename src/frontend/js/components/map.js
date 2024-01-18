@@ -41,7 +41,7 @@ export class Map {
         });
 
         this.initMapDiv(); // show map in container
-        L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
+        // L.control.bigImage({position: 'bottomright'}).addTo(this.map); // add print control 
         this.clusterGroup.mapLayerGroup.addTo(this.map); // add layer group to map
         this.map.setView(this.srt_view, 9); // set map view to specified coordinates and zoom level
         // addStartMarkers(this); // add route planning markers
@@ -58,23 +58,32 @@ export class Map {
 
 
     showSideBar() {
-        console.log(sidebar);
         this.sidebar.open("home");
     }
 
     async addStartMarkers(){
         var canoe_iconS = L.icon({
-            iconUrl: "../../src/frontend/assets/start-pin.svg",
+            iconUrl: "../assets/start-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
         var canoe_iconE = L.icon({
-            iconUrl: "../../src/frontend/assets/end-pin.svg",
+            iconUrl: "../assets/end-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
     
-
         await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
         await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
+    }
+
+    async addNextMarker(day) {
+        var canoe_iconS = L.icon({
+            iconUrl: "../assets/start-pin.svg",
+            iconSize:     [38, 95], // size of the icon
+        });
+
+        const numMarkers = this.clusterGroup.getMarkerLength()
+        console.log(numMarkers)
+        await this.clusterGroup.addPathMarker(numMarkers, {lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
     }
 
     getStartEndMarkers() {
@@ -112,7 +121,6 @@ export class Map {
     // }
 
     disableMapInteraction() {
-        console.log("Disabling map Interaction");
         this.map.dragging.disable();
         this.map.touchZoom.disable();
         this.map.doubleClickZoom.disable();
@@ -123,7 +131,6 @@ export class Map {
     }
 
     enableMapInteraction() {
-        console.log("Enabling map Interaction");
         this.map.dragging.enable();
         this.map.touchZoom.enable();
         this.map.doubleClickZoom.enable();

@@ -2,6 +2,7 @@ import Map from "../js/components/map.js"
 import { modifyPdf, createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
+var day = 1
 
 window.addEventListener('DOMContentLoaded', function() {
     var map = new Map()
@@ -52,7 +53,15 @@ window.addEventListener('DOMContentLoaded', function() {
         const sideBarDiv = document.getElementById("home");
       
         sideBarDiv.insertBefore(newDayDiv, addDayDiv);
-        map.addStartMarkers(); // add start markers to map
+
+        if (day === 1) {
+            map.addStartMarkers(); // add start markers to map
+            day += 1
+        } else {
+            map.addNextMarker(day)
+            day += 1
+        }
+        
 
     })
 
@@ -183,7 +192,7 @@ function createDayDiv (date, mapObj) {
 
     
     selectStartDiv.classList.add("selectBtns");
-    selectStartIcon.src = "../../src/frontend/assets/start-pin.svg"; 
+    selectStartIcon.src = "../assets/start-pin.svg"; 
     selectStartSpan.classList.add("selectBtnSpan");
     selectStartSpan.id = "start";
     selectStartText.innerText = "Drag icon to select start";
@@ -192,14 +201,9 @@ function createDayDiv (date, mapObj) {
     selectStartSpan.appendChild(selectStartText);
     selectStartDiv.appendChild(selectStartSpan);
 
-    selectStartDiv.addEventListener("click", () => {
-        console.log("add listener");
-    })
-
-
-
+ 
     selectEndDiv.classList.add("selectBtns");
-    selectEndIcon.src = "../../src/frontend/assets/end-pin.svg"; 
+    selectEndIcon.src = "../assets/end-pin.svg"; 
     selectEndSpan.classList.add("selectBtnSpan");
     selectEndSpan.id = "end";
     selectEndText.innerText = "Drag icon to select end";
@@ -208,8 +212,15 @@ function createDayDiv (date, mapObj) {
     selectEndDiv.appendChild(selectEndSpan);
 
     selectBtnContainer.classList.add("selectBtnContainer"); 
+    selectBtnContainer.id = 'day-' + day
+
+    // if (day === 1) {
+    //     selectBtnContainer.append(selectStartDiv);
+    // }
+    
     selectBtnContainer.append(selectStartDiv);
     selectBtnContainer.append(selectEndDiv);
+    console.log(selectBtnContainer)
 
     deleteDayBtn.classList.add("deleteDayBtn");
     deleteDayBtn.innerText = "Delete day";
@@ -226,7 +237,6 @@ function createDayDiv (date, mapObj) {
     })
 
     dayDivBody.append(selectBtnContainer); // add the select btn container
-
     dayDiv.appendChild(startDateHeader); // add the start date
     dayDiv.appendChild(dayDivBody); // append select and delete buttons
     dayDiv.append(deleteDayBtn); // add the delete btn

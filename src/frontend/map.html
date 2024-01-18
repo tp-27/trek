@@ -32,9 +32,9 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
         <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
-        <script src="js/components/leaflet-search.js" type="module"></script>
-        <link rel="stylesheet" href="../frontend/css/leaflet-search.css" />
-        <link rel="stylesheet" href="../frontend/css/leaflet-sidebar.css" />
+        <!-- <script src="js/components/leaflet-search.js" type="module"></script> -->
+        <!-- <link rel="stylesheet" href="css/leaflet-search.css" /> -->
+        <link rel="stylesheet" href="css/leaflet-sidebar.css" />
     </head>
     <body>        
         <div id="map" class="sidebar-map">
@@ -44,7 +44,7 @@
             <div class="park-dropdown">
                 <div class="dropdown-header">
                     <p class="selected">Algonquin</p>
-                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
+                    <img src="assets/arrow-down.svg" alt="Downward arrow">
                 </div>
                 <ul class="menu">
                     <li>Kawartha</li>
@@ -87,7 +87,7 @@
                             <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                         </h1>
                         <div class="day" id="addDay">
-                            <img src="../../src/frontend/assets/add.svg" alt="Plus icon">
+                            <img src="assets/add.svg" alt="Plus icon">
                             <h2>Add a day</h2>
                         </div>
                         <div class="pdf-btn-container">
@@ -146,18 +146,18 @@
                             <h2>Icons</h2>
                             <div class="icons">
                                 <div class="icon-item">
-                                    <img src="../../src/frontend/assets/tent.svg" alt="Tent">
+                                    <img src="assets/tent.svg" alt="Tent">
                                     <input type="checkbox" id="campsite" name="icons" value="Designated Camping Site" checked>
 
                                 </div>
 
                                 <div class="icon-item">
-                                    <img src="../../src/frontend/assets/access.svg" alt="Crossed paddles">
+                                    <img src="assets/access.svg" alt="Crossed paddles">
                                     <input type="checkbox" id="access-point" name="icons" value="Access Point" checked>
                                 </div>
 
                                 <div class="icon-item">
-                                    <img src="../../src/frontend/assets/picnic.svg" alt="Picnic table">
+                                    <img src="assets/picnic.svg" alt="Picnic table">
                                     <input type="checkbox" id="picnic-area" name="icons" value="Picnic" checked>
                                 </div>
 
@@ -187,24 +187,23 @@
         </div>
         
         </div>
-        <script src="../frontend/js/leaflet-sidebar.js"></script>
-            <script src="../frontend/js/leaflet-sidebar.js"></script>
-            <div class="park-dropdown">
-                <div class="dropdown-header">
-                    <p class="selected">Algonquin</p>
-                    <img src="../../src/frontend/assets/arrow-down.svg" alt="Downward arrow">
-                </div>
-                <ul class="menu">
-                    <li>Kawartha</li>
-                    <li>Killarney</li>
-                    <li>Temagami</li>
-                    <li>Sleeping Giant</li>
-                    <li class="active">Algonquin</li>
-                </ul>
 
-                
+        <div class="park-dropdown">
+            <div class="dropdown-header">
+                <p class="selected">Algonquin</p>
+                <img src="assets/arrow-down.svg" alt="Downward arrow">
+            </div>
+            <ul class="menu">
+                <li>Kawartha</li>
+                <li>Killarney</li>
+                <li>Temagami</li>
+                <li>Sleeping Giant</li>
+                <li class="active">Algonquin</li>
+            </ul>
             </div>
         </div>
+
+        <script src="js/components/leaflet-sidebar.js"></script>
     </body>
 
 </html>
