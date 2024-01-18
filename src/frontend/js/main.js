@@ -3,8 +3,11 @@ import { modifyPdf, createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
 var day = 1
-const assets_url = window.location.href.replace(/\/js\/.*/, '/assets/'); // Get url of api directory
 
+
+const assets_url = window.location.href.replace(/(frontend\/).*/, `$1assets/`); // Get url of api directory
+
+console.log(assets_url)
 window.addEventListener('DOMContentLoaded', function() {
     var map = new Map()
     map.initMap('algonquin')
@@ -194,6 +197,7 @@ function createDayDiv (date, mapObj) {
     
     selectStartDiv.classList.add("selectBtns");
     selectStartIcon.src =  assets_url + "start-pin.svg"; 
+    console.log(assets_url + "start-pin.svg");
     selectStartSpan.classList.add("selectBtnSpan");
     selectStartSpan.id = "start";
     selectStartText.innerText = "Drag icon to select start";
@@ -204,7 +208,7 @@ function createDayDiv (date, mapObj) {
 
  
     selectEndDiv.classList.add("selectBtns");
-    selectEndIcon.src = "../assets/end-pin.svg"; 
+    selectEndIcon.src = assets_url + "end-pin.svg"; 
     selectEndSpan.classList.add("selectBtnSpan");
     selectEndSpan.id = "end";
     selectEndText.innerText = "Drag icon to select end";
