@@ -194,7 +194,7 @@ function createDayDiv (date, mapObj) {
 
     
     selectStartDiv.classList.add("selectBtns");
-    selectStartIcon.src = "../../src/frontend/assets/start-pin.svg"; 
+    selectStartIcon.src = "assets/start-pin.svg"; 
     selectStartSpan.classList.add("selectBtnSpan");
     selectStartSpan.id = "start";
     selectStartText.innerText = "Drag icon to select start";
@@ -205,7 +205,7 @@ function createDayDiv (date, mapObj) {
 
  
     selectEndDiv.classList.add("selectBtns");
-    selectEndIcon.src = "../../src/frontend/assets/end-pin.svg"; 
+    selectEndIcon.src = "assets/end-pin.svg"; 
     selectEndSpan.classList.add("selectBtnSpan");
     selectEndSpan.id = "end";
     selectEndText.innerText = "Drag icon to select end";
