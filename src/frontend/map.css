@@ -101,6 +101,12 @@ body {
 
 #dateStart {
     font-size: 30px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#dateStart:hover {
+    background-color: rgba(0, 0, 0, 0.306);
 }
 
 

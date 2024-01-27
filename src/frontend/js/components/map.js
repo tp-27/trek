@@ -47,7 +47,6 @@ export class Map {
         // addStartMarkers(this); // add route planning markers
     }
 
-
     showFeatureIcon(feature) {
         this.clusterGroup.showLayer(feature);
     }
@@ -62,17 +61,21 @@ export class Map {
     }
 
     async addStartMarkers(){
+        
         var canoe_iconS = L.icon({
-            iconUrl: "../assets/start-pin.svg",
+            iconUrl: "../../src/frontend/assets/start-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
         var canoe_iconE = L.icon({
-            iconUrl: "../assets/end-pin.svg",
+            iconUrl: "../../src/frontend/assets/end-pin.svg",
             iconSize:     [38, 95], // size of the icon
         });
     
         await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
         await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
+
+        console.log('Add pin')
+        
     }
 
     async addNextMarker(day) {
