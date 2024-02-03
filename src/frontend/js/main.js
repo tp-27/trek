@@ -55,7 +55,7 @@ window.addEventListener('DOMContentLoaded', function() {
     dateInput.addEventListener("change", (event) => { // when user selects start date
         dateModal.style.display = "none"; // close the modal
         
-        const newDayDiv = createDayDiv(trip.numDays, event.target.value, map); // create a new day in side bar 
+        const newDayDiv = createDayDiv(trip, event.target.value, map); // create a new day in side bar 
         const addDayDiv = document.querySelector(".day");
         const sideBarDiv = document.getElementById("home");
       
@@ -75,7 +75,6 @@ window.addEventListener('DOMContentLoaded', function() {
     this.document.getElementById("addDay").addEventListener("click", function () {
         dateModal.style.display = "block";
     })
-
 
     select.addEventListener('click', () => {
         select.classList.toggle('select-clicked');

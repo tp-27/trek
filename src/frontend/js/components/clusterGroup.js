@@ -63,6 +63,8 @@ export default class ClusterGroup {
             popupAnchor: [1, -34],
             shadowSize: [10, 10]
         });
+
+        this.pathJSON = [] // stringified path information about trip
     }
 
     initLayers() {
@@ -421,7 +423,7 @@ export default class ClusterGroup {
 
     // Update the start and end marker locations on sidebar whenever they are moved
     updatePathMarkersSideBar(m, idx) {
-        if (idx == 0) { // start marker
+            if (idx == 0) { // start marker
             const startSpan = document.getElementById("start");
             const startSpanTextNode = startSpan.querySelector("p");
 
@@ -440,7 +442,7 @@ export default class ClusterGroup {
         const lastRoutedDayContainer = selectBtnContainer[selectBtnContainer.length - 1];
         const selectButtonSpans = lastRoutedDayContainer.querySelectorAll("span");
 
-        console.log(selectButtonSpans)
+        // Check to see if start and end have been selected
         var endPointsSelected = true;
         selectButtonSpans.forEach((span) => {
             if (!span.classList.contains("active")) {
@@ -452,23 +454,21 @@ export default class ClusterGroup {
             // append the route container after the select start container
             const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent             
             const selectStartContainer = selectBtnContainer.firstChild; // get the select start container
+            const newdayParent = selectBtnContainer.closest('.newDay'); // get the parent container for the day
             let routePathContainer = document.querySelector(".route-path-container");
-            const startIcon = document.getElementById("start");
-
-            routePathContainer = this.createRoutePathContainer();
+    
+            routePathContainer = this.createRoutePathContainer(newdayParent.id);
             selectStartContainer.after(routePathContainer);
-
-            // selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
         }
 
     }
 
-    createRoutePathContainer() {
+    createRoutePathContainer(day) {
         const routePathContainer = document.createElement("div");
         const routePathSpan = document.createElement("span");
         const routePathImg = document.createElement("img");
         const routePathText = document.createElement("p");
-
+        
         routePathContainer.classList.add("route-path-container");
         routePathText.innerText = "Show path";
         routePathImg.src = "../../src/frontend/assets/expand-all.svg";
@@ -503,13 +503,23 @@ export default class ClusterGroup {
                     const pathDistData = document.createElement("td")
 
                     pathTableRow.classList.add('path-row')
-                    pathTypeData.innerHTML = `${item.name}`;
-                    pathDistData.innerHTML = `${item.distance}`;
+                    pathTypeData.innerHTML = `${item.name}`
+                    pathDistData.innerHTML = `${item.distance}`
 
                     pathTableRow.appendChild(pathTypeData)
                     pathTableRow.appendChild(pathDistData)
                     pathTable.appendChild(pathTableRow)
+
+                    let aPath = {  
+                        "name": item.name,
+                        "distance": item.distance
+                    }
+
+
+
                 })
+
+                console.log("DAY = " + day);
                 routePathContainer.appendChild(pathTable);
             }              
         })
