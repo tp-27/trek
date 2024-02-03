@@ -9,7 +9,6 @@ export default class Map {
         this.searchLayer;
         this.MapSettings = new mapSettings();
         this.clusterGroup = new ClusterGroup(this.MapSettings);
-
         this.sourceID = 38509;
         this.targetID = 5742; //change to a list of target IDs
         this.directionMarkers = [];
@@ -26,7 +25,6 @@ export default class Map {
         });
         
         this.sidebar.addTo(this.map);    
-
     }
   
     initMap(park) {
@@ -55,13 +53,11 @@ export default class Map {
         this.clusterGroup.hideLayer(feature);
     }
 
-
     showSideBar() {
         this.sidebar.open("home");
     }
 
     async addStartMarkers(){
-        
         var canoe_iconS = L.icon({
             iconUrl: "../../src/frontend/assets/start-pin.svg",
             iconSize:     [38, 95], // size of the icon
@@ -72,10 +68,7 @@ export default class Map {
         });
     
         await this.clusterGroup.addPathMarker(0,{lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
-        await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);
-
-        console.log('Add pin')
-        
+        await this.clusterGroup.addPathMarker(1,{lat:45.844645909959816 , lng:-78.5995533866199},true,canoe_iconE);    
     }
 
     async addNextMarker(day) {
@@ -85,7 +78,6 @@ export default class Map {
         });
 
         const numMarkers = this.clusterGroup.getMarkerLength()
-        console.log(numMarkers)
         await this.clusterGroup.addPathMarker(numMarkers, {lat:45.844645909959816 , lng:-78.3995533866199},true,canoe_iconS);
     }
 

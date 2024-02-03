@@ -391,7 +391,6 @@ export default class ClusterGroup {
 
     async addPathMarker(pathIndex,pos,isStartOrEnd,customIcon) {
         var marker = await this.makeMarker(pathIndex,pos,isStartOrEnd,customIcon);
-        console.log('hello 1')
         this.markerlist.splice(pathIndex, 0, marker);
         //change index of all future markers
         for (let i = pathIndex; i < this.markerlist.length; i++) {
@@ -438,9 +437,9 @@ export default class ClusterGroup {
         }
         
         const selectBtnContainer = document.querySelectorAll(".selectBtnContainer");
-        const lastRoutedDayContainer = selectBtnContainer[selectBtnContainer.length - 1]
-        
+        const lastRoutedDayContainer = selectBtnContainer[selectBtnContainer.length - 1];
         const selectButtonSpans = lastRoutedDayContainer.querySelectorAll("span");
+
         console.log(selectButtonSpans)
         var endPointsSelected = true;
         selectButtonSpans.forEach((span) => {
@@ -451,22 +450,15 @@ export default class ClusterGroup {
 
         if (endPointsSelected) {
             // append the route container after the select start container
-            const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent 
-            console.log(selectBtnContainer)
-            
-
+            const selectBtnContainer = document.querySelector(".selectBtnContainer"); // get the select btn parent             
             const selectStartContainer = selectBtnContainer.firstChild; // get the select start container
-            console.log(selectStartContainer)
-            
-            let routePathContainer = document.querySelector(".route-path-container")
-            // if (routePathContainer) {
-            //     routePathContainer.remove()
-            // }
+            let routePathContainer = document.querySelector(".route-path-container");
+            const startIcon = document.getElementById("start");
 
-            routePathContainer = this.createRoutePathContainer()
-            // selectStartContainer.after(routePathContainer, selectStartContainer)
+            routePathContainer = this.createRoutePathContainer();
+            selectStartContainer.after(routePathContainer);
 
-            selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
+            // selectBtnContainer.after(routePathContainer, selectStartContainer); // insert route path ctn after select start container
         }
 
     }
