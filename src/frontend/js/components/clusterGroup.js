@@ -500,8 +500,7 @@ export default class ClusterGroup {
                 
 
                 day = day.split('-')[1]; // get day number
-                dayJSON[day] = []
-            
+                let allPaths = []
                 data.forEach((item, idx) => {
                     const pathTableRow = document.createElement("tr")
                     const pathTypeData = document.createElement("td")
@@ -520,10 +519,11 @@ export default class ClusterGroup {
                         "distance": item.distance
                     }
 
-                    
-                    dayJSON[day].append(aPath);
-                })
+                    allPaths.push(aPath)
 
+                })
+                
+                dayJSON[day] = allPaths
                 console.log(dayJSON)
                 routePathContainer.appendChild(pathTable);
             }              
