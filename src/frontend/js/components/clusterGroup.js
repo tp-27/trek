@@ -1,7 +1,7 @@
 import { setMarkerStyles, setPathStyles } from "./mapStyles.js";
 import { mapSettings } from "./mapSettings.js";
 
-const serverURL = "https://3.147.242.4:8443/geoserver/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
+const serverURL = "https://tomcat-geoserver.trekapp.ca/wfs?service=wfs&version=2.0.0&request=getfeature&typename="; //Geographic Web File Service
 
 const PathMarker = L.Marker.extend({
     options: {
