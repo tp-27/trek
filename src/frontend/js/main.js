@@ -1,4 +1,6 @@
 import Map from "../js/components/map.js"
+import Trip from "../js/components/trip.js"
+import { createDayDiv } from "../js/components/utils.js"
 import { modifyPdf, createPdf } from "../js/components/pdf.js";
 
 const parks = ["Algonquin", "Kawartha", "Killarney", "Sleeping Giant", "Temagami"];
@@ -10,6 +12,8 @@ const assets_url = window.location.href.replace(/(frontend\/).*/, `$1assets/`); 
 console.log(assets_url)
 window.addEventListener('DOMContentLoaded', function() {
     var map = new Map()
+    var trip = new Trip()
+
     map.initMap('algonquin')
 
     const dropdown = document.querySelector(".park-dropdown");
@@ -18,7 +22,6 @@ window.addEventListener('DOMContentLoaded', function() {
     const options = dropdown.querySelectorAll(".menu li");
     const selected = dropdown.querySelector(".selected");
     const startBtn = document.getElementById('startBtn')
-
 
     startBtn.addEventListener('click', () => {
         map.showSideBar(); // show sidebar  
@@ -52,7 +55,7 @@ window.addEventListener('DOMContentLoaded', function() {
     dateInput.addEventListener("change", (event) => { // when user selects start date
         dateModal.style.display = "none"; // close the modal
         
-        const newDayDiv = createDayDiv(event.target.value, map); // create a new day in side bar 
+        const newDayDiv = createDayDiv(trip.numDays, event.target.value, map); // create a new day in side bar 
         const addDayDiv = document.querySelector(".day");
         const sideBarDiv = document.getElementById("home");
       
@@ -162,89 +165,3 @@ window.addEventListener('DOMContentLoaded', function() {
         map.enableMapInteraction();
     },false);  
 });
-
-function createDayDiv (date, mapObj) {
-    const dayDiv = document.createElement('div');
-    const dayDivBody = document.createElement('div');
-    const startDateHeader = document.createElement("p");
-    const selectBtnContainer = document.createElement("div");
-    const selectStartDiv = document.createElement("div");
-    const selectStartSpan = document.createElement("span");
-    const selectStartIcon = document.createElement("img");
-    const selectStartText = document.createElement("p");
-
-    const selectEndSpan = document.createElement("span");
-    const selectEndIcon = document.createElement("img");
-    const selectEndText = document.createElement("p");
-
-    const selectEndDiv = document.createElement("div");
-    const deleteDayBtn = document.createElement("button");
-    const confirmDayBtn = document.createElement("button");
-    const editDayBtn = document.createElement("button");
-
-    dayDiv.classList.add("newDay");
-    dayDivBody.classList.add("newDayBody"); 
-
-    startDateHeader.classList.add("day-header")
-    startDateHeader.innerText = date;
-    startDateHeader.style.fontSize = "18px";
-    startDateHeader.style.fontWeight = "700";
-    startDateHeader.style.color = "black";
-    editDayBtn.innerText = "Edit"
-    editDayBtn.classList.add("edit-btn")
-    editDayBtn.classList.add("inactive")
-
-    
-    selectStartDiv.classList.add("selectBtns");
-    selectStartIcon.src =  assets_url + "start-pin.svg"; 
-    console.log(assets_url + "start-pin.svg");
-    selectStartSpan.classList.add("selectBtnSpan");
-    selectStartSpan.id = "start";
-    selectStartText.innerText = "Drag icon to select start";
-
-    selectStartSpan.appendChild(selectStartIcon);
-    selectStartSpan.appendChild(selectStartText);
-    selectStartDiv.appendChild(selectStartSpan);
-
- 
-    selectEndDiv.classList.add("selectBtns");
-    selectEndIcon.src = assets_url + "end-pin.svg"; 
-    selectEndSpan.classList.add("selectBtnSpan");
-    selectEndSpan.id = "end";
-    selectEndText.innerText = "Drag icon to select end";
-    selectEndSpan.appendChild(selectEndIcon);
-    selectEndSpan.appendChild(selectEndText);
-    selectEndDiv.appendChild(selectEndSpan);
-
-    selectBtnContainer.classList.add("selectBtnContainer"); 
-    selectBtnContainer.id = 'day-' + day
-
-    // if (day === 1) {
-    //     selectBtnContainer.append(selectStartDiv);
-    // }
-    
-    selectBtnContainer.append(selectStartDiv);
-    selectBtnContainer.append(selectEndDiv);
-
-    deleteDayBtn.classList.add("deleteDayBtn");
-    deleteDayBtn.innerText = "Delete day";
-    deleteDayBtn.addEventListener("click", () => {
-        dayDiv.remove(); // remove current day on delete
-    });
-
-    confirmDayBtn.classList.add("confirmDayBtn");
-    confirmDayBtn.innerText = "Finish day";
-    confirmDayBtn.addEventListener("click", () => {
-        deleteDayBtn.remove()
-        confirmDayBtn.remove()
-        startDateHeader.appendChild(editDayBtn)
-    })
-
-    dayDivBody.append(selectBtnContainer); // add the select btn container
-    dayDiv.appendChild(startDateHeader); // add the start date
-    dayDiv.appendChild(dayDivBody); // append select and delete buttons
-    dayDiv.append(deleteDayBtn); // add the delete btn
-    dayDiv.appendChild(confirmDayBtn); // append confirm day button
-
-    return dayDiv;
-}

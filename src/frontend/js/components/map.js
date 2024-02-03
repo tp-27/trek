@@ -1,7 +1,7 @@
 import ClusterGroup from "./clusterGroup.js";
 import { mapSettings } from "./mapSettings.js";
 
-export class Map {
+export default class Map {
     constructor(park) {
         this.map;
         this.park;
@@ -255,4 +255,3 @@ export class Map {
         return details;
     }
 }
-export default Map;
