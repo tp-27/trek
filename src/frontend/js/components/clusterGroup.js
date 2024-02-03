@@ -487,6 +487,7 @@ export default class ClusterGroup {
                 const pathTableHeaderRow = document.createElement("tr")
                 const pathTypeHeader = document.createElement("th")
                 const pathDistanceHeader = document.createElement("th")
+                const dayJSON = {}
 
                 routePathContainer.classList.add("active");
                 pathTable.classList.add('path-table')
@@ -497,6 +498,10 @@ export default class ClusterGroup {
                 pathTableHeaderRow.appendChild(pathDistanceHeader)
                 pathTable.appendChild(pathTableHeaderRow)
                 
+
+                day = day.split('-')[1]; // get day number
+                dayJSON[day] = []
+            
                 data.forEach((item, idx) => {
                     const pathTableRow = document.createElement("tr")
                     const pathTypeData = document.createElement("td")
@@ -515,11 +520,11 @@ export default class ClusterGroup {
                         "distance": item.distance
                     }
 
-
-
+                    
+                    dayJSON[day].append(aPath);
                 })
 
-                console.log("DAY = " + day);
+                console.log(dayJSON)
                 routePathContainer.appendChild(pathTable);
             }              
         })
